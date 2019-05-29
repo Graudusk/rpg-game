@@ -8,6 +8,7 @@ yarn-error.log*
 # Custom
 .reportpost.js
 trader.sqlite
+.notes
 
 # Runtime data
 pids

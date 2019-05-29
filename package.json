@@ -1,7 +1,7 @@
 {
-  "name": "rpggame",
-  "version": "1.0.0",
-  "description": "",
+  "name": "rpg-game",
+  "version": "0.0.1",
+  "description": "test project",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,7 @@
     "dev": "nodemon server.js",
     "production": "NODE_ENV='production' node server.js"
   },
-  "author": "",
+  "author": "Eric Johansson",
   "license": "ISC",
   "dependencies": {
     "clean-webpack-plugin": "^2.0.2",
