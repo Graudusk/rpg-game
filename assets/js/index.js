@@ -149,7 +149,6 @@
 //             var hMovement = app.checkPressed('d') - app.checkPressed('a');
 //             var vMovement = app.checkPressed('s') - app.checkPressed('w');
 
-
 //             if (hMovement != 0 && vMovement != 0) {
 //                 var xySpeed = Math.sqrt((app.moveSpeed*app.moveSpeed)/2);
 

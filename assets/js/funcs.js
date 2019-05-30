@@ -3,44 +3,48 @@
 let funcs = {};
 
 funcs.bind = function(el, action, method) {
-    let element = null;
+  let element = null;
 
-    if (typeof el == 'string') {
-        element = document.getElementById(el);
-    } else {
-        element = el;
-    }
-    element.addEventListener(action, method);
+  if (typeof el == "string") {
+    element = document.getElementById(el);
+  } else {
+    element = el;
+  }
+  element.addEventListener(action, method);
 };
 
 String.prototype.toCamelCase = function() {
-    return this.valueOf()
-        .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
-        .replace(/\s/g, '')
-        .replace(/^(.)/, function($1) { return $1.toLowerCase(); });
+  return this.valueOf()
+    .replace(/\s(.)/g, function($1) {
+      return $1.toUpperCase();
+    })
+    .replace(/\s/g, "")
+    .replace(/^(.)/, function($1) {
+      return $1.toLowerCase();
+    });
 };
 
-funcs.isCollide = function (a, b) {
-    return !(
-        ((a.y + a.height) < (b.y)) ||
-        (a.y > (b.y + b.height)) ||
-        ((a.x + a.width) < b.x) ||
-        (a.x > (b.x + b.width))
-    );
+funcs.isCollide = function(a, b) {
+  return !(
+    a.y + a.height < b.y ||
+    a.y > b.y + b.height ||
+    a.x + a.width < b.x ||
+    a.x > b.x + b.width
+  );
 };
 
-funcs.clone = function (obj) {
-    if (null == obj || "object" != typeof obj) {
-        return obj;
-    }
-    var copy = new obj.constructor();
+funcs.clone = function(obj) {
+  if (null == obj || "object" != typeof obj) {
+    return obj;
+  }
+  var copy = new obj.constructor();
 
-    for (var attr in obj) {
-        if (obj.hasOwnProperty(attr)) {
-            copy[attr] = obj[attr];
-        }
+  for (var attr in obj) {
+    if (obj.hasOwnProperty(attr)) {
+      copy[attr] = obj[attr];
     }
-    return copy;
+  }
+  return copy;
 };
 
 // funcs.prototype.binds = function(el, action, method) {

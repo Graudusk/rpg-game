@@ -11,7 +11,7 @@
     "production": "NODE_ENV='production' node server.js"
   },
   "author": "Eric Johansson",
-  "license": "ISC",
+  "license": "gpl-3.0",
   "dependencies": {
     "clean-webpack-plugin": "^2.0.2",
     "cors": "^2.8.5",
