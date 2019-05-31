@@ -4,7 +4,9 @@ import { Game } from "./Game.js";
 import { Player } from "./Player.js";
 import { Map } from "./Map.js";
 
-let game = new Game(800, 600);
+let screen = { width: window.innerWidth, height: window.innerHeight };
+
+let game = new Game(screen);
 let map = new Map("assets/img/map/overworld1.json");
 
 map.loadMap().then(function() {
