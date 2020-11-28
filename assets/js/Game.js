@@ -6,8 +6,7 @@ import { Slime } from "./Slime.js";
 import { funcs } from "./funcs.js";
 
 class Game {
-  constructor({ width, height }) {
-    console.log(width, height);
+  constructor(width, height) {
     this.barWidth = 200;
     this.barHeight = 10;
     this.started = false;
@@ -48,7 +47,7 @@ class Game {
     this.canvas.style.zIndex = 8;
     this.canvas.style.margin = "auto";
     this.canvas.style.display = "block";
-    // this.canvas.style.border = "1px solid #bbb";
+    this.canvas.style.border = "1px solid #bbb";
     this.fps = 20;
     this.timer = null;
     this.map = null;
