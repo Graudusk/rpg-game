@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --hot -p 1337",
     "watch": "webpack -d --watch",
-    "dev": "nodemon server.js",
+    "dev": "nodemon server.js & npm run watch",
     "production": "NODE_ENV='production' node server.js"
   },
   "author": "Eric Johansson",
