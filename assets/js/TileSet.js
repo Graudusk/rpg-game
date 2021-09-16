@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 // import { Player } from './Player.js';
 // import { TileSet } from './TileSet.js';
-import { Tile } from "./Tile.js";
+import { Tile } from './Tile.js';
 
 class TileSet {
   constructor(firstgid, tileWidth, tileHeight, source, width, height) {
@@ -21,25 +21,21 @@ class TileSet {
 
   async loadTileSetImage() {
     let mapimage = await window.fetch(
-      "assets/img/map/overworld1.tsx" /* + this.source*/
+      'assets/img/map/overworld1.tsx' /* + this.source*/
     );
     let text = await mapimage.text();
-    let xmlDoc = new window.DOMParser().parseFromString(text, "text/xml");
+    let xmlDoc = new window.DOMParser().parseFromString(text, 'text/xml');
     let tileCounter = 1;
 
-    // console.log(xmlDoc);
-    // console.log(xmlDoc.activeElement.children[0]);
-    this.mapImage = xmlDoc.activeElement.getElementsByTagName("image")[0];
+    this.mapImage = xmlDoc.getElementsByTagName('image')[0];
+    const tileset = xmlDoc.getElementsByTagName('tileset')[0];
 
-    this.columns = xmlDoc.activeElement.getAttribute("columns");
-    this.tilecount = xmlDoc.activeElement.getAttribute("tilecount");
-    this.tilewidth = xmlDoc.activeElement.getAttribute("tilewidth");
-    this.tileheight = xmlDoc.activeElement.getAttribute("tileheight");
-    this.spacing = xmlDoc.activeElement.getAttribute("spacing");
+    this.columns = tileset.getAttribute('columns');
+    this.tilecount = tileset.getAttribute('tilecount');
+    this.tilewidth = tileset.getAttribute('tilewidth');
+    this.tileheight = tileset.getAttribute('tileheight');
+    this.spacing = tileset.getAttribute('spacing');
     this.rows = this.tilecount / this.columns;
-    console.log(this);
-
-    // console.log(this.tilewidth * 39);
 
     for (let y = 0; y < this.rows; y++) {
       // this.tiles[y] = [];

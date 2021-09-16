@@ -1,100 +1,407 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/main.js");
-/******/ })
-/************************************************************************/
-/******/ ({
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
 /***/ "./assets/js/Enemy.js":
 /*!****************************!*\
   !*** ./assets/js/Enemy.js ***!
   \****************************/
-/*! exports provided: Enemy */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Enemy\", function() { return Enemy; });\n/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./funcs.js */ \"./assets/js/funcs.js\");\n\n\n// import { Player } from './Player.js';\n// import { TileSet } from './TileSet.js';\n\n\nclass Enemy {\n  constructor(x, y, name, maxHealth, damage, speed, expGive) {\n    this.name = name;\n    this.maxHealth = maxHealth;\n    this.health = maxHealth;\n    this.damage = damage;\n    this.speed = speed;\n    this.expGive = expGive;\n    this.xPos = x;\n    this.yPos = y;\n    // this.image = 'slime_red.png';\n    this.offsetFrameY = 0;\n    this.offsetFrameX = 0;\n    this.animationFrames = [3];\n    this.width = 16;\n    this.height = 16;\n    this.hurtTimer = null;\n    this.alive = true;\n    this.hurt = false;\n    this.missiles = [];\n    this.attacking = false;\n    this.attackCooldown = 2000;\n    this.moveTimer = null;\n    this.canMove = true;\n    this.isCollidingX = false;\n    this.isCollidingY = false;\n  }\n\n  getImage() {\n    return this.image;\n  }\n\n  getWidth() {\n    return this.width;\n  }\n\n  getHeight() {\n    return this.height;\n  }\n\n  calculateAttackCooldown() {\n    return this.attackCooldown;\n  }\n\n  move(player, map) {\n    let dx = player.posX - this.getXPos();\n    let dy = player.posY - this.getYPos();\n    let distance = Math.round(Math.sqrt(dx * dx + dy * dy));\n\n    if (distance < 300 && distance > 150) {\n      if (!this.hurt) {\n        this.doMove(distance, dx, dy, map);\n      }\n    } else if (distance > 300) {\n      this.moveRandom();\n    }\n  }\n\n  checkObjectsCollision(a1, a2, map) {\n    let objL = map.plane.objects;\n    let ts = map.tileSets[0].tiles;\n\n    // console.log(map);\n    for (let x = map.startX; x < map.endX; x++) {\n      for (let y = map.startY; y < map.endY; y++) {\n        if (objL[x][y]) {\n          let tileType = objL[x][y].getType();\n\n          if (tileType != 0) {\n            let t = {\n              x: objL[x][y].xOffset + map.worldXOffset,\n              y: objL[x][y].yOffset + map.worldYOffset,\n              width: objL[x][y].width,\n              height: objL[x][y].height\n            };\n\n            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__[\"funcs\"].isCollide(a1, t)) {\n              // console.log(objL[x][y])\n              // console.log('colliding;')\n              this.isCollidingX = true;\n            }\n\n            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__[\"funcs\"].isCollide(a2, t)) {\n              // console.log('colliding;')\n              this.isCollidingY = true;\n            }\n          }\n        }\n      }\n    }\n  }\n\n  doMove(distance, dx, dy, map) {\n    if (distance > this.moveSpeed) {\n      clearInterval(this.moveTimer);\n      let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;\n      let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;\n      let xSpeed = Math.round((dx / distance) * this.moveSpeed * hMovement);\n      let ySpeed = Math.round((dy / distance) * this.moveSpeed * vMovement);\n\n      let a1 = {\n        x: this.getXPos() + map.worldXOffset + this.moveSpeed * hMovement,\n        y: this.getYPos() + map.worldYOffset,\n        width: this.width * 2,\n        height: this.height * 2\n      };\n      let a2 = {\n        x: this.getXPos() + map.worldXOffset,\n        y: this.getYPos() + map.worldYOffset + this.moveSpeed * vMovement,\n        width: this.width * 2,\n        height: this.height * 2\n      };\n\n      this.checkObjectsCollision(a1, a2, map);\n\n      // if (this.isCollidingX && this.isCollidingY) {\n      //     // this.stopMoving();\n      // } else {\n      if (!this.isCollidingX) {\n        this.xPos += xSpeed * hMovement;\n        // this.posX += xSpeed * hMovement;\n      } else if (ySpeed <= 0.5) {\n        // this.stopMoving();\n        // this.posY += this.moveSpeed * vMovement;\n        // this.posX += 0.1 * -hMovement;\n      }\n      if (!this.isCollidingY) {\n        this.yPos += ySpeed * vMovement;\n        // this.posY += ySpeed * vMovement;\n      } else if (xSpeed <= 0.5) {\n        // this.stopMoving();\n        // this.posX += this.moveSpeed * hMovement;\n        // this.posY += 0.1 * -vMovement;\n      }\n      // }\n\n      this.moving = true;\n    } else {\n      this.moving = false;\n    }\n  }\n\n  moveRandom() {\n    let canMove = this.canMove;\n\n    if (canMove) {\n      let r = Math.random();\n      let plusOrMinus = r < 0.33 ? -1 : r > 0.66 ? 1 : 0;\n      let targetX = this.getXPos() + 100 * plusOrMinus;\n\n      r = Math.random();\n      plusOrMinus = r < 0.33 ? -1 : r > 0.66 ? 1 : 0;\n      let targetY = this.getYPos() + 100 * plusOrMinus;\n      let moveLoop = this.moveLoop.bind(this);\n      let moveTimer = this.moveTimer;\n      let setCanMove = this.setCanMove.bind(this);\n      let target = {\n        targetX: targetX,\n        targetY: targetY,\n        posX: this.getXPos(),\n        posY: this.getYPos()\n      };\n\n      this.canMove = false;\n      this.moveTimeout = setTimeout(function() {\n        clearInterval(moveTimer);\n        setCanMove();\n      }, 5000);\n\n      this.moveTimer = setInterval(function() {\n        moveLoop(target);\n      }, 50);\n    }\n  }\n\n  setCanMove() {\n    this.canMove = true;\n  }\n\n  moveLoop(target) {\n    let dx = target.targetX - this.xPos;\n    let dy = target.targetY - this.yPos;\n    let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;\n    let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;\n    let distance = Math.sqrt(dx * dx + dy * dy);\n    let xSpeed = (dx / distance) * this.moveSpeed * hMovement;\n    let ySpeed = (dy / distance) * this.moveSpeed * vMovement;\n\n    if (distance <= this.moveSpeed) {\n      clearInterval(this.moveTimer);\n    } else if (distance > this.moveSpeed) {\n      this.xPos += xSpeed * hMovement;\n      this.yPos += ySpeed * vMovement;\n    }\n  }\n\n  setAttacking() {\n    this.attacking = true;\n  }\n\n  setNotAttacking() {\n    this.attacking = false;\n  }\n\n  checkAttack(player) {\n    if (!this.attacking && player.alive && !this.hurt) {\n      let dx = player.posX - this.getXPos();\n      let dy = player.posY - this.getYPos();\n      let distance = Math.round(Math.sqrt(dx * dx + dy * dy));\n      let setNotAttacking = this.setNotAttacking.bind(this);\n\n      if (distance < 160) {\n        this.doAttack(player, dy, dx);\n        this.attackTimeout = setTimeout(function() {\n          setNotAttacking();\n        }, this.calculateAttackCooldown());\n        this.attacking = true;\n      }\n    }\n  }\n\n  getMissileImage(dy, dx) {\n    let image = \"enemies/slime_red_missile\";\n    let theta = Math.atan2(dy, dx); // range (-PI, PI]\n    let range = 22.5;\n\n    theta *= 180 / Math.PI; // rads to degs, range (-180, 180]\n\n    if (theta <= 0 + range && theta > 0 - range) {\n      // east\n      image += \"_east\";\n    } else if (theta <= 45 + range && theta > 45 - range) {\n      // south-east\n      image += \"_south_east\";\n    } else if (theta <= 90 + range && theta > 90 - range) {\n      // south\n      image += \"_south\";\n    } else if (theta <= 135 + range && theta > 135 - range) {\n      // south-west\n      image += \"_south_west\";\n    } else if (\n      (theta <= 180 && theta > 180 - range) ||\n      (theta <= -180 + range && theta > -180)\n    ) {\n      // west\n      image += \"_west\";\n    } else if (theta <= -135 + range && theta > -135 - range) {\n      // south-west\n      image += \"_north_west\";\n    } else if (theta <= -90 + range && theta > -90 - range) {\n      // south-west\n      image += \"_north\";\n    } else if (theta <= -45 + range && theta > -45 - range) {\n      // south-west\n      image += \"_north_east\";\n    } else {\n      image += \"_east\";\n    }\n\n    image += \".png\";\n    return image;\n  }\n\n  doAttack(player, dy, dx) {\n    let missile = {\n      targetX: player.posX + dx - 16,\n      targetY: player.posY + dy - 16,\n      posX: this.getXPos() - 12,\n      posY: this.getYPos() - 16,\n      moveSpeed: 15,\n      width: 16,\n      height: 16,\n      image: this.getMissileImage(dy, dx),\n      hit: false\n    };\n    let attackLoop = this.attackLoop.bind(this);\n    let missileId = this.missiles.push(missile);\n\n    missile.id = missileId;\n    let attackTimer = setInterval(function() {\n      attackLoop(missile, attackTimer);\n    }, 100);\n  }\n\n  attackLoop(missile, timer) {\n    let dx = missile.targetX - missile.posX;\n    let dy = missile.targetY - missile.posY;\n    let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;\n    let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;\n\n    let distance = Math.sqrt(dx * dx + dy * dy);\n\n    let xSpeed = (dx / distance) * missile.moveSpeed * hMovement;\n    let ySpeed = (dy / distance) * missile.moveSpeed * vMovement;\n\n    if (distance <= missile.moveSpeed || missile.hit) {\n      for (let m in this.missiles) {\n        if (this.missiles[m].id == missile.id) {\n          this.missiles.splice(m, 1);\n          clearInterval(timer);\n        }\n      }\n    } else if (distance > missile.moveSpeed) {\n      missile.posX += xSpeed * hMovement;\n      missile.posY += ySpeed * vMovement;\n    }\n  }\n\n  getXPos() {\n    return this.xPos;\n  }\n\n  getYPos() {\n    return this.yPos;\n  }\n\n  getXCenterPos() {\n    return this.xPos + (this.width * 2) / 2;\n  }\n\n  getYCenterPos() {\n    return this.yPos + (this.height * 2) / 2;\n  }\n\n  startAnimation() {\n    let that = this;\n\n    if (!that.started) {\n      that.animationTimer = setInterval(function() {\n        that.updateAnimationFrames();\n      }, 1000 / 10);\n      that.started = true;\n    }\n  }\n\n  die() {\n    this.alive = false;\n  }\n\n  getHurt(damage) {\n    let that = this;\n\n    if (!that.hurt) {\n      console.log(`${that.name} was damaged ${damage} points!`);\n      that.hurt = true;\n      that.health -= damage;\n      that.hurtTimer = setTimeout(function() {\n        if (that.health <= 0) {\n          that.die();\n          console.log(`${that.name} died!`);\n        }\n        that.hurt = false;\n        console.log(\"not hurt\");\n      }, 200);\n    }\n  }\n\n  updateAnimationFrames() {\n    let that = this;\n    let outOfBounds =\n      that.offsetFrameX >= that.animationFrames[that.offsetFrameY];\n\n    // if (that.attacking && outOfBounds) {\n    //     that.attacking = false;\n    // }\n\n    if (that.hurt && that.offsetFrameX % 2 != 0) {\n      that.offsetFrameY = 1;\n    } else {\n      that.offsetFrameY = 0;\n    }\n\n    if (that.animationFrames[that.offsetFrameY] === undefined || outOfBounds) {\n      that.animationFrame = 0;\n      that.offsetFrameX = 0;\n    } else {\n      that.offsetFrameX += 1;\n    }\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvRW5lbXkuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9hc3NldHMvanMvRW5lbXkuanM/MjRkNyJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcblxuLy8gaW1wb3J0IHsgUGxheWVyIH0gZnJvbSAnLi9QbGF5ZXIuanMnO1xuLy8gaW1wb3J0IHsgVGlsZVNldCB9IGZyb20gJy4vVGlsZVNldC5qcyc7XG5pbXBvcnQgeyBmdW5jcyB9IGZyb20gXCIuL2Z1bmNzLmpzXCI7XG5cbmNsYXNzIEVuZW15IHtcbiAgY29uc3RydWN0b3IoeCwgeSwgbmFtZSwgbWF4SGVhbHRoLCBkYW1hZ2UsIHNwZWVkLCBleHBHaXZlKSB7XG4gICAgdGhpcy5uYW1lID0gbmFtZTtcbiAgICB0aGlzLm1heEhlYWx0aCA9IG1heEhlYWx0aDtcbiAgICB0aGlzLmhlYWx0aCA9IG1heEhlYWx0aDtcbiAgICB0aGlzLmRhbWFnZSA9IGRhbWFnZTtcbiAgICB0aGlzLnNwZWVkID0gc3BlZWQ7XG4gICAgdGhpcy5leHBHaXZlID0gZXhwR2l2ZTtcbiAgICB0aGlzLnhQb3MgPSB4O1xuICAgIHRoaXMueVBvcyA9IHk7XG4gICAgLy8gdGhpcy5pbWFnZSA9ICdzbGltZV9yZWQucG5nJztcbiAgICB0aGlzLm9mZnNldEZyYW1lWSA9IDA7XG4gICAgdGhpcy5vZmZzZXRGcmFtZVggPSAwO1xuICAgIHRoaXMuYW5pbWF0aW9uRnJhbWVzID0gWzNdO1xuICAgIHRoaXMud2lkdGggPSAxNjtcbiAgICB0aGlzLmhlaWdodCA9IDE2O1xuICAgIHRoaXMuaHVydFRpbWVyID0gbnVsbDtcbiAgICB0aGlzLmFsaXZlID0gdHJ1ZTtcbiAgICB0aGlzLmh1cnQgPSBmYWxzZTtcbiAgICB0aGlzLm1pc3NpbGVzID0gW107XG4gICAgdGhpcy5hdHRhY2tpbmcgPSBmYWxzZTtcbiAgICB0aGlzLmF0dGFja0Nvb2xkb3duID0gMjAwMDtcbiAgICB0aGlzLm1vdmVUaW1lciA9IG51bGw7XG4gICAgdGhpcy5jYW5Nb3ZlID0gdHJ1ZTtcbiAgICB0aGlzLmlzQ29sbGlkaW5nWCA9IGZhbHNlO1xuICAgIHRoaXMuaXNDb2xsaWRpbmdZID0gZmFsc2U7XG4gIH1cblxuICBnZXRJbWFnZSgpIHtcbiAgICByZXR1cm4gdGhpcy5pbWFnZTtcbiAgfVxuXG4gIGdldFdpZHRoKCkge1xuICAgIHJldHVybiB0aGlzLndpZHRoO1xuICB9XG5cbiAgZ2V0SGVpZ2h0KCkge1xuICAgIHJldHVybiB0aGlzLmhlaWdodDtcbiAgfVxuXG4gIGNhbGN1bGF0ZUF0dGFja0Nvb2xkb3duKCkge1xuICAgIHJldHVybiB0aGlzLmF0dGFja0Nvb2xkb3duO1xuICB9XG5cbiAgbW92ZShwbGF5ZXIsIG1hcCkge1xuICAgIGxldCBkeCA9IHBsYXllci5wb3NYIC0gdGhpcy5nZXRYUG9zKCk7XG4gICAgbGV0IGR5ID0gcGxheWVyLnBvc1kgLSB0aGlzLmdldFlQb3MoKTtcbiAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnJvdW5kKE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSkpO1xuXG4gICAgaWYgKGRpc3RhbmNlIDwgMzAwICYmIGRpc3RhbmNlID4gMTUwKSB7XG4gICAgICBpZiAoIXRoaXMuaHVydCkge1xuICAgICAgICB0aGlzLmRvTW92ZShkaXN0YW5jZSwgZHgsIGR5LCBtYXApO1xuICAgICAgfVxuICAgIH0gZWxzZSBpZiAoZGlzdGFuY2UgPiAzMDApIHtcbiAgICAgIHRoaXMubW92ZVJhbmRvbSgpO1xuICAgIH1cbiAgfVxuXG4gIGNoZWNrT2JqZWN0c0NvbGxpc2lvbihhMSwgYTIsIG1hcCkge1xuICAgIGxldCBvYmpMID0gbWFwLnBsYW5lLm9iamVjdHM7XG4gICAgbGV0IHRzID0gbWFwLnRpbGVTZXRzWzBdLnRpbGVzO1xuXG4gICAgLy8gY29uc29sZS5sb2cobWFwKTtcbiAgICBmb3IgKGxldCB4ID0gbWFwLnN0YXJ0WDsgeCA8IG1hcC5lbmRYOyB4KyspIHtcbiAgICAgIGZvciAobGV0IHkgPSBtYXAuc3RhcnRZOyB5IDwgbWFwLmVuZFk7IHkrKykge1xuICAgICAgICBpZiAob2JqTFt4XVt5XSkge1xuICAgICAgICAgIGxldCB0aWxlVHlwZSA9IG9iakxbeF1beV0uZ2V0VHlwZSgpO1xuXG4gICAgICAgICAgaWYgKHRpbGVUeXBlICE9IDApIHtcbiAgICAgICAgICAgIGxldCB0ID0ge1xuICAgICAgICAgICAgICB4OiBvYmpMW3hdW3ldLnhPZmZzZXQgKyBtYXAud29ybGRYT2Zmc2V0LFxuICAgICAgICAgICAgICB5OiBvYmpMW3hdW3ldLnlPZmZzZXQgKyBtYXAud29ybGRZT2Zmc2V0LFxuICAgICAgICAgICAgICB3aWR0aDogb2JqTFt4XVt5XS53aWR0aCxcbiAgICAgICAgICAgICAgaGVpZ2h0OiBvYmpMW3hdW3ldLmhlaWdodFxuICAgICAgICAgICAgfTtcblxuICAgICAgICAgICAgaWYgKGZ1bmNzLmlzQ29sbGlkZShhMSwgdCkpIHtcbiAgICAgICAgICAgICAgLy8gY29uc29sZS5sb2cob2JqTFt4XVt5XSlcbiAgICAgICAgICAgICAgLy8gY29uc29sZS5sb2coJ2NvbGxpZGluZzsnKVxuICAgICAgICAgICAgICB0aGlzLmlzQ29sbGlkaW5nWCA9IHRydWU7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmIChmdW5jcy5pc0NvbGxpZGUoYTIsIHQpKSB7XG4gICAgICAgICAgICAgIC8vIGNvbnNvbGUubG9nKCdjb2xsaWRpbmc7JylcbiAgICAgICAgICAgICAgdGhpcy5pc0NvbGxpZGluZ1kgPSB0cnVlO1xuICAgICAgICAgICAgfVxuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIGRvTW92ZShkaXN0YW5jZSwgZHgsIGR5LCBtYXApIHtcbiAgICBpZiAoZGlzdGFuY2UgPiB0aGlzLm1vdmVTcGVlZCkge1xuICAgICAgY2xlYXJJbnRlcnZhbCh0aGlzLm1vdmVUaW1lcik7XG4gICAgICBsZXQgaE1vdmVtZW50ID0gZHggPiAwID8gMSA6IGR4IDwgMCA/IC0xIDogMDtcbiAgICAgIGxldCB2TW92ZW1lbnQgPSBkeSA+IDAgPyAxIDogZHkgPCAwID8gLTEgOiAwO1xuICAgICAgbGV0IHhTcGVlZCA9IE1hdGgucm91bmQoKGR4IC8gZGlzdGFuY2UpICogdGhpcy5tb3ZlU3BlZWQgKiBoTW92ZW1lbnQpO1xuICAgICAgbGV0IHlTcGVlZCA9IE1hdGgucm91bmQoKGR5IC8gZGlzdGFuY2UpICogdGhpcy5tb3ZlU3BlZWQgKiB2TW92ZW1lbnQpO1xuXG4gICAgICBsZXQgYTEgPSB7XG4gICAgICAgIHg6IHRoaXMuZ2V0WFBvcygpICsgbWFwLndvcmxkWE9mZnNldCArIHRoaXMubW92ZVNwZWVkICogaE1vdmVtZW50LFxuICAgICAgICB5OiB0aGlzLmdldFlQb3MoKSArIG1hcC53b3JsZFlPZmZzZXQsXG4gICAgICAgIHdpZHRoOiB0aGlzLndpZHRoICogMixcbiAgICAgICAgaGVpZ2h0OiB0aGlzLmhlaWdodCAqIDJcbiAgICAgIH07XG4gICAgICBsZXQgYTIgPSB7XG4gICAgICAgIHg6IHRoaXMuZ2V0WFBvcygpICsgbWFwLndvcmxkWE9mZnNldCxcbiAgICAgICAgeTogdGhpcy5nZXRZUG9zKCkgKyBtYXAud29ybGRZT2Zmc2V0ICsgdGhpcy5tb3ZlU3BlZWQgKiB2TW92ZW1lbnQsXG4gICAgICAgIHdpZHRoOiB0aGlzLndpZHRoICogMixcbiAgICAgICAgaGVpZ2h0OiB0aGlzLmhlaWdodCAqIDJcbiAgICAgIH07XG5cbiAgICAgIHRoaXMuY2hlY2tPYmplY3RzQ29sbGlzaW9uKGExLCBhMiwgbWFwKTtcblxuICAgICAgLy8gaWYgKHRoaXMuaXNDb2xsaWRpbmdYICYmIHRoaXMuaXNDb2xsaWRpbmdZKSB7XG4gICAgICAvLyAgICAgLy8gdGhpcy5zdG9wTW92aW5nKCk7XG4gICAgICAvLyB9IGVsc2Uge1xuICAgICAgaWYgKCF0aGlzLmlzQ29sbGlkaW5nWCkge1xuICAgICAgICB0aGlzLnhQb3MgKz0geFNwZWVkICogaE1vdmVtZW50O1xuICAgICAgICAvLyB0aGlzLnBvc1ggKz0geFNwZWVkICogaE1vdmVtZW50O1xuICAgICAgfSBlbHNlIGlmICh5U3BlZWQgPD0gMC41KSB7XG4gICAgICAgIC8vIHRoaXMuc3RvcE1vdmluZygpO1xuICAgICAgICAvLyB0aGlzLnBvc1kgKz0gdGhpcy5tb3ZlU3BlZWQgKiB2TW92ZW1lbnQ7XG4gICAgICAgIC8vIHRoaXMucG9zWCArPSAwLjEgKiAtaE1vdmVtZW50O1xuICAgICAgfVxuICAgICAgaWYgKCF0aGlzLmlzQ29sbGlkaW5nWSkge1xuICAgICAgICB0aGlzLnlQb3MgKz0geVNwZWVkICogdk1vdmVtZW50O1xuICAgICAgICAvLyB0aGlzLnBvc1kgKz0geVNwZWVkICogdk1vdmVtZW50O1xuICAgICAgfSBlbHNlIGlmICh4U3BlZWQgPD0gMC41KSB7XG4gICAgICAgIC8vIHRoaXMuc3RvcE1vdmluZygpO1xuICAgICAgICAvLyB0aGlzLnBvc1ggKz0gdGhpcy5tb3ZlU3BlZWQgKiBoTW92ZW1lbnQ7XG4gICAgICAgIC8vIHRoaXMucG9zWSArPSAwLjEgKiAtdk1vdmVtZW50O1xuICAgICAgfVxuICAgICAgLy8gfVxuXG4gICAgICB0aGlzLm1vdmluZyA9IHRydWU7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoaXMubW92aW5nID0gZmFsc2U7XG4gICAgfVxuICB9XG5cbiAgbW92ZVJhbmRvbSgpIHtcbiAgICBsZXQgY2FuTW92ZSA9IHRoaXMuY2FuTW92ZTtcblxuICAgIGlmIChjYW5Nb3ZlKSB7XG4gICAgICBsZXQgciA9IE1hdGgucmFuZG9tKCk7XG4gICAgICBsZXQgcGx1c09yTWludXMgPSByIDwgMC4zMyA/IC0xIDogciA+IDAuNjYgPyAxIDogMDtcbiAgICAgIGxldCB0YXJnZXRYID0gdGhpcy5nZXRYUG9zKCkgKyAxMDAgKiBwbHVzT3JNaW51cztcblxuICAgICAgciA9IE1hdGgucmFuZG9tKCk7XG4gICAgICBwbHVzT3JNaW51cyA9IHIgPCAwLjMzID8gLTEgOiByID4gMC42NiA/IDEgOiAwO1xuICAgICAgbGV0IHRhcmdldFkgPSB0aGlzLmdldFlQb3MoKSArIDEwMCAqIHBsdXNPck1pbnVzO1xuICAgICAgbGV0IG1vdmVMb29wID0gdGhpcy5tb3ZlTG9vcC5iaW5kKHRoaXMpO1xuICAgICAgbGV0IG1vdmVUaW1lciA9IHRoaXMubW92ZVRpbWVyO1xuICAgICAgbGV0IHNldENhbk1vdmUgPSB0aGlzLnNldENhbk1vdmUuYmluZCh0aGlzKTtcbiAgICAgIGxldCB0YXJnZXQgPSB7XG4gICAgICAgIHRhcmdldFg6IHRhcmdldFgsXG4gICAgICAgIHRhcmdldFk6IHRhcmdldFksXG4gICAgICAgIHBvc1g6IHRoaXMuZ2V0WFBvcygpLFxuICAgICAgICBwb3NZOiB0aGlzLmdldFlQb3MoKVxuICAgICAgfTtcblxuICAgICAgdGhpcy5jYW5Nb3ZlID0gZmFsc2U7XG4gICAgICB0aGlzLm1vdmVUaW1lb3V0ID0gc2V0VGltZW91dChmdW5jdGlvbigpIHtcbiAgICAgICAgY2xlYXJJbnRlcnZhbChtb3ZlVGltZXIpO1xuICAgICAgICBzZXRDYW5Nb3ZlKCk7XG4gICAgICB9LCA1MDAwKTtcblxuICAgICAgdGhpcy5tb3ZlVGltZXIgPSBzZXRJbnRlcnZhbChmdW5jdGlvbigpIHtcbiAgICAgICAgbW92ZUxvb3AodGFyZ2V0KTtcbiAgICAgIH0sIDUwKTtcbiAgICB9XG4gIH1cblxuICBzZXRDYW5Nb3ZlKCkge1xuICAgIHRoaXMuY2FuTW92ZSA9IHRydWU7XG4gIH1cblxuICBtb3ZlTG9vcCh0YXJnZXQpIHtcbiAgICBsZXQgZHggPSB0YXJnZXQudGFyZ2V0WCAtIHRoaXMueFBvcztcbiAgICBsZXQgZHkgPSB0YXJnZXQudGFyZ2V0WSAtIHRoaXMueVBvcztcbiAgICBsZXQgaE1vdmVtZW50ID0gZHggPiAwID8gMSA6IGR4IDwgMCA/IC0xIDogMDtcbiAgICBsZXQgdk1vdmVtZW50ID0gZHkgPiAwID8gMSA6IGR5IDwgMCA/IC0xIDogMDtcbiAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnNxcnQoZHggKiBkeCArIGR5ICogZHkpO1xuICAgIGxldCB4U3BlZWQgPSAoZHggLyBkaXN0YW5jZSkgKiB0aGlzLm1vdmVTcGVlZCAqIGhNb3ZlbWVudDtcbiAgICBsZXQgeVNwZWVkID0gKGR5IC8gZGlzdGFuY2UpICogdGhpcy5tb3ZlU3BlZWQgKiB2TW92ZW1lbnQ7XG5cbiAgICBpZiAoZGlzdGFuY2UgPD0gdGhpcy5tb3ZlU3BlZWQpIHtcbiAgICAgIGNsZWFySW50ZXJ2YWwodGhpcy5tb3ZlVGltZXIpO1xuICAgIH0gZWxzZSBpZiAoZGlzdGFuY2UgPiB0aGlzLm1vdmVTcGVlZCkge1xuICAgICAgdGhpcy54UG9zICs9IHhTcGVlZCAqIGhNb3ZlbWVudDtcbiAgICAgIHRoaXMueVBvcyArPSB5U3BlZWQgKiB2TW92ZW1lbnQ7XG4gICAgfVxuICB9XG5cbiAgc2V0QXR0YWNraW5nKCkge1xuICAgIHRoaXMuYXR0YWNraW5nID0gdHJ1ZTtcbiAgfVxuXG4gIHNldE5vdEF0dGFja2luZygpIHtcbiAgICB0aGlzLmF0dGFja2luZyA9IGZhbHNlO1xuICB9XG5cbiAgY2hlY2tBdHRhY2socGxheWVyKSB7XG4gICAgaWYgKCF0aGlzLmF0dGFja2luZyAmJiBwbGF5ZXIuYWxpdmUgJiYgIXRoaXMuaHVydCkge1xuICAgICAgbGV0IGR4ID0gcGxheWVyLnBvc1ggLSB0aGlzLmdldFhQb3MoKTtcbiAgICAgIGxldCBkeSA9IHBsYXllci5wb3NZIC0gdGhpcy5nZXRZUG9zKCk7XG4gICAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnJvdW5kKE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSkpO1xuICAgICAgbGV0IHNldE5vdEF0dGFja2luZyA9IHRoaXMuc2V0Tm90QXR0YWNraW5nLmJpbmQodGhpcyk7XG5cbiAgICAgIGlmIChkaXN0YW5jZSA8IDE2MCkge1xuICAgICAgICB0aGlzLmRvQXR0YWNrKHBsYXllciwgZHksIGR4KTtcbiAgICAgICAgdGhpcy5hdHRhY2tUaW1lb3V0ID0gc2V0VGltZW91dChmdW5jdGlvbigpIHtcbiAgICAgICAgICBzZXROb3RBdHRhY2tpbmcoKTtcbiAgICAgICAgfSwgdGhpcy5jYWxjdWxhdGVBdHRhY2tDb29sZG93bigpKTtcbiAgICAgICAgdGhpcy5hdHRhY2tpbmcgPSB0cnVlO1xuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIGdldE1pc3NpbGVJbWFnZShkeSwgZHgpIHtcbiAgICBsZXQgaW1hZ2UgPSBcImVuZW1pZXMvc2xpbWVfcmVkX21pc3NpbGVcIjtcbiAgICBsZXQgdGhldGEgPSBNYXRoLmF0YW4yKGR5LCBkeCk7IC8vIHJhbmdlICgtUEksIFBJXVxuICAgIGxldCByYW5nZSA9IDIyLjU7XG5cbiAgICB0aGV0YSAqPSAxODAgLyBNYXRoLlBJOyAvLyByYWRzIHRvIGRlZ3MsIHJhbmdlICgtMTgwLCAxODBdXG5cbiAgICBpZiAodGhldGEgPD0gMCArIHJhbmdlICYmIHRoZXRhID4gMCAtIHJhbmdlKSB7XG4gICAgICAvLyBlYXN0XG4gICAgICBpbWFnZSArPSBcIl9lYXN0XCI7XG4gICAgfSBlbHNlIGlmICh0aGV0YSA8PSA0NSArIHJhbmdlICYmIHRoZXRhID4gNDUgLSByYW5nZSkge1xuICAgICAgLy8gc291dGgtZWFzdFxuICAgICAgaW1hZ2UgKz0gXCJfc291dGhfZWFzdFwiO1xuICAgIH0gZWxzZSBpZiAodGhldGEgPD0gOTAgKyByYW5nZSAmJiB0aGV0YSA+IDkwIC0gcmFuZ2UpIHtcbiAgICAgIC8vIHNvdXRoXG4gICAgICBpbWFnZSArPSBcIl9zb3V0aFwiO1xuICAgIH0gZWxzZSBpZiAodGhldGEgPD0gMTM1ICsgcmFuZ2UgJiYgdGhldGEgPiAxMzUgLSByYW5nZSkge1xuICAgICAgLy8gc291dGgtd2VzdFxuICAgICAgaW1hZ2UgKz0gXCJfc291dGhfd2VzdFwiO1xuICAgIH0gZWxzZSBpZiAoXG4gICAgICAodGhldGEgPD0gMTgwICYmIHRoZXRhID4gMTgwIC0gcmFuZ2UpIHx8XG4gICAgICAodGhldGEgPD0gLTE4MCArIHJhbmdlICYmIHRoZXRhID4gLTE4MClcbiAgICApIHtcbiAgICAgIC8vIHdlc3RcbiAgICAgIGltYWdlICs9IFwiX3dlc3RcIjtcbiAgICB9IGVsc2UgaWYgKHRoZXRhIDw9IC0xMzUgKyByYW5nZSAmJiB0aGV0YSA+IC0xMzUgLSByYW5nZSkge1xuICAgICAgLy8gc291dGgtd2VzdFxuICAgICAgaW1hZ2UgKz0gXCJfbm9ydGhfd2VzdFwiO1xuICAgIH0gZWxzZSBpZiAodGhldGEgPD0gLTkwICsgcmFuZ2UgJiYgdGhldGEgPiAtOTAgLSByYW5nZSkge1xuICAgICAgLy8gc291dGgtd2VzdFxuICAgICAgaW1hZ2UgKz0gXCJfbm9ydGhcIjtcbiAgICB9IGVsc2UgaWYgKHRoZXRhIDw9IC00NSArIHJhbmdlICYmIHRoZXRhID4gLTQ1IC0gcmFuZ2UpIHtcbiAgICAgIC8vIHNvdXRoLXdlc3RcbiAgICAgIGltYWdlICs9IFwiX25vcnRoX2Vhc3RcIjtcbiAgICB9IGVsc2Uge1xuICAgICAgaW1hZ2UgKz0gXCJfZWFzdFwiO1xuICAgIH1cblxuICAgIGltYWdlICs9IFwiLnBuZ1wiO1xuICAgIHJldHVybiBpbWFnZTtcbiAgfVxuXG4gIGRvQXR0YWNrKHBsYXllciwgZHksIGR4KSB7XG4gICAgbGV0IG1pc3NpbGUgPSB7XG4gICAgICB0YXJnZXRYOiBwbGF5ZXIucG9zWCArIGR4IC0gMTYsXG4gICAgICB0YXJnZXRZOiBwbGF5ZXIucG9zWSArIGR5IC0gMTYsXG4gICAgICBwb3NYOiB0aGlzLmdldFhQb3MoKSAtIDEyLFxuICAgICAgcG9zWTogdGhpcy5nZXRZUG9zKCkgLSAxNixcbiAgICAgIG1vdmVTcGVlZDogMTUsXG4gICAgICB3aWR0aDogMTYsXG4gICAgICBoZWlnaHQ6IDE2LFxuICAgICAgaW1hZ2U6IHRoaXMuZ2V0TWlzc2lsZUltYWdlKGR5LCBkeCksXG4gICAgICBoaXQ6IGZhbHNlXG4gICAgfTtcbiAgICBsZXQgYXR0YWNrTG9vcCA9IHRoaXMuYXR0YWNrTG9vcC5iaW5kKHRoaXMpO1xuICAgIGxldCBtaXNzaWxlSWQgPSB0aGlzLm1pc3NpbGVzLnB1c2gobWlzc2lsZSk7XG5cbiAgICBtaXNzaWxlLmlkID0gbWlzc2lsZUlkO1xuICAgIGxldCBhdHRhY2tUaW1lciA9IHNldEludGVydmFsKGZ1bmN0aW9uKCkge1xuICAgICAgYXR0YWNrTG9vcChtaXNzaWxlLCBhdHRhY2tUaW1lcik7XG4gICAgfSwgMTAwKTtcbiAgfVxuXG4gIGF0dGFja0xvb3AobWlzc2lsZSwgdGltZXIpIHtcbiAgICBsZXQgZHggPSBtaXNzaWxlLnRhcmdldFggLSBtaXNzaWxlLnBvc1g7XG4gICAgbGV0IGR5ID0gbWlzc2lsZS50YXJnZXRZIC0gbWlzc2lsZS5wb3NZO1xuICAgIGxldCBoTW92ZW1lbnQgPSBkeCA+IDAgPyAxIDogZHggPCAwID8gLTEgOiAwO1xuICAgIGxldCB2TW92ZW1lbnQgPSBkeSA+IDAgPyAxIDogZHkgPCAwID8gLTEgOiAwO1xuXG4gICAgbGV0IGRpc3RhbmNlID0gTWF0aC5zcXJ0KGR4ICogZHggKyBkeSAqIGR5KTtcblxuICAgIGxldCB4U3BlZWQgPSAoZHggLyBkaXN0YW5jZSkgKiBtaXNzaWxlLm1vdmVTcGVlZCAqIGhNb3ZlbWVudDtcbiAgICBsZXQgeVNwZWVkID0gKGR5IC8gZGlzdGFuY2UpICogbWlzc2lsZS5tb3ZlU3BlZWQgKiB2TW92ZW1lbnQ7XG5cbiAgICBpZiAoZGlzdGFuY2UgPD0gbWlzc2lsZS5tb3ZlU3BlZWQgfHwgbWlzc2lsZS5oaXQpIHtcbiAgICAgIGZvciAobGV0IG0gaW4gdGhpcy5taXNzaWxlcykge1xuICAgICAgICBpZiAodGhpcy5taXNzaWxlc1ttXS5pZCA9PSBtaXNzaWxlLmlkKSB7XG4gICAgICAgICAgdGhpcy5taXNzaWxlcy5zcGxpY2UobSwgMSk7XG4gICAgICAgICAgY2xlYXJJbnRlcnZhbCh0aW1lcik7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9IGVsc2UgaWYgKGRpc3RhbmNlID4gbWlzc2lsZS5tb3ZlU3BlZWQpIHtcbiAgICAgIG1pc3NpbGUucG9zWCArPSB4U3BlZWQgKiBoTW92ZW1lbnQ7XG4gICAgICBtaXNzaWxlLnBvc1kgKz0geVNwZWVkICogdk1vdmVtZW50O1xuICAgIH1cbiAgfVxuXG4gIGdldFhQb3MoKSB7XG4gICAgcmV0dXJuIHRoaXMueFBvcztcbiAgfVxuXG4gIGdldFlQb3MoKSB7XG4gICAgcmV0dXJuIHRoaXMueVBvcztcbiAgfVxuXG4gIGdldFhDZW50ZXJQb3MoKSB7XG4gICAgcmV0dXJuIHRoaXMueFBvcyArICh0aGlzLndpZHRoICogMikgLyAyO1xuICB9XG5cbiAgZ2V0WUNlbnRlclBvcygpIHtcbiAgICByZXR1cm4gdGhpcy55UG9zICsgKHRoaXMuaGVpZ2h0ICogMikgLyAyO1xuICB9XG5cbiAgc3RhcnRBbmltYXRpb24oKSB7XG4gICAgbGV0IHRoYXQgPSB0aGlzO1xuXG4gICAgaWYgKCF0aGF0LnN0YXJ0ZWQpIHtcbiAgICAgIHRoYXQuYW5pbWF0aW9uVGltZXIgPSBzZXRJbnRlcnZhbChmdW5jdGlvbigpIHtcbiAgICAgICAgdGhhdC51cGRhdGVBbmltYXRpb25GcmFtZXMoKTtcbiAgICAgIH0sIDEwMDAgLyAxMCk7XG4gICAgICB0aGF0LnN0YXJ0ZWQgPSB0cnVlO1xuICAgIH1cbiAgfVxuXG4gIGRpZSgpIHtcbiAgICB0aGlzLmFsaXZlID0gZmFsc2U7XG4gIH1cblxuICBnZXRIdXJ0KGRhbWFnZSkge1xuICAgIGxldCB0aGF0ID0gdGhpcztcblxuICAgIGlmICghdGhhdC5odXJ0KSB7XG4gICAgICBjb25zb2xlLmxvZyhgJHt0aGF0Lm5hbWV9IHdhcyBkYW1hZ2VkICR7ZGFtYWdlfSBwb2ludHMhYCk7XG4gICAgICB0aGF0Lmh1cnQgPSB0cnVlO1xuICAgICAgdGhhdC5oZWFsdGggLT0gZGFtYWdlO1xuICAgICAgdGhhdC5odXJ0VGltZXIgPSBzZXRUaW1lb3V0KGZ1bmN0aW9uKCkge1xuICAgICAgICBpZiAodGhhdC5oZWFsdGggPD0gMCkge1xuICAgICAgICAgIHRoYXQuZGllKCk7XG4gICAgICAgICAgY29uc29sZS5sb2coYCR7dGhhdC5uYW1lfSBkaWVkIWApO1xuICAgICAgICB9XG4gICAgICAgIHRoYXQuaHVydCA9IGZhbHNlO1xuICAgICAgICBjb25zb2xlLmxvZyhcIm5vdCBodXJ0XCIpO1xuICAgICAgfSwgMjAwKTtcbiAgICB9XG4gIH1cblxuICB1cGRhdGVBbmltYXRpb25GcmFtZXMoKSB7XG4gICAgbGV0IHRoYXQgPSB0aGlzO1xuICAgIGxldCBvdXRPZkJvdW5kcyA9XG4gICAgICB0aGF0Lm9mZnNldEZyYW1lWCA+PSB0aGF0LmFuaW1hdGlvbkZyYW1lc1t0aGF0Lm9mZnNldEZyYW1lWV07XG5cbiAgICAvLyBpZiAodGhhdC5hdHRhY2tpbmcgJiYgb3V0T2ZCb3VuZHMpIHtcbiAgICAvLyAgICAgdGhhdC5hdHRhY2tpbmcgPSBmYWxzZTtcbiAgICAvLyB9XG5cbiAgICBpZiAodGhhdC5odXJ0ICYmIHRoYXQub2Zmc2V0RnJhbWVYICUgMiAhPSAwKSB7XG4gICAgICB0aGF0Lm9mZnNldEZyYW1lWSA9IDE7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoYXQub2Zmc2V0RnJhbWVZID0gMDtcbiAgICB9XG5cbiAgICBpZiAodGhhdC5hbmltYXRpb25GcmFtZXNbdGhhdC5vZmZzZXRGcmFtZVldID09PSB1bmRlZmluZWQgfHwgb3V0T2ZCb3VuZHMpIHtcbiAgICAgIHRoYXQuYW5pbWF0aW9uRnJhbWUgPSAwO1xuICAgICAgdGhhdC5vZmZzZXRGcmFtZVggPSAwO1xuICAgIH0gZWxzZSB7XG4gICAgICB0aGF0Lm9mZnNldEZyYW1lWCArPSAxO1xuICAgIH1cbiAgfVxufVxuXG5leHBvcnQgeyBFbmVteSB9O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./assets/js/Enemy.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Enemy": () => (/* binding */ Enemy)
+/* harmony export */ });
+/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./funcs.js */ "./assets/js/funcs.js");
+
+
+// import { Player } from './Player.js';
+// import { TileSet } from './TileSet.js';
+
+
+class Enemy {
+  constructor(x, y, name, maxHealth, damage, speed, expGive) {
+    this.name = name;
+    this.maxHealth = maxHealth;
+    this.health = maxHealth;
+    this.damage = damage;
+    this.speed = speed;
+    this.expGive = expGive;
+    this.xPos = x;
+    this.yPos = y;
+    // this.image = 'slime_red.png';
+    this.offsetFrameY = 0;
+    this.offsetFrameX = 0;
+    this.animationFrames = [3];
+    this.width = 16;
+    this.height = 16;
+    this.hurtTimer = null;
+    this.alive = true;
+    this.hurt = false;
+    this.missiles = [];
+    this.attacking = false;
+    this.attackCooldown = 2000;
+    this.moveTimer = null;
+    this.canMove = true;
+    this.isCollidingX = false;
+    this.isCollidingY = false;
+  }
+
+  getImage() {
+    return this.image;
+  }
+
+  getWidth() {
+    return this.width;
+  }
+
+  getHeight() {
+    return this.height;
+  }
+
+  calculateAttackCooldown() {
+    return this.attackCooldown;
+  }
+
+  move(player, map) {
+    let dx = player.posX - this.getXPos();
+    let dy = player.posY - this.getYPos();
+    let distance = Math.round(Math.sqrt(dx * dx + dy * dy));
+
+    if (distance < 300 && distance > 150) {
+      if (!this.hurt) {
+        this.doMove(distance, dx, dy, map);
+      }
+    } else if (distance > 300) {
+      this.moveRandom();
+    }
+  }
+
+  checkObjectsCollision(a1, a2, map) {
+    let objL = map.plane.objects;
+    let ts = map.tileSets[0].tiles;
+
+    // console.log(map);
+    for (let x = map.startX; x < map.endX; x++) {
+      for (let y = map.startY; y < map.endY; y++) {
+        if (objL[x][y]) {
+          let tileType = objL[x][y].getType();
+
+          if (tileType != 0) {
+            let t = {
+              x: objL[x][y].xOffset + map.worldXOffset,
+              y: objL[x][y].yOffset + map.worldYOffset,
+              width: objL[x][y].width,
+              height: objL[x][y].height
+            };
+
+            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__.funcs.isCollide(a1, t)) {
+              // console.log(objL[x][y])
+              // console.log('colliding;')
+              this.isCollidingX = true;
+            }
+
+            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__.funcs.isCollide(a2, t)) {
+              // console.log('colliding;')
+              this.isCollidingY = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  doMove(distance, dx, dy, map) {
+    if (distance > this.moveSpeed) {
+      clearInterval(this.moveTimer);
+      let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+      let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+      let xSpeed = Math.round((dx / distance) * this.moveSpeed * hMovement);
+      let ySpeed = Math.round((dy / distance) * this.moveSpeed * vMovement);
+
+      let a1 = {
+        x: this.getXPos() + map.worldXOffset + this.moveSpeed * hMovement,
+        y: this.getYPos() + map.worldYOffset,
+        width: this.width * 2,
+        height: this.height * 2
+      };
+      let a2 = {
+        x: this.getXPos() + map.worldXOffset,
+        y: this.getYPos() + map.worldYOffset + this.moveSpeed * vMovement,
+        width: this.width * 2,
+        height: this.height * 2
+      };
+
+      this.checkObjectsCollision(a1, a2, map);
+
+      // if (this.isCollidingX && this.isCollidingY) {
+      //     // this.stopMoving();
+      // } else {
+      if (!this.isCollidingX) {
+        this.xPos += xSpeed * hMovement;
+        // this.posX += xSpeed * hMovement;
+      } else if (ySpeed <= 0.5) {
+        // this.stopMoving();
+        // this.posY += this.moveSpeed * vMovement;
+        // this.posX += 0.1 * -hMovement;
+      }
+      if (!this.isCollidingY) {
+        this.yPos += ySpeed * vMovement;
+        // this.posY += ySpeed * vMovement;
+      } else if (xSpeed <= 0.5) {
+        // this.stopMoving();
+        // this.posX += this.moveSpeed * hMovement;
+        // this.posY += 0.1 * -vMovement;
+      }
+      // }
+
+      this.moving = true;
+    } else {
+      this.moving = false;
+    }
+  }
+
+  moveRandom() {
+    let canMove = this.canMove;
+
+    if (canMove) {
+      let r = Math.random();
+      let plusOrMinus = r < 0.33 ? -1 : r > 0.66 ? 1 : 0;
+      let targetX = this.getXPos() + 100 * plusOrMinus;
+
+      r = Math.random();
+      plusOrMinus = r < 0.33 ? -1 : r > 0.66 ? 1 : 0;
+      let targetY = this.getYPos() + 100 * plusOrMinus;
+      let moveLoop = this.moveLoop.bind(this);
+      let moveTimer = this.moveTimer;
+      let setCanMove = this.setCanMove.bind(this);
+      let target = {
+        targetX: targetX,
+        targetY: targetY,
+        posX: this.getXPos(),
+        posY: this.getYPos()
+      };
+
+      this.canMove = false;
+      this.moveTimeout = setTimeout(function() {
+        clearInterval(moveTimer);
+        setCanMove();
+      }, 5000);
+
+      this.moveTimer = setInterval(function() {
+        moveLoop(target);
+      }, 50);
+    }
+  }
+
+  setCanMove() {
+    this.canMove = true;
+  }
+
+  moveLoop(target) {
+    let dx = target.targetX - this.xPos;
+    let dy = target.targetY - this.yPos;
+    let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+    let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    let xSpeed = (dx / distance) * this.moveSpeed * hMovement;
+    let ySpeed = (dy / distance) * this.moveSpeed * vMovement;
+
+    if (distance <= this.moveSpeed) {
+      clearInterval(this.moveTimer);
+    } else if (distance > this.moveSpeed) {
+      this.xPos += xSpeed * hMovement;
+      this.yPos += ySpeed * vMovement;
+    }
+  }
+
+  setAttacking() {
+    this.attacking = true;
+  }
+
+  setNotAttacking() {
+    this.attacking = false;
+  }
+
+  checkAttack(player) {
+    if (!this.attacking && player.alive && !this.hurt) {
+      let dx = player.posX - this.getXPos();
+      let dy = player.posY - this.getYPos();
+      let distance = Math.round(Math.sqrt(dx * dx + dy * dy));
+      let setNotAttacking = this.setNotAttacking.bind(this);
+
+      if (distance < 160) {
+        this.doAttack(player, dy, dx);
+        this.attackTimeout = setTimeout(function() {
+          setNotAttacking();
+        }, this.calculateAttackCooldown());
+        this.attacking = true;
+      }
+    }
+  }
+
+  getMissileImage(dy, dx) {
+    let image = "enemies/slime_red_missile";
+    let theta = Math.atan2(dy, dx); // range (-PI, PI]
+    let range = 22.5;
+
+    theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+
+    if (theta <= 0 + range && theta > 0 - range) {
+      // east
+      image += "_east";
+    } else if (theta <= 45 + range && theta > 45 - range) {
+      // south-east
+      image += "_south_east";
+    } else if (theta <= 90 + range && theta > 90 - range) {
+      // south
+      image += "_south";
+    } else if (theta <= 135 + range && theta > 135 - range) {
+      // south-west
+      image += "_south_west";
+    } else if (
+      (theta <= 180 && theta > 180 - range) ||
+      (theta <= -180 + range && theta > -180)
+    ) {
+      // west
+      image += "_west";
+    } else if (theta <= -135 + range && theta > -135 - range) {
+      // south-west
+      image += "_north_west";
+    } else if (theta <= -90 + range && theta > -90 - range) {
+      // south-west
+      image += "_north";
+    } else if (theta <= -45 + range && theta > -45 - range) {
+      // south-west
+      image += "_north_east";
+    } else {
+      image += "_east";
+    }
+
+    image += ".png";
+    return image;
+  }
+
+  doAttack(player, dy, dx) {
+    let missile = {
+      targetX: player.posX + dx - 16,
+      targetY: player.posY + dy - 16,
+      posX: this.getXPos() - 12,
+      posY: this.getYPos() - 16,
+      moveSpeed: 15,
+      width: 16,
+      height: 16,
+      image: this.getMissileImage(dy, dx),
+      hit: false
+    };
+    let attackLoop = this.attackLoop.bind(this);
+    let missileId = this.missiles.push(missile);
+
+    missile.id = missileId;
+    let attackTimer = setInterval(function() {
+      attackLoop(missile, attackTimer);
+    }, 100);
+  }
+
+  attackLoop(missile, timer) {
+    let dx = missile.targetX - missile.posX;
+    let dy = missile.targetY - missile.posY;
+    let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+    let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+
+    let distance = Math.sqrt(dx * dx + dy * dy);
+
+    let xSpeed = (dx / distance) * missile.moveSpeed * hMovement;
+    let ySpeed = (dy / distance) * missile.moveSpeed * vMovement;
+
+    if (distance <= missile.moveSpeed || missile.hit) {
+      for (let m in this.missiles) {
+        if (this.missiles[m].id == missile.id) {
+          this.missiles.splice(m, 1);
+          clearInterval(timer);
+        }
+      }
+    } else if (distance > missile.moveSpeed) {
+      missile.posX += xSpeed * hMovement;
+      missile.posY += ySpeed * vMovement;
+    }
+  }
+
+  getXPos() {
+    return this.xPos;
+  }
+
+  getYPos() {
+    return this.yPos;
+  }
+
+  getXCenterPos() {
+    return this.xPos + (this.width * 2) / 2;
+  }
+
+  getYCenterPos() {
+    return this.yPos + (this.height * 2) / 2;
+  }
+
+  startAnimation() {
+    let that = this;
+
+    if (!that.started) {
+      that.animationTimer = setInterval(function() {
+        that.updateAnimationFrames();
+      }, 1000 / 10);
+      that.started = true;
+    }
+  }
+
+  die() {
+    this.alive = false;
+  }
+
+  getHurt(damage) {
+    let that = this;
+
+    if (!that.hurt) {
+      console.log(`${that.name} was damaged ${damage} points!`);
+      that.hurt = true;
+      that.health -= damage;
+      that.hurtTimer = setTimeout(function() {
+        if (that.health <= 0) {
+          that.die();
+          console.log(`${that.name} died!`);
+        }
+        that.hurt = false;
+        console.log("not hurt");
+      }, 200);
+    }
+  }
+
+  updateAnimationFrames() {
+    let that = this;
+    let outOfBounds =
+      that.offsetFrameX >= that.animationFrames[that.offsetFrameY];
+
+    // if (that.attacking && outOfBounds) {
+    //     that.attacking = false;
+    // }
+
+    if (that.hurt && that.offsetFrameX % 2 != 0) {
+      that.offsetFrameY = 1;
+    } else {
+      that.offsetFrameY = 0;
+    }
+
+    if (that.animationFrames[that.offsetFrameY] === undefined || outOfBounds) {
+      that.animationFrame = 0;
+      that.offsetFrameX = 0;
+    } else {
+      that.offsetFrameX += 1;
+    }
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -102,11 +409,663 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!***************************!*\
   !*** ./assets/js/Game.js ***!
   \***************************/
-/*! exports provided: Game */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Game\", function() { return Game; });\n/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Player.js */ \"./assets/js/Player.js\");\n/* harmony import */ var _Enemy_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Enemy.js */ \"./assets/js/Enemy.js\");\n/* harmony import */ var _Slime_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Slime.js */ \"./assets/js/Slime.js\");\n/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./funcs.js */ \"./assets/js/funcs.js\");\n\n\n\n\n\n\n\nclass Game {\n  constructor(width, height) {\n    this.barWidth = 200;\n    this.barHeight = 10;\n    this.started = false;\n    this.plane = [];\n    this.player = null;\n    this.image = null;\n    this.imageUrls = [\n      \"adventurer/adventurer.png\",\n      \"enemies/slime_red.png\",\n      \"cross.png\",\n      \"glove.png\",\n      \"sword.png\",\n      \"enemies/slime_red_missile_east.png\",\n      \"enemies/slime_red_missile_south_east.png\",\n      \"enemies/slime_red_missile_south.png\",\n      \"enemies/slime_red_missile_south_west.png\",\n      \"enemies/slime_red_missile_west.png\",\n      \"enemies/slime_red_missile_north_west.png\",\n      \"enemies/slime_red_missile_north.png\",\n      \"enemies/slime_red_missile_north_east.png\"\n    ];\n    this.images = {};\n    this.enemies = [];\n    this.directions = [\n      \"standingnorth\",\n      \"standingwest\",\n      \"standingeast\",\n      \"standingsouth\",\n      \"runningeast1\",\n      \"runningeast2\"\n    ];\n    this.width = width;\n    this.height = height;\n    this.canvas = document.createElement(\"canvas\");\n    this.canvas.id = \"CursorLayer\";\n    this.canvas.width = this.width;\n    this.canvas.height = this.height;\n    this.canvas.style.zIndex = 8;\n    this.canvas.style.margin = \"auto\";\n    this.canvas.style.display = \"block\";\n    this.canvas.style.border = \"1px solid #bbb\";\n    this.fps = 20;\n    this.timer = null;\n    this.map = null;\n    this.mouseX;\n    this.mouseY;\n  }\n\n  init() {\n    if (this.map.layers.ground) {\n      let startPoint = this.map.dataLayer.startingPoint;\n      let mouseMove = this.mouseMove.bind(this);\n\n      this.imageUrls.push(\n        \"map/\" + this.map.tileSets[0].mapImage.getAttribute(\"source\")\n      );\n      this.map.realWidth = this.map.width * this.map.layers.ground.tileWidth;\n      this.map.realHeight = this.map.height * this.map.layers.ground.tileHeight;\n\n      this.stop();\n      this.player = new _Player_js__WEBPACK_IMPORTED_MODULE_0__[\"Player\"](startPoint.x, startPoint.y);\n      this.enemies.push(\n        new _Slime_js__WEBPACK_IMPORTED_MODULE_2__[\"Slime\"](\n          startPoint.x + 200,\n          startPoint.y + 200,\n          \"redSlime\",\n          20,\n          10,\n          1,\n          100\n        )\n      );\n      // this.enemies.push(new Slime(\n      //     startPoint.x + 300,\n      //     startPoint.y + 300,\n      //     'redSlime',\n      //     20,\n      //     10,\n      //     1,\n      //     10)\n      // );\n      this.centerCamera();\n\n      let player = this.player;\n      let map = this.map;\n\n      window.addEventListener(\"mousedown\", function(e) {\n        player.mouseDown(e, map.worldXOffset, map.worldYOffset);\n      });\n      window.addEventListener(\"mouseup\", function(e) {\n        player.mouseUp(e, true);\n      });\n      window.addEventListener(\"mousemove\", function(e) {\n        mouseMove(e, true);\n      });\n\n      document.getElementById(\"plane\").appendChild(this.canvas);\n      this.ctx = this.canvas.getContext(\"2d\");\n\n      let loadImage = this.loadImage.bind(this);\n\n      loadImage();\n      // this.loadImage();\n    } else {\n      console.log(\"No ground layer found\");\n    }\n  }\n\n  mouseMove(e) {\n    let el = e.target;\n\n    if ((el.getTagName = \"canvas\")) {\n      this.mouseX = e.clientX - el.offsetLeft;\n      this.mouseY = e.clientY - el.offsetTop;\n    }\n  }\n\n  stop() {\n    if (this.started) {\n      clearInterval(this.timer);\n      this.started = false;\n    }\n  }\n\n  start() {\n    let redraw = this.redraw.bind(this);\n    let startAnimation = this.player.startAnimation.bind(this.player);\n    let startData = this.player.startData.bind(this.player);\n\n    startData();\n    startAnimation();\n    for (let enemy of this.enemies) {\n      enemy.startAnimation();\n    }\n\n    if (!this.started) {\n      this.timer = setInterval(function() {\n        redraw();\n        // }, 1500);\n      }, 1000 / this.fps);\n      this.started = true;\n    }\n  }\n\n  redraw() {\n    this.getMapScope();\n    this.player.move2(\n      {\n        x: this.map.worldXOffset,\n        y: this.map.worldYOffset,\n        w: this.map.realWidth,\n        h: this.map.realHeight\n      },\n      this.enemies,\n      this.map\n    );\n    this.checkEnemies();\n    this.mapScroll();\n    this.draw();\n  }\n\n  checkEnemies() {\n    for (let enemy in this.enemies) {\n      this.enemies[enemy].realXPos =\n        this.enemies[enemy].getXPos() - 16 + this.map.worldXOffset;\n      this.enemies[enemy].realYPos =\n        this.enemies[enemy].getYPos() - 16 + this.map.worldYOffset;\n      this.enemies[enemy].realXCenterPos =\n        this.enemies[enemy].getXCenterPos() + this.map.worldXOffset;\n      this.enemies[enemy].realYCenterPos =\n        this.enemies[enemy].getYCenterPos() + this.map.worldYOffset;\n      if (!this.enemies[enemy].alive) {\n        this.player.getxp(this.enemies[enemy].expGive);\n        this.enemies.splice(enemy, 1);\n      } else {\n        this.enemies[enemy].move(this.player, this.map);\n        this.enemies[enemy].checkAttack(this.player);\n      }\n    }\n  }\n\n  centerCamera() {\n    this.map.worldXOffset =\n      -this.player.posX + this.width / 2 - this.player.height;\n    this.map.worldYOffset =\n      -this.player.posY + this.height / 2 - this.player.height;\n  }\n\n  mapScroll() {\n    let margin = 300;\n    let realYPos = this.player.posY + this.map.worldYOffset;\n    let realXPos = this.player.posX + this.map.worldXOffset;\n    let isBelow = realYPos > this.height - margin ? 1 : 0;\n    let isAbove = realYPos + this.player.height * 2 < margin ? 1 : 0;\n    let isRight =\n      realXPos + this.player.width * 2 > this.width - margin ? 1 : 0;\n    let isLeft = realXPos < margin ? 1 : 0;\n    let dx = this.player.realClickX - this.player.posX;\n    let dy = this.player.realClickY - this.player.posY;\n    let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;\n    let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;\n    let distance = Math.sqrt(dx * dx + dy * dy);\n    let xSpeed = (dx / distance) * this.player.moveSpeed * hMovement;\n    let ySpeed = (dy / distance) * this.player.moveSpeed * vMovement;\n\n    if (\n      isRight &&\n      this.map.worldXOffset - xSpeed * 1 > -this.map.realWidth + this.width\n    ) {\n      this.map.worldXOffset -= xSpeed * 1;\n    } else if (isLeft && this.map.worldXOffset + xSpeed * 1 <= 0) {\n      this.map.worldXOffset += xSpeed * 1;\n    }\n\n    if (\n      isBelow &&\n      this.map.worldYOffset - ySpeed * 1 > -this.map.realHeight + this.height\n    ) {\n      this.map.worldYOffset -= ySpeed * 1;\n    } else if (isAbove && this.map.worldYOffset + ySpeed * 1 < 0) {\n      this.map.worldYOffset += ySpeed * 1;\n    }\n  }\n\n  loadImage() {\n    let imageUrls = this.imageUrls;\n    let start = this.start.bind(this);\n    let loadCounter = 0;\n\n    for (let image of imageUrls) {\n      this.images[image] = new Image();\n      this.images[image].onload = function() {\n        loadCounter++;\n        if (loadCounter === imageUrls.length) {\n          start();\n        }\n      };\n      this.images[image].src = \"assets/img/\" + image;\n    }\n  }\n\n  reset() {\n    this.player.posX = this.player.startX;\n    this.player.posY = this.player.startY;\n  }\n\n  draw() {\n    let getAnimationType = this.player.getAnimationType.bind(this.player);\n\n    // getAnimationType();\n\n    this.ctx.font = \"14px courier\";\n    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);\n\n    this.ctx.msImageSmoothingEnabled = false;\n    this.ctx.webkitImageSmoothingEnabled = false;\n    this.ctx.imageSmoothingEnabled = false;\n\n    this.drawMap();\n    this.drawPlayer();\n    this.drawEnemies();\n    this.drawOverlayObjects();\n    // this.drawAttackingSquares();\n    // this.drawStatusText();\n    this.drawHealthbar();\n    this.drawPointer();\n  }\n\n  getMapScope() {\n    let tileWidth = this.map.tileWidth;\n    let restY = -this.map.worldXOffset % tileWidth;\n\n    let startY = (-this.map.worldXOffset - restY) / tileWidth;\n    let restX = -this.map.worldYOffset % tileWidth;\n\n    let startX = (-this.map.worldYOffset - restX) / tileWidth;\n    let restEndX = (-this.map.worldYOffset + this.width) % tileWidth;\n    let endX = (-this.map.worldYOffset + this.width - restEndX) / tileWidth;\n    let restEndY = (-this.map.worldXOffset + this.width) % tileWidth;\n    let endY = (-this.map.worldXOffset + this.width - restEndY) / tileWidth;\n\n    this.map.startX = startX > 0 ? startX - 1 : 0;\n    this.map.startY = startY > 0 ? startY - 1 : 0;\n\n    this.map.endX = endX + 1 < this.map.width ? endX + 1 : this.map.width;\n    this.map.endY = endY + 1 < this.map.height ? endY + 1 : this.map.height;\n  }\n\n  drawMap() {\n    for (let layer in this.map.plane) {\n      for (let x = this.map.startX; x < this.map.endX; x++) {\n        for (let y = this.map.startY; y < this.map.endY; y++) {\n          if (\n            this.map.plane[layer][x][y] &&\n            this.map.tileSets[0].tiles[this.map.plane[layer][x][y].getType()]\n          ) {\n            let tileType = this.map.plane[layer][x][y].getType();\n\n            this.ctx.drawImage(\n              this.images[\"map/overworld1.png\"], //bilden\n              this.map.tileSets[0].tiles[tileType].xOffset,\n              this.map.tileSets[0].tiles[tileType].yOffset,\n              this.map.tileSets[0].tiles[tileType].getWidth(),\n              this.map.tileSets[0].tiles[tileType].getHeight(),\n              this.map.plane[layer][x][y].xOffset + this.map.worldXOffset,\n              this.map.plane[layer][x][y].yOffset + this.map.worldYOffset,\n              this.map.plane[layer][x][y].getWidth(),\n              this.map.plane[layer][x][y].getHeight()\n            );\n          }\n        }\n      }\n    }\n  }\n\n  drawOverlayObjects() {\n    for (let x = this.map.startX; x < this.map.endX; x++) {\n      for (let y = this.map.startY; y < this.map.endY; y++) {\n        if (\n          this.map.objectsOverlay[x][y] &&\n          this.map.tileSets[0].tiles[this.map.objectsOverlay[x][y].getType()]\n        ) {\n          let tileType = this.map.objectsOverlay[x][y].getType();\n\n          this.ctx.drawImage(\n            this.images[\"map/overworld1.png\"], //bilden\n            this.map.tileSets[0].tiles[tileType].xOffset,\n            this.map.tileSets[0].tiles[tileType].yOffset,\n            this.map.tileSets[0].tiles[tileType].getWidth(),\n            this.map.tileSets[0].tiles[tileType].getHeight(),\n            this.map.objectsOverlay[x][y].xOffset + this.map.worldXOffset,\n            this.map.objectsOverlay[x][y].yOffset + this.map.worldYOffset,\n            this.map.objectsOverlay[x][y].getWidth(),\n            this.map.objectsOverlay[x][y].getHeight()\n          );\n        }\n      }\n    }\n  }\n\n  drawPlayer() {\n    // let facingPlayerOffset = this.player.facingX == 1 ? 10 : 18;\n    let playerYPos = this.player.posY + 18 + this.map.worldYOffset - 32;\n    let playerXPos = this.player.posX + 14 + this.map.worldXOffset - 32;\n    // let targetX = this.player.realClickX + this.map.worldXOffset - 16;\n    // let targetY = this.player.realClickY + this.map.worldYOffset - 16;\n\n    // this.player.facingPlayerOffset = facingPlayerOffset;\n    this.player.playerXPos = playerXPos;\n    this.player.playerYPos = playerYPos;\n\n    // if (this.player.clickTarget) {\n    //     targetX = this.player.clickTarget.getXPos() + this.map.worldXOffset - 16;\n    //     targetY = this.player.clickTarget.getYPos() + this.map.worldYOffset - 16;\n    // }\n\n    // if (this.player.realClickX && this.player.realClickX) {\n    //     this.ctx.drawImage(\n    //         this.images['cross.png'],\n    //         targetX,\n    //         targetY,\n    //         32,\n    //         32\n    //     );\n    // }\n\n    // this.ctx.fillStyle = '#BBBBBB4D';\n    // this.ctx.fillRect(\n    //     this.player.playerXPos,\n    //     this.player.playerYPos,\n    //     (this.player.width * 1.5) - 12,\n    //     (this.player.height * 1.5) - 6\n    // );\n\n    this.ctx.drawImage(\n      this.images[\"adventurer/adventurer.png\"],\n      this.player.offsetFrameX * this.player.width, // sidled/animation\n      this.player.offsetFrameY * this.player.height + 1, // höjden\n      this.player.width,\n      this.player.height,\n      this.player.posX + this.map.worldXOffset - 32,\n      this.player.posY + this.map.worldYOffset - 32,\n      // playerXPos,\n      // playerYPos,\n      // this.player.posX + this.map.worldXOffset,\n      // this.player.posY + this.map.worldYOffset,\n      this.player.width * 2,\n      this.player.height * 2\n    );\n    // this.ctx.fillStyle = '#000000';\n    // this.ctx.fillRect(\n    //     this.player.posX + this.map.worldXOffset,\n    //     this.player.posY + this.map.worldYOffset,\n    //     1,\n    //     1\n    // );\n  }\n\n  drawEnemies() {\n    let a = {\n      x: this.player.playerXPos,\n      y: this.player.playerYPos,\n      width: this.player.width * 1.5 - 12,\n      height: this.player.height * 1.5 - 6\n    };\n\n    // this.ctx.fillStyle = '#BBBBBB4D';\n    // this.ctx.fillRect(\n    //     this.player.playerXPos,\n    //     this.player.playerYPos,\n    //     (this.player.width * 1.5) - 12,\n    //     (this.player.height * 1.5) - 6\n    // );\n\n    for (let enemy of this.enemies) {\n      this.ctx.drawImage(\n        this.images[\"enemies/\" + enemy.getImage()],\n        enemy.offsetFrameX * enemy.width, // sidled/animation\n        enemy.offsetFrameY * enemy.height, // höjden\n        enemy.getWidth(),\n        enemy.getHeight(),\n        enemy.realXPos,\n        enemy.realYPos,\n        enemy.getWidth() * 2,\n        enemy.getHeight() * 2\n      );\n      this.ctx.fillStyle = \"#000000\";\n      this.ctx.fillRect(\n        enemy.realXPos + (enemy.width * 2) / 2,\n        enemy.realYPos + (enemy.height * 2) / 2,\n        3,\n        3\n        // enemy.getWidth() * 2,\n        // enemy.getHeight() * 2\n      );\n\n      if (enemy.missiles) {\n        for (let missile of enemy.missiles) {\n          this.ctx.drawImage(\n            this.images[missile.image],\n            missile.posX - 8 + this.map.worldXOffset,\n            missile.posY - 8 + this.map.worldYOffset,\n            32,\n            32\n          );\n          // this.ctx.fillRect(\n          //     missile.posX + this.map.worldXOffset,\n          //     missile.posY + this.map.worldYOffset,\n          //     missile.width,\n          //     missile.height\n          // );\n          let b = {\n            x: missile.posX + this.map.worldXOffset,\n            y: missile.posY + this.map.worldYOffset,\n            width: missile.width,\n            height: missile.height\n          };\n\n          if (_funcs_js__WEBPACK_IMPORTED_MODULE_3__[\"funcs\"].isCollide(a, b)) {\n            missile.hit = true;\n            this.player.getHurt(enemy.damage);\n            // enemy.getHurt(this.player.damage);\n          }\n        }\n\n        // for (let enemy of this.enemies) {\n        // }\n      }\n\n      /*if (funcs.isCollide({\n                x: this.player.playerXPos,\n                y: this.player.playerYPos,\n                width: (this.player.width * 1.5) - 12,\n                height: (this.player.height * 1.5) - 6\n            }, {\n                x: enemy.realXPos,\n                y: enemy.realYPos,\n                width: enemy.getWidth() * 2,\n                height: enemy.getHeight() * 2\n            }) && !enemy.hurt) {\n            // if (realXPos > attackXPos &&\n            //     realXPos < attackXPos + 20 &&\n            //     realYPos > attackYPos &&\n            //     realYPos < attackYPos + 40\n            // ) {\n                this.player.getHurt(enemy.damage);\n            }*/\n    }\n  }\n\n  drawAttackingSquares() {\n    if (this.player.attacking) {\n      let facingOffset = this.player.facingX == 1 ? 32 + 12 : 0;\n      let attackYPos = this.player.posY + 20 + this.map.worldYOffset - 32;\n      let attackXPos =\n        this.player.posX + facingOffset + this.map.worldXOffset - 32;\n\n      let a = {\n        x: attackXPos,\n        y: attackYPos,\n        width: 20,\n        height: 40\n      };\n\n      this.ctx.fillStyle = \"#005AFF4D\";\n      this.ctx.fillRect(attackXPos, attackYPos, 20, 40);\n      this.ctx.fillStyle = \"#005AFF\";\n      this.ctx.strokeRect(attackXPos, attackYPos, 20, 40);\n\n      for (let enemy of this.enemies) {\n        let b = {\n          x: enemy.realXPos,\n          y: enemy.realYPos,\n          width: enemy.getWidth() * 2,\n          height: enemy.getHeight() * 2\n        };\n\n        if (_funcs_js__WEBPACK_IMPORTED_MODULE_3__[\"funcs\"].isCollide(a, b)) {\n          enemy.getHurt(this.player.damage);\n        }\n      }\n    }\n  }\n\n  drawStatusText() {\n    this.ctx.font = \"20px courier\";\n    this.ctx.fillStyle = \"#fff\";\n    this.ctx.fillText(\n      \"lvl: \" +\n        this.player.level +\n        \"  xp \" +\n        this.player.experience +\n        \"/\" +\n        this.player.nextLevel,\n      20,\n      80\n    );\n    this.ctx.fillStyle = \"#ffffffc\";\n    this.ctx.fillText(this.player.facing, 10, 120);\n    this.ctx.fillText(\n      Math.round(this.player.posY) + \", \" + Math.round(this.player.posX),\n      10,\n      140\n    );\n\n    this.ctx.fillText(\n      Math.round(\n        this.player.posY + this.map.worldYOffset - this.player.height * 2\n      ) +\n        \", \" +\n        Math.round(\n          this.player.posX + this.map.worldXOffset - this.player.width * 2\n        ),\n      10,\n      160\n    );\n\n    this.ctx.fillText(\n      Math.round(this.player.clickY - this.map.worldYOffset) +\n        \", \" +\n        Math.round(this.player.clickX - this.map.worldXOffset),\n      10,\n      180\n    );\n    this.ctx.stroke();\n  }\n\n  drawHealthbar() {\n    this.ctx.font = \"20px courier\";\n    this.ctx.fillStyle = \"#fff\";\n    this.ctx.fillText(\n      \"lvl: \" +\n        this.player.level +\n        \"  xp \" +\n        this.player.experience +\n        \"/\" +\n        this.player.nextLevel,\n      20,\n      80\n    );\n    this.ctx.fillStyle = \"#FFFFFF55\";\n    this.ctx.fillRect(17, 17, this.barWidth + 6, this.barHeight + 6);\n\n    this.ctx.fillStyle = \"#CB2E2E\";\n    this.ctx.fillRect(\n      20,\n      20,\n      this.barWidth * (this.player.health / this.player.maxHealth),\n      this.barHeight\n    );\n\n    this.ctx.fillStyle = \"#FFFFFF55\";\n    this.ctx.fillRect(17, 37, this.barWidth + 6, this.barHeight + 6);\n\n    this.ctx.fillStyle = \"#24A733\";\n    this.ctx.fillRect(\n      20,\n      40,\n      this.barWidth * (this.player.stamina / this.player.maxStamina),\n      this.barHeight\n    );\n  }\n\n  drawPointer() {\n    let image = this.images[\"glove.png\"];\n    this.player.hoverAction = \"move\";\n    this.player.hoverTarget = null;\n\n    let a = {\n      x: this.mouseX,\n      y: this.mouseY,\n      width: 1,\n      height: 1\n    };\n\n    for (let enemy of this.enemies) {\n      let b = {\n        x: enemy.realXPos,\n        y: enemy.realYPos,\n        width: enemy.getWidth() * 2,\n        height: enemy.getHeight() * 2\n      };\n\n      if (_funcs_js__WEBPACK_IMPORTED_MODULE_3__[\"funcs\"].isCollide(a, b)) {\n        this.player.hoverAction = \"attack\";\n        this.player.hoverTarget = enemy;\n        image = this.images[\"sword.png\"];\n      }\n    }\n\n    if (this.mouseX && this.mouseY) {\n      this.ctx.drawImage(image, this.mouseX, this.mouseY, 32, 32);\n    }\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvR2FtZS5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9qcy9HYW1lLmpzP2EwMjYiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7XG5cbmltcG9ydCB7IFBsYXllciB9IGZyb20gXCIuL1BsYXllci5qc1wiO1xuaW1wb3J0IHsgRW5lbXkgfSBmcm9tIFwiLi9FbmVteS5qc1wiO1xuaW1wb3J0IHsgU2xpbWUgfSBmcm9tIFwiLi9TbGltZS5qc1wiO1xuaW1wb3J0IHsgZnVuY3MgfSBmcm9tIFwiLi9mdW5jcy5qc1wiO1xuXG5jbGFzcyBHYW1lIHtcbiAgY29uc3RydWN0b3Iod2lkdGgsIGhlaWdodCkge1xuICAgIHRoaXMuYmFyV2lkdGggPSAyMDA7XG4gICAgdGhpcy5iYXJIZWlnaHQgPSAxMDtcbiAgICB0aGlzLnN0YXJ0ZWQgPSBmYWxzZTtcbiAgICB0aGlzLnBsYW5lID0gW107XG4gICAgdGhpcy5wbGF5ZXIgPSBudWxsO1xuICAgIHRoaXMuaW1hZ2UgPSBudWxsO1xuICAgIHRoaXMuaW1hZ2VVcmxzID0gW1xuICAgICAgXCJhZHZlbnR1cmVyL2FkdmVudHVyZXIucG5nXCIsXG4gICAgICBcImVuZW1pZXMvc2xpbWVfcmVkLnBuZ1wiLFxuICAgICAgXCJjcm9zcy5wbmdcIixcbiAgICAgIFwiZ2xvdmUucG5nXCIsXG4gICAgICBcInN3b3JkLnBuZ1wiLFxuICAgICAgXCJlbmVtaWVzL3NsaW1lX3JlZF9taXNzaWxlX2Vhc3QucG5nXCIsXG4gICAgICBcImVuZW1pZXMvc2xpbWVfcmVkX21pc3NpbGVfc291dGhfZWFzdC5wbmdcIixcbiAgICAgIFwiZW5lbWllcy9zbGltZV9yZWRfbWlzc2lsZV9zb3V0aC5wbmdcIixcbiAgICAgIFwiZW5lbWllcy9zbGltZV9yZWRfbWlzc2lsZV9zb3V0aF93ZXN0LnBuZ1wiLFxuICAgICAgXCJlbmVtaWVzL3NsaW1lX3JlZF9taXNzaWxlX3dlc3QucG5nXCIsXG4gICAgICBcImVuZW1pZXMvc2xpbWVfcmVkX21pc3NpbGVfbm9ydGhfd2VzdC5wbmdcIixcbiAgICAgIFwiZW5lbWllcy9zbGltZV9yZWRfbWlzc2lsZV9ub3J0aC5wbmdcIixcbiAgICAgIFwiZW5lbWllcy9zbGltZV9yZWRfbWlzc2lsZV9ub3J0aF9lYXN0LnBuZ1wiXG4gICAgXTtcbiAgICB0aGlzLmltYWdlcyA9IHt9O1xuICAgIHRoaXMuZW5lbWllcyA9IFtdO1xuICAgIHRoaXMuZGlyZWN0aW9ucyA9IFtcbiAgICAgIFwic3RhbmRpbmdub3J0aFwiLFxuICAgICAgXCJzdGFuZGluZ3dlc3RcIixcbiAgICAgIFwic3RhbmRpbmdlYXN0XCIsXG4gICAgICBcInN0YW5kaW5nc291dGhcIixcbiAgICAgIFwicnVubmluZ2Vhc3QxXCIsXG4gICAgICBcInJ1bm5pbmdlYXN0MlwiXG4gICAgXTtcbiAgICB0aGlzLndpZHRoID0gd2lkdGg7XG4gICAgdGhpcy5oZWlnaHQgPSBoZWlnaHQ7XG4gICAgdGhpcy5jYW52YXMgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiY2FudmFzXCIpO1xuICAgIHRoaXMuY2FudmFzLmlkID0gXCJDdXJzb3JMYXllclwiO1xuICAgIHRoaXMuY2FudmFzLndpZHRoID0gdGhpcy53aWR0aDtcbiAgICB0aGlzLmNhbnZhcy5oZWlnaHQgPSB0aGlzLmhlaWdodDtcbiAgICB0aGlzLmNhbnZhcy5zdHlsZS56SW5kZXggPSA4O1xuICAgIHRoaXMuY2FudmFzLnN0eWxlLm1hcmdpbiA9IFwiYXV0b1wiO1xuICAgIHRoaXMuY2FudmFzLnN0eWxlLmRpc3BsYXkgPSBcImJsb2NrXCI7XG4gICAgdGhpcy5jYW52YXMuc3R5bGUuYm9yZGVyID0gXCIxcHggc29saWQgI2JiYlwiO1xuICAgIHRoaXMuZnBzID0gMjA7XG4gICAgdGhpcy50aW1lciA9IG51bGw7XG4gICAgdGhpcy5tYXAgPSBudWxsO1xuICAgIHRoaXMubW91c2VYO1xuICAgIHRoaXMubW91c2VZO1xuICB9XG5cbiAgaW5pdCgpIHtcbiAgICBpZiAodGhpcy5tYXAubGF5ZXJzLmdyb3VuZCkge1xuICAgICAgbGV0IHN0YXJ0UG9pbnQgPSB0aGlzLm1hcC5kYXRhTGF5ZXIuc3RhcnRpbmdQb2ludDtcbiAgICAgIGxldCBtb3VzZU1vdmUgPSB0aGlzLm1vdXNlTW92ZS5iaW5kKHRoaXMpO1xuXG4gICAgICB0aGlzLmltYWdlVXJscy5wdXNoKFxuICAgICAgICBcIm1hcC9cIiArIHRoaXMubWFwLnRpbGVTZXRzWzBdLm1hcEltYWdlLmdldEF0dHJpYnV0ZShcInNvdXJjZVwiKVxuICAgICAgKTtcbiAgICAgIHRoaXMubWFwLnJlYWxXaWR0aCA9IHRoaXMubWFwLndpZHRoICogdGhpcy5tYXAubGF5ZXJzLmdyb3VuZC50aWxlV2lkdGg7XG4gICAgICB0aGlzLm1hcC5yZWFsSGVpZ2h0ID0gdGhpcy5tYXAuaGVpZ2h0ICogdGhpcy5tYXAubGF5ZXJzLmdyb3VuZC50aWxlSGVpZ2h0O1xuXG4gICAgICB0aGlzLnN0b3AoKTtcbiAgICAgIHRoaXMucGxheWVyID0gbmV3IFBsYXllcihzdGFydFBvaW50LngsIHN0YXJ0UG9pbnQueSk7XG4gICAgICB0aGlzLmVuZW1pZXMucHVzaChcbiAgICAgICAgbmV3IFNsaW1lKFxuICAgICAgICAgIHN0YXJ0UG9pbnQueCArIDIwMCxcbiAgICAgICAgICBzdGFydFBvaW50LnkgKyAyMDAsXG4gICAgICAgICAgXCJyZWRTbGltZVwiLFxuICAgICAgICAgIDIwLFxuICAgICAgICAgIDEwLFxuICAgICAgICAgIDEsXG4gICAgICAgICAgMTAwXG4gICAgICAgIClcbiAgICAgICk7XG4gICAgICAvLyB0aGlzLmVuZW1pZXMucHVzaChuZXcgU2xpbWUoXG4gICAgICAvLyAgICAgc3RhcnRQb2ludC54ICsgMzAwLFxuICAgICAgLy8gICAgIHN0YXJ0UG9pbnQueSArIDMwMCxcbiAgICAgIC8vICAgICAncmVkU2xpbWUnLFxuICAgICAgLy8gICAgIDIwLFxuICAgICAgLy8gICAgIDEwLFxuICAgICAgLy8gICAgIDEsXG4gICAgICAvLyAgICAgMTApXG4gICAgICAvLyApO1xuICAgICAgdGhpcy5jZW50ZXJDYW1lcmEoKTtcblxuICAgICAgbGV0IHBsYXllciA9IHRoaXMucGxheWVyO1xuICAgICAgbGV0IG1hcCA9IHRoaXMubWFwO1xuXG4gICAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcIm1vdXNlZG93blwiLCBmdW5jdGlvbihlKSB7XG4gICAgICAgIHBsYXllci5tb3VzZURvd24oZSwgbWFwLndvcmxkWE9mZnNldCwgbWFwLndvcmxkWU9mZnNldCk7XG4gICAgICB9KTtcbiAgICAgIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKFwibW91c2V1cFwiLCBmdW5jdGlvbihlKSB7XG4gICAgICAgIHBsYXllci5tb3VzZVVwKGUsIHRydWUpO1xuICAgICAgfSk7XG4gICAgICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcIm1vdXNlbW92ZVwiLCBmdW5jdGlvbihlKSB7XG4gICAgICAgIG1vdXNlTW92ZShlLCB0cnVlKTtcbiAgICAgIH0pO1xuXG4gICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcInBsYW5lXCIpLmFwcGVuZENoaWxkKHRoaXMuY2FudmFzKTtcbiAgICAgIHRoaXMuY3R4ID0gdGhpcy5jYW52YXMuZ2V0Q29udGV4dChcIjJkXCIpO1xuXG4gICAgICBsZXQgbG9hZEltYWdlID0gdGhpcy5sb2FkSW1hZ2UuYmluZCh0aGlzKTtcblxuICAgICAgbG9hZEltYWdlKCk7XG4gICAgICAvLyB0aGlzLmxvYWRJbWFnZSgpO1xuICAgIH0gZWxzZSB7XG4gICAgICBjb25zb2xlLmxvZyhcIk5vIGdyb3VuZCBsYXllciBmb3VuZFwiKTtcbiAgICB9XG4gIH1cblxuICBtb3VzZU1vdmUoZSkge1xuICAgIGxldCBlbCA9IGUudGFyZ2V0O1xuXG4gICAgaWYgKChlbC5nZXRUYWdOYW1lID0gXCJjYW52YXNcIikpIHtcbiAgICAgIHRoaXMubW91c2VYID0gZS5jbGllbnRYIC0gZWwub2Zmc2V0TGVmdDtcbiAgICAgIHRoaXMubW91c2VZID0gZS5jbGllbnRZIC0gZWwub2Zmc2V0VG9wO1xuICAgIH1cbiAgfVxuXG4gIHN0b3AoKSB7XG4gICAgaWYgKHRoaXMuc3RhcnRlZCkge1xuICAgICAgY2xlYXJJbnRlcnZhbCh0aGlzLnRpbWVyKTtcbiAgICAgIHRoaXMuc3RhcnRlZCA9IGZhbHNlO1xuICAgIH1cbiAgfVxuXG4gIHN0YXJ0KCkge1xuICAgIGxldCByZWRyYXcgPSB0aGlzLnJlZHJhdy5iaW5kKHRoaXMpO1xuICAgIGxldCBzdGFydEFuaW1hdGlvbiA9IHRoaXMucGxheWVyLnN0YXJ0QW5pbWF0aW9uLmJpbmQodGhpcy5wbGF5ZXIpO1xuICAgIGxldCBzdGFydERhdGEgPSB0aGlzLnBsYXllci5zdGFydERhdGEuYmluZCh0aGlzLnBsYXllcik7XG5cbiAgICBzdGFydERhdGEoKTtcbiAgICBzdGFydEFuaW1hdGlvbigpO1xuICAgIGZvciAobGV0IGVuZW15IG9mIHRoaXMuZW5lbWllcykge1xuICAgICAgZW5lbXkuc3RhcnRBbmltYXRpb24oKTtcbiAgICB9XG5cbiAgICBpZiAoIXRoaXMuc3RhcnRlZCkge1xuICAgICAgdGhpcy50aW1lciA9IHNldEludGVydmFsKGZ1bmN0aW9uKCkge1xuICAgICAgICByZWRyYXcoKTtcbiAgICAgICAgLy8gfSwgMTUwMCk7XG4gICAgICB9LCAxMDAwIC8gdGhpcy5mcHMpO1xuICAgICAgdGhpcy5zdGFydGVkID0gdHJ1ZTtcbiAgICB9XG4gIH1cblxuICByZWRyYXcoKSB7XG4gICAgdGhpcy5nZXRNYXBTY29wZSgpO1xuICAgIHRoaXMucGxheWVyLm1vdmUyKFxuICAgICAge1xuICAgICAgICB4OiB0aGlzLm1hcC53b3JsZFhPZmZzZXQsXG4gICAgICAgIHk6IHRoaXMubWFwLndvcmxkWU9mZnNldCxcbiAgICAgICAgdzogdGhpcy5tYXAucmVhbFdpZHRoLFxuICAgICAgICBoOiB0aGlzLm1hcC5yZWFsSGVpZ2h0XG4gICAgICB9LFxuICAgICAgdGhpcy5lbmVtaWVzLFxuICAgICAgdGhpcy5tYXBcbiAgICApO1xuICAgIHRoaXMuY2hlY2tFbmVtaWVzKCk7XG4gICAgdGhpcy5tYXBTY3JvbGwoKTtcbiAgICB0aGlzLmRyYXcoKTtcbiAgfVxuXG4gIGNoZWNrRW5lbWllcygpIHtcbiAgICBmb3IgKGxldCBlbmVteSBpbiB0aGlzLmVuZW1pZXMpIHtcbiAgICAgIHRoaXMuZW5lbWllc1tlbmVteV0ucmVhbFhQb3MgPVxuICAgICAgICB0aGlzLmVuZW1pZXNbZW5lbXldLmdldFhQb3MoKSAtIDE2ICsgdGhpcy5tYXAud29ybGRYT2Zmc2V0O1xuICAgICAgdGhpcy5lbmVtaWVzW2VuZW15XS5yZWFsWVBvcyA9XG4gICAgICAgIHRoaXMuZW5lbWllc1tlbmVteV0uZ2V0WVBvcygpIC0gMTYgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQ7XG4gICAgICB0aGlzLmVuZW1pZXNbZW5lbXldLnJlYWxYQ2VudGVyUG9zID1cbiAgICAgICAgdGhpcy5lbmVtaWVzW2VuZW15XS5nZXRYQ2VudGVyUG9zKCkgKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQ7XG4gICAgICB0aGlzLmVuZW1pZXNbZW5lbXldLnJlYWxZQ2VudGVyUG9zID1cbiAgICAgICAgdGhpcy5lbmVtaWVzW2VuZW15XS5nZXRZQ2VudGVyUG9zKCkgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQ7XG4gICAgICBpZiAoIXRoaXMuZW5lbWllc1tlbmVteV0uYWxpdmUpIHtcbiAgICAgICAgdGhpcy5wbGF5ZXIuZ2V0eHAodGhpcy5lbmVtaWVzW2VuZW15XS5leHBHaXZlKTtcbiAgICAgICAgdGhpcy5lbmVtaWVzLnNwbGljZShlbmVteSwgMSk7XG4gICAgICB9IGVsc2Uge1xuICAgICAgICB0aGlzLmVuZW1pZXNbZW5lbXldLm1vdmUodGhpcy5wbGF5ZXIsIHRoaXMubWFwKTtcbiAgICAgICAgdGhpcy5lbmVtaWVzW2VuZW15XS5jaGVja0F0dGFjayh0aGlzLnBsYXllcik7XG4gICAgICB9XG4gICAgfVxuICB9XG5cbiAgY2VudGVyQ2FtZXJhKCkge1xuICAgIHRoaXMubWFwLndvcmxkWE9mZnNldCA9XG4gICAgICAtdGhpcy5wbGF5ZXIucG9zWCArIHRoaXMud2lkdGggLyAyIC0gdGhpcy5wbGF5ZXIuaGVpZ2h0O1xuICAgIHRoaXMubWFwLndvcmxkWU9mZnNldCA9XG4gICAgICAtdGhpcy5wbGF5ZXIucG9zWSArIHRoaXMuaGVpZ2h0IC8gMiAtIHRoaXMucGxheWVyLmhlaWdodDtcbiAgfVxuXG4gIG1hcFNjcm9sbCgpIHtcbiAgICBsZXQgbWFyZ2luID0gMzAwO1xuICAgIGxldCByZWFsWVBvcyA9IHRoaXMucGxheWVyLnBvc1kgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQ7XG4gICAgbGV0IHJlYWxYUG9zID0gdGhpcy5wbGF5ZXIucG9zWCArIHRoaXMubWFwLndvcmxkWE9mZnNldDtcbiAgICBsZXQgaXNCZWxvdyA9IHJlYWxZUG9zID4gdGhpcy5oZWlnaHQgLSBtYXJnaW4gPyAxIDogMDtcbiAgICBsZXQgaXNBYm92ZSA9IHJlYWxZUG9zICsgdGhpcy5wbGF5ZXIuaGVpZ2h0ICogMiA8IG1hcmdpbiA/IDEgOiAwO1xuICAgIGxldCBpc1JpZ2h0ID1cbiAgICAgIHJlYWxYUG9zICsgdGhpcy5wbGF5ZXIud2lkdGggKiAyID4gdGhpcy53aWR0aCAtIG1hcmdpbiA/IDEgOiAwO1xuICAgIGxldCBpc0xlZnQgPSByZWFsWFBvcyA8IG1hcmdpbiA/IDEgOiAwO1xuICAgIGxldCBkeCA9IHRoaXMucGxheWVyLnJlYWxDbGlja1ggLSB0aGlzLnBsYXllci5wb3NYO1xuICAgIGxldCBkeSA9IHRoaXMucGxheWVyLnJlYWxDbGlja1kgLSB0aGlzLnBsYXllci5wb3NZO1xuICAgIGxldCBoTW92ZW1lbnQgPSBkeCA+IDAgPyAxIDogZHggPCAwID8gLTEgOiAwO1xuICAgIGxldCB2TW92ZW1lbnQgPSBkeSA+IDAgPyAxIDogZHkgPCAwID8gLTEgOiAwO1xuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSk7XG4gICAgbGV0IHhTcGVlZCA9IChkeCAvIGRpc3RhbmNlKSAqIHRoaXMucGxheWVyLm1vdmVTcGVlZCAqIGhNb3ZlbWVudDtcbiAgICBsZXQgeVNwZWVkID0gKGR5IC8gZGlzdGFuY2UpICogdGhpcy5wbGF5ZXIubW92ZVNwZWVkICogdk1vdmVtZW50O1xuXG4gICAgaWYgKFxuICAgICAgaXNSaWdodCAmJlxuICAgICAgdGhpcy5tYXAud29ybGRYT2Zmc2V0IC0geFNwZWVkICogMSA+IC10aGlzLm1hcC5yZWFsV2lkdGggKyB0aGlzLndpZHRoXG4gICAgKSB7XG4gICAgICB0aGlzLm1hcC53b3JsZFhPZmZzZXQgLT0geFNwZWVkICogMTtcbiAgICB9IGVsc2UgaWYgKGlzTGVmdCAmJiB0aGlzLm1hcC53b3JsZFhPZmZzZXQgKyB4U3BlZWQgKiAxIDw9IDApIHtcbiAgICAgIHRoaXMubWFwLndvcmxkWE9mZnNldCArPSB4U3BlZWQgKiAxO1xuICAgIH1cblxuICAgIGlmIChcbiAgICAgIGlzQmVsb3cgJiZcbiAgICAgIHRoaXMubWFwLndvcmxkWU9mZnNldCAtIHlTcGVlZCAqIDEgPiAtdGhpcy5tYXAucmVhbEhlaWdodCArIHRoaXMuaGVpZ2h0XG4gICAgKSB7XG4gICAgICB0aGlzLm1hcC53b3JsZFlPZmZzZXQgLT0geVNwZWVkICogMTtcbiAgICB9IGVsc2UgaWYgKGlzQWJvdmUgJiYgdGhpcy5tYXAud29ybGRZT2Zmc2V0ICsgeVNwZWVkICogMSA8IDApIHtcbiAgICAgIHRoaXMubWFwLndvcmxkWU9mZnNldCArPSB5U3BlZWQgKiAxO1xuICAgIH1cbiAgfVxuXG4gIGxvYWRJbWFnZSgpIHtcbiAgICBsZXQgaW1hZ2VVcmxzID0gdGhpcy5pbWFnZVVybHM7XG4gICAgbGV0IHN0YXJ0ID0gdGhpcy5zdGFydC5iaW5kKHRoaXMpO1xuICAgIGxldCBsb2FkQ291bnRlciA9IDA7XG5cbiAgICBmb3IgKGxldCBpbWFnZSBvZiBpbWFnZVVybHMpIHtcbiAgICAgIHRoaXMuaW1hZ2VzW2ltYWdlXSA9IG5ldyBJbWFnZSgpO1xuICAgICAgdGhpcy5pbWFnZXNbaW1hZ2VdLm9ubG9hZCA9IGZ1bmN0aW9uKCkge1xuICAgICAgICBsb2FkQ291bnRlcisrO1xuICAgICAgICBpZiAobG9hZENvdW50ZXIgPT09IGltYWdlVXJscy5sZW5ndGgpIHtcbiAgICAgICAgICBzdGFydCgpO1xuICAgICAgICB9XG4gICAgICB9O1xuICAgICAgdGhpcy5pbWFnZXNbaW1hZ2VdLnNyYyA9IFwiYXNzZXRzL2ltZy9cIiArIGltYWdlO1xuICAgIH1cbiAgfVxuXG4gIHJlc2V0KCkge1xuICAgIHRoaXMucGxheWVyLnBvc1ggPSB0aGlzLnBsYXllci5zdGFydFg7XG4gICAgdGhpcy5wbGF5ZXIucG9zWSA9IHRoaXMucGxheWVyLnN0YXJ0WTtcbiAgfVxuXG4gIGRyYXcoKSB7XG4gICAgbGV0IGdldEFuaW1hdGlvblR5cGUgPSB0aGlzLnBsYXllci5nZXRBbmltYXRpb25UeXBlLmJpbmQodGhpcy5wbGF5ZXIpO1xuXG4gICAgLy8gZ2V0QW5pbWF0aW9uVHlwZSgpO1xuXG4gICAgdGhpcy5jdHguZm9udCA9IFwiMTRweCBjb3VyaWVyXCI7XG4gICAgdGhpcy5jdHguY2xlYXJSZWN0KDAsIDAsIHRoaXMuY2FudmFzLndpZHRoLCB0aGlzLmNhbnZhcy5oZWlnaHQpO1xuXG4gICAgdGhpcy5jdHgubXNJbWFnZVNtb290aGluZ0VuYWJsZWQgPSBmYWxzZTtcbiAgICB0aGlzLmN0eC53ZWJraXRJbWFnZVNtb290aGluZ0VuYWJsZWQgPSBmYWxzZTtcbiAgICB0aGlzLmN0eC5pbWFnZVNtb290aGluZ0VuYWJsZWQgPSBmYWxzZTtcblxuICAgIHRoaXMuZHJhd01hcCgpO1xuICAgIHRoaXMuZHJhd1BsYXllcigpO1xuICAgIHRoaXMuZHJhd0VuZW1pZXMoKTtcbiAgICB0aGlzLmRyYXdPdmVybGF5T2JqZWN0cygpO1xuICAgIC8vIHRoaXMuZHJhd0F0dGFja2luZ1NxdWFyZXMoKTtcbiAgICAvLyB0aGlzLmRyYXdTdGF0dXNUZXh0KCk7XG4gICAgdGhpcy5kcmF3SGVhbHRoYmFyKCk7XG4gICAgdGhpcy5kcmF3UG9pbnRlcigpO1xuICB9XG5cbiAgZ2V0TWFwU2NvcGUoKSB7XG4gICAgbGV0IHRpbGVXaWR0aCA9IHRoaXMubWFwLnRpbGVXaWR0aDtcbiAgICBsZXQgcmVzdFkgPSAtdGhpcy5tYXAud29ybGRYT2Zmc2V0ICUgdGlsZVdpZHRoO1xuXG4gICAgbGV0IHN0YXJ0WSA9ICgtdGhpcy5tYXAud29ybGRYT2Zmc2V0IC0gcmVzdFkpIC8gdGlsZVdpZHRoO1xuICAgIGxldCByZXN0WCA9IC10aGlzLm1hcC53b3JsZFlPZmZzZXQgJSB0aWxlV2lkdGg7XG5cbiAgICBsZXQgc3RhcnRYID0gKC10aGlzLm1hcC53b3JsZFlPZmZzZXQgLSByZXN0WCkgLyB0aWxlV2lkdGg7XG4gICAgbGV0IHJlc3RFbmRYID0gKC10aGlzLm1hcC53b3JsZFlPZmZzZXQgKyB0aGlzLndpZHRoKSAlIHRpbGVXaWR0aDtcbiAgICBsZXQgZW5kWCA9ICgtdGhpcy5tYXAud29ybGRZT2Zmc2V0ICsgdGhpcy53aWR0aCAtIHJlc3RFbmRYKSAvIHRpbGVXaWR0aDtcbiAgICBsZXQgcmVzdEVuZFkgPSAoLXRoaXMubWFwLndvcmxkWE9mZnNldCArIHRoaXMud2lkdGgpICUgdGlsZVdpZHRoO1xuICAgIGxldCBlbmRZID0gKC10aGlzLm1hcC53b3JsZFhPZmZzZXQgKyB0aGlzLndpZHRoIC0gcmVzdEVuZFkpIC8gdGlsZVdpZHRoO1xuXG4gICAgdGhpcy5tYXAuc3RhcnRYID0gc3RhcnRYID4gMCA/IHN0YXJ0WCAtIDEgOiAwO1xuICAgIHRoaXMubWFwLnN0YXJ0WSA9IHN0YXJ0WSA+IDAgPyBzdGFydFkgLSAxIDogMDtcblxuICAgIHRoaXMubWFwLmVuZFggPSBlbmRYICsgMSA8IHRoaXMubWFwLndpZHRoID8gZW5kWCArIDEgOiB0aGlzLm1hcC53aWR0aDtcbiAgICB0aGlzLm1hcC5lbmRZID0gZW5kWSArIDEgPCB0aGlzLm1hcC5oZWlnaHQgPyBlbmRZICsgMSA6IHRoaXMubWFwLmhlaWdodDtcbiAgfVxuXG4gIGRyYXdNYXAoKSB7XG4gICAgZm9yIChsZXQgbGF5ZXIgaW4gdGhpcy5tYXAucGxhbmUpIHtcbiAgICAgIGZvciAobGV0IHggPSB0aGlzLm1hcC5zdGFydFg7IHggPCB0aGlzLm1hcC5lbmRYOyB4KyspIHtcbiAgICAgICAgZm9yIChsZXQgeSA9IHRoaXMubWFwLnN0YXJ0WTsgeSA8IHRoaXMubWFwLmVuZFk7IHkrKykge1xuICAgICAgICAgIGlmIChcbiAgICAgICAgICAgIHRoaXMubWFwLnBsYW5lW2xheWVyXVt4XVt5XSAmJlxuICAgICAgICAgICAgdGhpcy5tYXAudGlsZVNldHNbMF0udGlsZXNbdGhpcy5tYXAucGxhbmVbbGF5ZXJdW3hdW3ldLmdldFR5cGUoKV1cbiAgICAgICAgICApIHtcbiAgICAgICAgICAgIGxldCB0aWxlVHlwZSA9IHRoaXMubWFwLnBsYW5lW2xheWVyXVt4XVt5XS5nZXRUeXBlKCk7XG5cbiAgICAgICAgICAgIHRoaXMuY3R4LmRyYXdJbWFnZShcbiAgICAgICAgICAgICAgdGhpcy5pbWFnZXNbXCJtYXAvb3ZlcndvcmxkMS5wbmdcIl0sIC8vYmlsZGVuXG4gICAgICAgICAgICAgIHRoaXMubWFwLnRpbGVTZXRzWzBdLnRpbGVzW3RpbGVUeXBlXS54T2Zmc2V0LFxuICAgICAgICAgICAgICB0aGlzLm1hcC50aWxlU2V0c1swXS50aWxlc1t0aWxlVHlwZV0ueU9mZnNldCxcbiAgICAgICAgICAgICAgdGhpcy5tYXAudGlsZVNldHNbMF0udGlsZXNbdGlsZVR5cGVdLmdldFdpZHRoKCksXG4gICAgICAgICAgICAgIHRoaXMubWFwLnRpbGVTZXRzWzBdLnRpbGVzW3RpbGVUeXBlXS5nZXRIZWlnaHQoKSxcbiAgICAgICAgICAgICAgdGhpcy5tYXAucGxhbmVbbGF5ZXJdW3hdW3ldLnhPZmZzZXQgKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQsXG4gICAgICAgICAgICAgIHRoaXMubWFwLnBsYW5lW2xheWVyXVt4XVt5XS55T2Zmc2V0ICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0LFxuICAgICAgICAgICAgICB0aGlzLm1hcC5wbGFuZVtsYXllcl1beF1beV0uZ2V0V2lkdGgoKSxcbiAgICAgICAgICAgICAgdGhpcy5tYXAucGxhbmVbbGF5ZXJdW3hdW3ldLmdldEhlaWdodCgpXG4gICAgICAgICAgICApO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIGRyYXdPdmVybGF5T2JqZWN0cygpIHtcbiAgICBmb3IgKGxldCB4ID0gdGhpcy5tYXAuc3RhcnRYOyB4IDwgdGhpcy5tYXAuZW5kWDsgeCsrKSB7XG4gICAgICBmb3IgKGxldCB5ID0gdGhpcy5tYXAuc3RhcnRZOyB5IDwgdGhpcy5tYXAuZW5kWTsgeSsrKSB7XG4gICAgICAgIGlmIChcbiAgICAgICAgICB0aGlzLm1hcC5vYmplY3RzT3ZlcmxheVt4XVt5XSAmJlxuICAgICAgICAgIHRoaXMubWFwLnRpbGVTZXRzWzBdLnRpbGVzW3RoaXMubWFwLm9iamVjdHNPdmVybGF5W3hdW3ldLmdldFR5cGUoKV1cbiAgICAgICAgKSB7XG4gICAgICAgICAgbGV0IHRpbGVUeXBlID0gdGhpcy5tYXAub2JqZWN0c092ZXJsYXlbeF1beV0uZ2V0VHlwZSgpO1xuXG4gICAgICAgICAgdGhpcy5jdHguZHJhd0ltYWdlKFxuICAgICAgICAgICAgdGhpcy5pbWFnZXNbXCJtYXAvb3ZlcndvcmxkMS5wbmdcIl0sIC8vYmlsZGVuXG4gICAgICAgICAgICB0aGlzLm1hcC50aWxlU2V0c1swXS50aWxlc1t0aWxlVHlwZV0ueE9mZnNldCxcbiAgICAgICAgICAgIHRoaXMubWFwLnRpbGVTZXRzWzBdLnRpbGVzW3RpbGVUeXBlXS55T2Zmc2V0LFxuICAgICAgICAgICAgdGhpcy5tYXAudGlsZVNldHNbMF0udGlsZXNbdGlsZVR5cGVdLmdldFdpZHRoKCksXG4gICAgICAgICAgICB0aGlzLm1hcC50aWxlU2V0c1swXS50aWxlc1t0aWxlVHlwZV0uZ2V0SGVpZ2h0KCksXG4gICAgICAgICAgICB0aGlzLm1hcC5vYmplY3RzT3ZlcmxheVt4XVt5XS54T2Zmc2V0ICsgdGhpcy5tYXAud29ybGRYT2Zmc2V0LFxuICAgICAgICAgICAgdGhpcy5tYXAub2JqZWN0c092ZXJsYXlbeF1beV0ueU9mZnNldCArIHRoaXMubWFwLndvcmxkWU9mZnNldCxcbiAgICAgICAgICAgIHRoaXMubWFwLm9iamVjdHNPdmVybGF5W3hdW3ldLmdldFdpZHRoKCksXG4gICAgICAgICAgICB0aGlzLm1hcC5vYmplY3RzT3ZlcmxheVt4XVt5XS5nZXRIZWlnaHQoKVxuICAgICAgICAgICk7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG4gIH1cblxuICBkcmF3UGxheWVyKCkge1xuICAgIC8vIGxldCBmYWNpbmdQbGF5ZXJPZmZzZXQgPSB0aGlzLnBsYXllci5mYWNpbmdYID09IDEgPyAxMCA6IDE4O1xuICAgIGxldCBwbGF5ZXJZUG9zID0gdGhpcy5wbGF5ZXIucG9zWSArIDE4ICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0IC0gMzI7XG4gICAgbGV0IHBsYXllclhQb3MgPSB0aGlzLnBsYXllci5wb3NYICsgMTQgKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQgLSAzMjtcbiAgICAvLyBsZXQgdGFyZ2V0WCA9IHRoaXMucGxheWVyLnJlYWxDbGlja1ggKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQgLSAxNjtcbiAgICAvLyBsZXQgdGFyZ2V0WSA9IHRoaXMucGxheWVyLnJlYWxDbGlja1kgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQgLSAxNjtcblxuICAgIC8vIHRoaXMucGxheWVyLmZhY2luZ1BsYXllck9mZnNldCA9IGZhY2luZ1BsYXllck9mZnNldDtcbiAgICB0aGlzLnBsYXllci5wbGF5ZXJYUG9zID0gcGxheWVyWFBvcztcbiAgICB0aGlzLnBsYXllci5wbGF5ZXJZUG9zID0gcGxheWVyWVBvcztcblxuICAgIC8vIGlmICh0aGlzLnBsYXllci5jbGlja1RhcmdldCkge1xuICAgIC8vICAgICB0YXJnZXRYID0gdGhpcy5wbGF5ZXIuY2xpY2tUYXJnZXQuZ2V0WFBvcygpICsgdGhpcy5tYXAud29ybGRYT2Zmc2V0IC0gMTY7XG4gICAgLy8gICAgIHRhcmdldFkgPSB0aGlzLnBsYXllci5jbGlja1RhcmdldC5nZXRZUG9zKCkgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQgLSAxNjtcbiAgICAvLyB9XG5cbiAgICAvLyBpZiAodGhpcy5wbGF5ZXIucmVhbENsaWNrWCAmJiB0aGlzLnBsYXllci5yZWFsQ2xpY2tYKSB7XG4gICAgLy8gICAgIHRoaXMuY3R4LmRyYXdJbWFnZShcbiAgICAvLyAgICAgICAgIHRoaXMuaW1hZ2VzWydjcm9zcy5wbmcnXSxcbiAgICAvLyAgICAgICAgIHRhcmdldFgsXG4gICAgLy8gICAgICAgICB0YXJnZXRZLFxuICAgIC8vICAgICAgICAgMzIsXG4gICAgLy8gICAgICAgICAzMlxuICAgIC8vICAgICApO1xuICAgIC8vIH1cblxuICAgIC8vIHRoaXMuY3R4LmZpbGxTdHlsZSA9ICcjQkJCQkJCNEQnO1xuICAgIC8vIHRoaXMuY3R4LmZpbGxSZWN0KFxuICAgIC8vICAgICB0aGlzLnBsYXllci5wbGF5ZXJYUG9zLFxuICAgIC8vICAgICB0aGlzLnBsYXllci5wbGF5ZXJZUG9zLFxuICAgIC8vICAgICAodGhpcy5wbGF5ZXIud2lkdGggKiAxLjUpIC0gMTIsXG4gICAgLy8gICAgICh0aGlzLnBsYXllci5oZWlnaHQgKiAxLjUpIC0gNlxuICAgIC8vICk7XG5cbiAgICB0aGlzLmN0eC5kcmF3SW1hZ2UoXG4gICAgICB0aGlzLmltYWdlc1tcImFkdmVudHVyZXIvYWR2ZW50dXJlci5wbmdcIl0sXG4gICAgICB0aGlzLnBsYXllci5vZmZzZXRGcmFtZVggKiB0aGlzLnBsYXllci53aWR0aCwgLy8gc2lkbGVkL2FuaW1hdGlvblxuICAgICAgdGhpcy5wbGF5ZXIub2Zmc2V0RnJhbWVZICogdGhpcy5wbGF5ZXIuaGVpZ2h0ICsgMSwgLy8gaMO2amRlblxuICAgICAgdGhpcy5wbGF5ZXIud2lkdGgsXG4gICAgICB0aGlzLnBsYXllci5oZWlnaHQsXG4gICAgICB0aGlzLnBsYXllci5wb3NYICsgdGhpcy5tYXAud29ybGRYT2Zmc2V0IC0gMzIsXG4gICAgICB0aGlzLnBsYXllci5wb3NZICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0IC0gMzIsXG4gICAgICAvLyBwbGF5ZXJYUG9zLFxuICAgICAgLy8gcGxheWVyWVBvcyxcbiAgICAgIC8vIHRoaXMucGxheWVyLnBvc1ggKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQsXG4gICAgICAvLyB0aGlzLnBsYXllci5wb3NZICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0LFxuICAgICAgdGhpcy5wbGF5ZXIud2lkdGggKiAyLFxuICAgICAgdGhpcy5wbGF5ZXIuaGVpZ2h0ICogMlxuICAgICk7XG4gICAgLy8gdGhpcy5jdHguZmlsbFN0eWxlID0gJyMwMDAwMDAnO1xuICAgIC8vIHRoaXMuY3R4LmZpbGxSZWN0KFxuICAgIC8vICAgICB0aGlzLnBsYXllci5wb3NYICsgdGhpcy5tYXAud29ybGRYT2Zmc2V0LFxuICAgIC8vICAgICB0aGlzLnBsYXllci5wb3NZICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0LFxuICAgIC8vICAgICAxLFxuICAgIC8vICAgICAxXG4gICAgLy8gKTtcbiAgfVxuXG4gIGRyYXdFbmVtaWVzKCkge1xuICAgIGxldCBhID0ge1xuICAgICAgeDogdGhpcy5wbGF5ZXIucGxheWVyWFBvcyxcbiAgICAgIHk6IHRoaXMucGxheWVyLnBsYXllcllQb3MsXG4gICAgICB3aWR0aDogdGhpcy5wbGF5ZXIud2lkdGggKiAxLjUgLSAxMixcbiAgICAgIGhlaWdodDogdGhpcy5wbGF5ZXIuaGVpZ2h0ICogMS41IC0gNlxuICAgIH07XG5cbiAgICAvLyB0aGlzLmN0eC5maWxsU3R5bGUgPSAnI0JCQkJCQjREJztcbiAgICAvLyB0aGlzLmN0eC5maWxsUmVjdChcbiAgICAvLyAgICAgdGhpcy5wbGF5ZXIucGxheWVyWFBvcyxcbiAgICAvLyAgICAgdGhpcy5wbGF5ZXIucGxheWVyWVBvcyxcbiAgICAvLyAgICAgKHRoaXMucGxheWVyLndpZHRoICogMS41KSAtIDEyLFxuICAgIC8vICAgICAodGhpcy5wbGF5ZXIuaGVpZ2h0ICogMS41KSAtIDZcbiAgICAvLyApO1xuXG4gICAgZm9yIChsZXQgZW5lbXkgb2YgdGhpcy5lbmVtaWVzKSB7XG4gICAgICB0aGlzLmN0eC5kcmF3SW1hZ2UoXG4gICAgICAgIHRoaXMuaW1hZ2VzW1wiZW5lbWllcy9cIiArIGVuZW15LmdldEltYWdlKCldLFxuICAgICAgICBlbmVteS5vZmZzZXRGcmFtZVggKiBlbmVteS53aWR0aCwgLy8gc2lkbGVkL2FuaW1hdGlvblxuICAgICAgICBlbmVteS5vZmZzZXRGcmFtZVkgKiBlbmVteS5oZWlnaHQsIC8vIGjDtmpkZW5cbiAgICAgICAgZW5lbXkuZ2V0V2lkdGgoKSxcbiAgICAgICAgZW5lbXkuZ2V0SGVpZ2h0KCksXG4gICAgICAgIGVuZW15LnJlYWxYUG9zLFxuICAgICAgICBlbmVteS5yZWFsWVBvcyxcbiAgICAgICAgZW5lbXkuZ2V0V2lkdGgoKSAqIDIsXG4gICAgICAgIGVuZW15LmdldEhlaWdodCgpICogMlxuICAgICAgKTtcbiAgICAgIHRoaXMuY3R4LmZpbGxTdHlsZSA9IFwiIzAwMDAwMFwiO1xuICAgICAgdGhpcy5jdHguZmlsbFJlY3QoXG4gICAgICAgIGVuZW15LnJlYWxYUG9zICsgKGVuZW15LndpZHRoICogMikgLyAyLFxuICAgICAgICBlbmVteS5yZWFsWVBvcyArIChlbmVteS5oZWlnaHQgKiAyKSAvIDIsXG4gICAgICAgIDMsXG4gICAgICAgIDNcbiAgICAgICAgLy8gZW5lbXkuZ2V0V2lkdGgoKSAqIDIsXG4gICAgICAgIC8vIGVuZW15LmdldEhlaWdodCgpICogMlxuICAgICAgKTtcblxuICAgICAgaWYgKGVuZW15Lm1pc3NpbGVzKSB7XG4gICAgICAgIGZvciAobGV0IG1pc3NpbGUgb2YgZW5lbXkubWlzc2lsZXMpIHtcbiAgICAgICAgICB0aGlzLmN0eC5kcmF3SW1hZ2UoXG4gICAgICAgICAgICB0aGlzLmltYWdlc1ttaXNzaWxlLmltYWdlXSxcbiAgICAgICAgICAgIG1pc3NpbGUucG9zWCAtIDggKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQsXG4gICAgICAgICAgICBtaXNzaWxlLnBvc1kgLSA4ICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0LFxuICAgICAgICAgICAgMzIsXG4gICAgICAgICAgICAzMlxuICAgICAgICAgICk7XG4gICAgICAgICAgLy8gdGhpcy5jdHguZmlsbFJlY3QoXG4gICAgICAgICAgLy8gICAgIG1pc3NpbGUucG9zWCArIHRoaXMubWFwLndvcmxkWE9mZnNldCxcbiAgICAgICAgICAvLyAgICAgbWlzc2lsZS5wb3NZICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0LFxuICAgICAgICAgIC8vICAgICBtaXNzaWxlLndpZHRoLFxuICAgICAgICAgIC8vICAgICBtaXNzaWxlLmhlaWdodFxuICAgICAgICAgIC8vICk7XG4gICAgICAgICAgbGV0IGIgPSB7XG4gICAgICAgICAgICB4OiBtaXNzaWxlLnBvc1ggKyB0aGlzLm1hcC53b3JsZFhPZmZzZXQsXG4gICAgICAgICAgICB5OiBtaXNzaWxlLnBvc1kgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQsXG4gICAgICAgICAgICB3aWR0aDogbWlzc2lsZS53aWR0aCxcbiAgICAgICAgICAgIGhlaWdodDogbWlzc2lsZS5oZWlnaHRcbiAgICAgICAgICB9O1xuXG4gICAgICAgICAgaWYgKGZ1bmNzLmlzQ29sbGlkZShhLCBiKSkge1xuICAgICAgICAgICAgbWlzc2lsZS5oaXQgPSB0cnVlO1xuICAgICAgICAgICAgdGhpcy5wbGF5ZXIuZ2V0SHVydChlbmVteS5kYW1hZ2UpO1xuICAgICAgICAgICAgLy8gZW5lbXkuZ2V0SHVydCh0aGlzLnBsYXllci5kYW1hZ2UpO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuXG4gICAgICAgIC8vIGZvciAobGV0IGVuZW15IG9mIHRoaXMuZW5lbWllcykge1xuICAgICAgICAvLyB9XG4gICAgICB9XG5cbiAgICAgIC8qaWYgKGZ1bmNzLmlzQ29sbGlkZSh7XG4gICAgICAgICAgICAgICAgeDogdGhpcy5wbGF5ZXIucGxheWVyWFBvcyxcbiAgICAgICAgICAgICAgICB5OiB0aGlzLnBsYXllci5wbGF5ZXJZUG9zLFxuICAgICAgICAgICAgICAgIHdpZHRoOiAodGhpcy5wbGF5ZXIud2lkdGggKiAxLjUpIC0gMTIsXG4gICAgICAgICAgICAgICAgaGVpZ2h0OiAodGhpcy5wbGF5ZXIuaGVpZ2h0ICogMS41KSAtIDZcbiAgICAgICAgICAgIH0sIHtcbiAgICAgICAgICAgICAgICB4OiBlbmVteS5yZWFsWFBvcyxcbiAgICAgICAgICAgICAgICB5OiBlbmVteS5yZWFsWVBvcyxcbiAgICAgICAgICAgICAgICB3aWR0aDogZW5lbXkuZ2V0V2lkdGgoKSAqIDIsXG4gICAgICAgICAgICAgICAgaGVpZ2h0OiBlbmVteS5nZXRIZWlnaHQoKSAqIDJcbiAgICAgICAgICAgIH0pICYmICFlbmVteS5odXJ0KSB7XG4gICAgICAgICAgICAvLyBpZiAocmVhbFhQb3MgPiBhdHRhY2tYUG9zICYmXG4gICAgICAgICAgICAvLyAgICAgcmVhbFhQb3MgPCBhdHRhY2tYUG9zICsgMjAgJiZcbiAgICAgICAgICAgIC8vICAgICByZWFsWVBvcyA+IGF0dGFja1lQb3MgJiZcbiAgICAgICAgICAgIC8vICAgICByZWFsWVBvcyA8IGF0dGFja1lQb3MgKyA0MFxuICAgICAgICAgICAgLy8gKSB7XG4gICAgICAgICAgICAgICAgdGhpcy5wbGF5ZXIuZ2V0SHVydChlbmVteS5kYW1hZ2UpO1xuICAgICAgICAgICAgfSovXG4gICAgfVxuICB9XG5cbiAgZHJhd0F0dGFja2luZ1NxdWFyZXMoKSB7XG4gICAgaWYgKHRoaXMucGxheWVyLmF0dGFja2luZykge1xuICAgICAgbGV0IGZhY2luZ09mZnNldCA9IHRoaXMucGxheWVyLmZhY2luZ1ggPT0gMSA/IDMyICsgMTIgOiAwO1xuICAgICAgbGV0IGF0dGFja1lQb3MgPSB0aGlzLnBsYXllci5wb3NZICsgMjAgKyB0aGlzLm1hcC53b3JsZFlPZmZzZXQgLSAzMjtcbiAgICAgIGxldCBhdHRhY2tYUG9zID1cbiAgICAgICAgdGhpcy5wbGF5ZXIucG9zWCArIGZhY2luZ09mZnNldCArIHRoaXMubWFwLndvcmxkWE9mZnNldCAtIDMyO1xuXG4gICAgICBsZXQgYSA9IHtcbiAgICAgICAgeDogYXR0YWNrWFBvcyxcbiAgICAgICAgeTogYXR0YWNrWVBvcyxcbiAgICAgICAgd2lkdGg6IDIwLFxuICAgICAgICBoZWlnaHQ6IDQwXG4gICAgICB9O1xuXG4gICAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSBcIiMwMDVBRkY0RFwiO1xuICAgICAgdGhpcy5jdHguZmlsbFJlY3QoYXR0YWNrWFBvcywgYXR0YWNrWVBvcywgMjAsIDQwKTtcbiAgICAgIHRoaXMuY3R4LmZpbGxTdHlsZSA9IFwiIzAwNUFGRlwiO1xuICAgICAgdGhpcy5jdHguc3Ryb2tlUmVjdChhdHRhY2tYUG9zLCBhdHRhY2tZUG9zLCAyMCwgNDApO1xuXG4gICAgICBmb3IgKGxldCBlbmVteSBvZiB0aGlzLmVuZW1pZXMpIHtcbiAgICAgICAgbGV0IGIgPSB7XG4gICAgICAgICAgeDogZW5lbXkucmVhbFhQb3MsXG4gICAgICAgICAgeTogZW5lbXkucmVhbFlQb3MsXG4gICAgICAgICAgd2lkdGg6IGVuZW15LmdldFdpZHRoKCkgKiAyLFxuICAgICAgICAgIGhlaWdodDogZW5lbXkuZ2V0SGVpZ2h0KCkgKiAyXG4gICAgICAgIH07XG5cbiAgICAgICAgaWYgKGZ1bmNzLmlzQ29sbGlkZShhLCBiKSkge1xuICAgICAgICAgIGVuZW15LmdldEh1cnQodGhpcy5wbGF5ZXIuZGFtYWdlKTtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIGRyYXdTdGF0dXNUZXh0KCkge1xuICAgIHRoaXMuY3R4LmZvbnQgPSBcIjIwcHggY291cmllclwiO1xuICAgIHRoaXMuY3R4LmZpbGxTdHlsZSA9IFwiI2ZmZlwiO1xuICAgIHRoaXMuY3R4LmZpbGxUZXh0KFxuICAgICAgXCJsdmw6IFwiICtcbiAgICAgICAgdGhpcy5wbGF5ZXIubGV2ZWwgK1xuICAgICAgICBcIiAgeHAgXCIgK1xuICAgICAgICB0aGlzLnBsYXllci5leHBlcmllbmNlICtcbiAgICAgICAgXCIvXCIgK1xuICAgICAgICB0aGlzLnBsYXllci5uZXh0TGV2ZWwsXG4gICAgICAyMCxcbiAgICAgIDgwXG4gICAgKTtcbiAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSBcIiNmZmZmZmZjXCI7XG4gICAgdGhpcy5jdHguZmlsbFRleHQodGhpcy5wbGF5ZXIuZmFjaW5nLCAxMCwgMTIwKTtcbiAgICB0aGlzLmN0eC5maWxsVGV4dChcbiAgICAgIE1hdGgucm91bmQodGhpcy5wbGF5ZXIucG9zWSkgKyBcIiwgXCIgKyBNYXRoLnJvdW5kKHRoaXMucGxheWVyLnBvc1gpLFxuICAgICAgMTAsXG4gICAgICAxNDBcbiAgICApO1xuXG4gICAgdGhpcy5jdHguZmlsbFRleHQoXG4gICAgICBNYXRoLnJvdW5kKFxuICAgICAgICB0aGlzLnBsYXllci5wb3NZICsgdGhpcy5tYXAud29ybGRZT2Zmc2V0IC0gdGhpcy5wbGF5ZXIuaGVpZ2h0ICogMlxuICAgICAgKSArXG4gICAgICAgIFwiLCBcIiArXG4gICAgICAgIE1hdGgucm91bmQoXG4gICAgICAgICAgdGhpcy5wbGF5ZXIucG9zWCArIHRoaXMubWFwLndvcmxkWE9mZnNldCAtIHRoaXMucGxheWVyLndpZHRoICogMlxuICAgICAgICApLFxuICAgICAgMTAsXG4gICAgICAxNjBcbiAgICApO1xuXG4gICAgdGhpcy5jdHguZmlsbFRleHQoXG4gICAgICBNYXRoLnJvdW5kKHRoaXMucGxheWVyLmNsaWNrWSAtIHRoaXMubWFwLndvcmxkWU9mZnNldCkgK1xuICAgICAgICBcIiwgXCIgK1xuICAgICAgICBNYXRoLnJvdW5kKHRoaXMucGxheWVyLmNsaWNrWCAtIHRoaXMubWFwLndvcmxkWE9mZnNldCksXG4gICAgICAxMCxcbiAgICAgIDE4MFxuICAgICk7XG4gICAgdGhpcy5jdHguc3Ryb2tlKCk7XG4gIH1cblxuICBkcmF3SGVhbHRoYmFyKCkge1xuICAgIHRoaXMuY3R4LmZvbnQgPSBcIjIwcHggY291cmllclwiO1xuICAgIHRoaXMuY3R4LmZpbGxTdHlsZSA9IFwiI2ZmZlwiO1xuICAgIHRoaXMuY3R4LmZpbGxUZXh0KFxuICAgICAgXCJsdmw6IFwiICtcbiAgICAgICAgdGhpcy5wbGF5ZXIubGV2ZWwgK1xuICAgICAgICBcIiAgeHAgXCIgK1xuICAgICAgICB0aGlzLnBsYXllci5leHBlcmllbmNlICtcbiAgICAgICAgXCIvXCIgK1xuICAgICAgICB0aGlzLnBsYXllci5uZXh0TGV2ZWwsXG4gICAgICAyMCxcbiAgICAgIDgwXG4gICAgKTtcbiAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSBcIiNGRkZGRkY1NVwiO1xuICAgIHRoaXMuY3R4LmZpbGxSZWN0KDE3LCAxNywgdGhpcy5iYXJXaWR0aCArIDYsIHRoaXMuYmFySGVpZ2h0ICsgNik7XG5cbiAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSBcIiNDQjJFMkVcIjtcbiAgICB0aGlzLmN0eC5maWxsUmVjdChcbiAgICAgIDIwLFxuICAgICAgMjAsXG4gICAgICB0aGlzLmJhcldpZHRoICogKHRoaXMucGxheWVyLmhlYWx0aCAvIHRoaXMucGxheWVyLm1heEhlYWx0aCksXG4gICAgICB0aGlzLmJhckhlaWdodFxuICAgICk7XG5cbiAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSBcIiNGRkZGRkY1NVwiO1xuICAgIHRoaXMuY3R4LmZpbGxSZWN0KDE3LCAzNywgdGhpcy5iYXJXaWR0aCArIDYsIHRoaXMuYmFySGVpZ2h0ICsgNik7XG5cbiAgICB0aGlzLmN0eC5maWxsU3R5bGUgPSBcIiMyNEE3MzNcIjtcbiAgICB0aGlzLmN0eC5maWxsUmVjdChcbiAgICAgIDIwLFxuICAgICAgNDAsXG4gICAgICB0aGlzLmJhcldpZHRoICogKHRoaXMucGxheWVyLnN0YW1pbmEgLyB0aGlzLnBsYXllci5tYXhTdGFtaW5hKSxcbiAgICAgIHRoaXMuYmFySGVpZ2h0XG4gICAgKTtcbiAgfVxuXG4gIGRyYXdQb2ludGVyKCkge1xuICAgIGxldCBpbWFnZSA9IHRoaXMuaW1hZ2VzW1wiZ2xvdmUucG5nXCJdO1xuICAgIHRoaXMucGxheWVyLmhvdmVyQWN0aW9uID0gXCJtb3ZlXCI7XG4gICAgdGhpcy5wbGF5ZXIuaG92ZXJUYXJnZXQgPSBudWxsO1xuXG4gICAgbGV0IGEgPSB7XG4gICAgICB4OiB0aGlzLm1vdXNlWCxcbiAgICAgIHk6IHRoaXMubW91c2VZLFxuICAgICAgd2lkdGg6IDEsXG4gICAgICBoZWlnaHQ6IDFcbiAgICB9O1xuXG4gICAgZm9yIChsZXQgZW5lbXkgb2YgdGhpcy5lbmVtaWVzKSB7XG4gICAgICBsZXQgYiA9IHtcbiAgICAgICAgeDogZW5lbXkucmVhbFhQb3MsXG4gICAgICAgIHk6IGVuZW15LnJlYWxZUG9zLFxuICAgICAgICB3aWR0aDogZW5lbXkuZ2V0V2lkdGgoKSAqIDIsXG4gICAgICAgIGhlaWdodDogZW5lbXkuZ2V0SGVpZ2h0KCkgKiAyXG4gICAgICB9O1xuXG4gICAgICBpZiAoZnVuY3MuaXNDb2xsaWRlKGEsIGIpKSB7XG4gICAgICAgIHRoaXMucGxheWVyLmhvdmVyQWN0aW9uID0gXCJhdHRhY2tcIjtcbiAgICAgICAgdGhpcy5wbGF5ZXIuaG92ZXJUYXJnZXQgPSBlbmVteTtcbiAgICAgICAgaW1hZ2UgPSB0aGlzLmltYWdlc1tcInN3b3JkLnBuZ1wiXTtcbiAgICAgIH1cbiAgICB9XG5cbiAgICBpZiAodGhpcy5tb3VzZVggJiYgdGhpcy5tb3VzZVkpIHtcbiAgICAgIHRoaXMuY3R4LmRyYXdJbWFnZShpbWFnZSwgdGhpcy5tb3VzZVgsIHRoaXMubW91c2VZLCAzMiwgMzIpO1xuICAgIH1cbiAgfVxufVxuXG5leHBvcnQgeyBHYW1lIH07XG4iXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./assets/js/Game.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Game": () => (/* binding */ Game)
+/* harmony export */ });
+/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Player.js */ "./assets/js/Player.js");
+/* harmony import */ var _Enemy_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Enemy.js */ "./assets/js/Enemy.js");
+/* harmony import */ var _Slime_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Slime.js */ "./assets/js/Slime.js");
+/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./funcs.js */ "./assets/js/funcs.js");
+
+
+
+
+
+
+
+class Game {
+  constructor(width, height) {
+    this.barWidth = 200;
+    this.barHeight = 10;
+    this.started = false;
+    this.plane = [];
+    this.player = null;
+    this.image = null;
+    this.imageUrls = [
+      "adventurer/adventurer.png",
+      "enemies/slime_red.png",
+      "cross.png",
+      "glove.png",
+      "sword.png",
+      "enemies/slime_red_missile_east.png",
+      "enemies/slime_red_missile_south_east.png",
+      "enemies/slime_red_missile_south.png",
+      "enemies/slime_red_missile_south_west.png",
+      "enemies/slime_red_missile_west.png",
+      "enemies/slime_red_missile_north_west.png",
+      "enemies/slime_red_missile_north.png",
+      "enemies/slime_red_missile_north_east.png"
+    ];
+    this.images = {};
+    this.enemies = [];
+    this.directions = [
+      "standingnorth",
+      "standingwest",
+      "standingeast",
+      "standingsouth",
+      "runningeast1",
+      "runningeast2"
+    ];
+    this.width = width;
+    this.height = height;
+    this.canvas = document.createElement("canvas");
+    this.canvas.id = "CursorLayer";
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    this.canvas.style.zIndex = 8;
+    this.canvas.style.margin = "auto";
+    this.canvas.style.display = "block";
+    this.canvas.style.border = "1px solid #bbb";
+    this.fps = 20;
+    this.timer = null;
+    this.map = null;
+    this.mouseX;
+    this.mouseY;
+  }
+
+  init() {
+    if (this.map.layers.ground) {
+      let startPoint = this.map.dataLayer.startingPoint;
+      let mouseMove = this.mouseMove.bind(this);
+
+      this.imageUrls.push(
+        "map/" + this.map.tileSets[0].mapImage.getAttribute("source")
+      );
+      this.map.realWidth = this.map.width * this.map.layers.ground.tileWidth;
+      this.map.realHeight = this.map.height * this.map.layers.ground.tileHeight;
+
+      this.stop();
+      this.player = new _Player_js__WEBPACK_IMPORTED_MODULE_0__.Player(startPoint.x, startPoint.y);
+      this.enemies.push(
+        new _Slime_js__WEBPACK_IMPORTED_MODULE_2__.Slime(
+          startPoint.x + 200,
+          startPoint.y + 200,
+          "redSlime",
+          20,
+          10,
+          1,
+          100
+        )
+      );
+      // this.enemies.push(new Slime(
+      //     startPoint.x + 300,
+      //     startPoint.y + 300,
+      //     'redSlime',
+      //     20,
+      //     10,
+      //     1,
+      //     10)
+      // );
+      this.centerCamera();
+
+      let player = this.player;
+      let map = this.map;
+
+      window.addEventListener("mousedown", function(e) {
+        player.mouseDown(e, map.worldXOffset, map.worldYOffset);
+      });
+      window.addEventListener("mouseup", function(e) {
+        player.mouseUp(e, true);
+      });
+      window.addEventListener("mousemove", function(e) {
+        mouseMove(e, true);
+      });
+
+      document.getElementById("plane").appendChild(this.canvas);
+      this.ctx = this.canvas.getContext("2d");
+
+      let loadImage = this.loadImage.bind(this);
+
+      loadImage();
+      // this.loadImage();
+    } else {
+      console.log("No ground layer found");
+    }
+  }
+
+  mouseMove(e) {
+    let el = e.target;
+
+    if ((el.getTagName = "canvas")) {
+      this.mouseX = e.clientX - el.offsetLeft;
+      this.mouseY = e.clientY - el.offsetTop;
+    }
+  }
+
+  stop() {
+    if (this.started) {
+      clearInterval(this.timer);
+      this.started = false;
+    }
+  }
+
+  start() {
+    let redraw = this.redraw.bind(this);
+    let startAnimation = this.player.startAnimation.bind(this.player);
+    let startData = this.player.startData.bind(this.player);
+
+    startData();
+    startAnimation();
+    for (let enemy of this.enemies) {
+      enemy.startAnimation();
+    }
+
+    if (!this.started) {
+      this.timer = setInterval(function() {
+        redraw();
+        // }, 1500);
+      }, 1000 / this.fps);
+      this.started = true;
+    }
+  }
+
+  redraw() {
+    this.getMapScope();
+    this.player.move2(
+      {
+        x: this.map.worldXOffset,
+        y: this.map.worldYOffset,
+        w: this.map.realWidth,
+        h: this.map.realHeight
+      },
+      this.enemies,
+      this.map
+    );
+    this.checkEnemies();
+    this.mapScroll();
+    this.draw();
+  }
+
+  checkEnemies() {
+    for (let enemy in this.enemies) {
+      this.enemies[enemy].realXPos =
+        this.enemies[enemy].getXPos() - 16 + this.map.worldXOffset;
+      this.enemies[enemy].realYPos =
+        this.enemies[enemy].getYPos() - 16 + this.map.worldYOffset;
+      this.enemies[enemy].realXCenterPos =
+        this.enemies[enemy].getXCenterPos() + this.map.worldXOffset;
+      this.enemies[enemy].realYCenterPos =
+        this.enemies[enemy].getYCenterPos() + this.map.worldYOffset;
+      if (!this.enemies[enemy].alive) {
+        this.player.getxp(this.enemies[enemy].expGive);
+        this.enemies.splice(enemy, 1);
+      } else {
+        this.enemies[enemy].move(this.player, this.map);
+        this.enemies[enemy].checkAttack(this.player);
+      }
+    }
+  }
+
+  centerCamera() {
+    this.map.worldXOffset =
+      -this.player.posX + this.width / 2 - this.player.height;
+    this.map.worldYOffset =
+      -this.player.posY + this.height / 2 - this.player.height;
+  }
+
+  mapScroll() {
+    let margin = 300;
+    let realYPos = this.player.posY + this.map.worldYOffset;
+    let realXPos = this.player.posX + this.map.worldXOffset;
+    let isBelow = realYPos > this.height - margin ? 1 : 0;
+    let isAbove = realYPos + this.player.height * 2 < margin ? 1 : 0;
+    let isRight =
+      realXPos + this.player.width * 2 > this.width - margin ? 1 : 0;
+    let isLeft = realXPos < margin ? 1 : 0;
+    let dx = this.player.realClickX - this.player.posX;
+    let dy = this.player.realClickY - this.player.posY;
+    let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+    let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    let xSpeed = (dx / distance) * this.player.moveSpeed * hMovement;
+    let ySpeed = (dy / distance) * this.player.moveSpeed * vMovement;
+
+    if (
+      isRight &&
+      this.map.worldXOffset - xSpeed * 1 > -this.map.realWidth + this.width
+    ) {
+      this.map.worldXOffset -= xSpeed * 1;
+    } else if (isLeft && this.map.worldXOffset + xSpeed * 1 <= 0) {
+      this.map.worldXOffset += xSpeed * 1;
+    }
+
+    if (
+      isBelow &&
+      this.map.worldYOffset - ySpeed * 1 > -this.map.realHeight + this.height
+    ) {
+      this.map.worldYOffset -= ySpeed * 1;
+    } else if (isAbove && this.map.worldYOffset + ySpeed * 1 < 0) {
+      this.map.worldYOffset += ySpeed * 1;
+    }
+  }
+
+  loadImage() {
+    let imageUrls = this.imageUrls;
+    let start = this.start.bind(this);
+    let loadCounter = 0;
+
+    for (let image of imageUrls) {
+      this.images[image] = new Image();
+      this.images[image].onload = function() {
+        loadCounter++;
+        if (loadCounter === imageUrls.length) {
+          start();
+        }
+      };
+      this.images[image].src = "assets/img/" + image;
+    }
+  }
+
+  reset() {
+    this.player.posX = this.player.startX;
+    this.player.posY = this.player.startY;
+  }
+
+  draw() {
+    let getAnimationType = this.player.getAnimationType.bind(this.player);
+
+    // getAnimationType();
+
+    this.ctx.font = "14px courier";
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.msImageSmoothingEnabled = false;
+    this.ctx.webkitImageSmoothingEnabled = false;
+    this.ctx.imageSmoothingEnabled = false;
+
+    this.drawMap();
+    this.drawPlayer();
+    this.drawEnemies();
+    this.drawOverlayObjects();
+    // this.drawAttackingSquares();
+    // this.drawStatusText();
+    this.drawHealthbar();
+    this.drawPointer();
+  }
+
+  getMapScope() {
+    let tileWidth = this.map.tileWidth;
+    let restY = -this.map.worldXOffset % tileWidth;
+
+    let startY = (-this.map.worldXOffset - restY) / tileWidth;
+    let restX = -this.map.worldYOffset % tileWidth;
+
+    let startX = (-this.map.worldYOffset - restX) / tileWidth;
+    let restEndX = (-this.map.worldYOffset + this.width) % tileWidth;
+    let endX = (-this.map.worldYOffset + this.width - restEndX) / tileWidth;
+    let restEndY = (-this.map.worldXOffset + this.width) % tileWidth;
+    let endY = (-this.map.worldXOffset + this.width - restEndY) / tileWidth;
+
+    this.map.startX = startX > 0 ? startX - 1 : 0;
+    this.map.startY = startY > 0 ? startY - 1 : 0;
+
+    this.map.endX = endX + 1 < this.map.width ? endX + 1 : this.map.width;
+    this.map.endY = endY + 1 < this.map.height ? endY + 1 : this.map.height;
+  }
+
+  drawMap() {
+    for (let layer in this.map.plane) {
+      for (let x = this.map.startX; x < this.map.endX; x++) {
+        for (let y = this.map.startY; y < this.map.endY; y++) {
+          if (
+            this.map.plane[layer][x][y] &&
+            this.map.tileSets[0].tiles[this.map.plane[layer][x][y].getType()]
+          ) {
+            let tileType = this.map.plane[layer][x][y].getType();
+
+            this.ctx.drawImage(
+              this.images["map/overworld1.png"], //bilden
+              this.map.tileSets[0].tiles[tileType].xOffset,
+              this.map.tileSets[0].tiles[tileType].yOffset,
+              this.map.tileSets[0].tiles[tileType].getWidth(),
+              this.map.tileSets[0].tiles[tileType].getHeight(),
+              this.map.plane[layer][x][y].xOffset + this.map.worldXOffset,
+              this.map.plane[layer][x][y].yOffset + this.map.worldYOffset,
+              this.map.plane[layer][x][y].getWidth(),
+              this.map.plane[layer][x][y].getHeight()
+            );
+          }
+        }
+      }
+    }
+  }
+
+  drawOverlayObjects() {
+    for (let x = this.map.startX; x < this.map.endX; x++) {
+      for (let y = this.map.startY; y < this.map.endY; y++) {
+        if (
+          this.map.objectsOverlay[x][y] &&
+          this.map.tileSets[0].tiles[this.map.objectsOverlay[x][y].getType()]
+        ) {
+          let tileType = this.map.objectsOverlay[x][y].getType();
+
+          this.ctx.drawImage(
+            this.images["map/overworld1.png"], //bilden
+            this.map.tileSets[0].tiles[tileType].xOffset,
+            this.map.tileSets[0].tiles[tileType].yOffset,
+            this.map.tileSets[0].tiles[tileType].getWidth(),
+            this.map.tileSets[0].tiles[tileType].getHeight(),
+            this.map.objectsOverlay[x][y].xOffset + this.map.worldXOffset,
+            this.map.objectsOverlay[x][y].yOffset + this.map.worldYOffset,
+            this.map.objectsOverlay[x][y].getWidth(),
+            this.map.objectsOverlay[x][y].getHeight()
+          );
+        }
+      }
+    }
+  }
+
+  drawPlayer() {
+    // let facingPlayerOffset = this.player.facingX == 1 ? 10 : 18;
+    let playerYPos = this.player.posY + 18 + this.map.worldYOffset - 32;
+    let playerXPos = this.player.posX + 14 + this.map.worldXOffset - 32;
+    // let targetX = this.player.realClickX + this.map.worldXOffset - 16;
+    // let targetY = this.player.realClickY + this.map.worldYOffset - 16;
+
+    // this.player.facingPlayerOffset = facingPlayerOffset;
+    this.player.playerXPos = playerXPos;
+    this.player.playerYPos = playerYPos;
+
+    // if (this.player.clickTarget) {
+    //     targetX = this.player.clickTarget.getXPos() + this.map.worldXOffset - 16;
+    //     targetY = this.player.clickTarget.getYPos() + this.map.worldYOffset - 16;
+    // }
+
+    // if (this.player.realClickX && this.player.realClickX) {
+    //     this.ctx.drawImage(
+    //         this.images['cross.png'],
+    //         targetX,
+    //         targetY,
+    //         32,
+    //         32
+    //     );
+    // }
+
+    // this.ctx.fillStyle = '#BBBBBB4D';
+    // this.ctx.fillRect(
+    //     this.player.playerXPos,
+    //     this.player.playerYPos,
+    //     (this.player.width * 1.5) - 12,
+    //     (this.player.height * 1.5) - 6
+    // );
+
+    this.ctx.drawImage(
+      this.images["adventurer/adventurer.png"],
+      this.player.offsetFrameX * this.player.width, // sidled/animation
+      this.player.offsetFrameY * this.player.height + 1, // höjden
+      this.player.width,
+      this.player.height,
+      this.player.posX + this.map.worldXOffset - 32,
+      this.player.posY + this.map.worldYOffset - 32,
+      // playerXPos,
+      // playerYPos,
+      // this.player.posX + this.map.worldXOffset,
+      // this.player.posY + this.map.worldYOffset,
+      this.player.width * 2,
+      this.player.height * 2
+    );
+    // this.ctx.fillStyle = '#000000';
+    // this.ctx.fillRect(
+    //     this.player.posX + this.map.worldXOffset,
+    //     this.player.posY + this.map.worldYOffset,
+    //     1,
+    //     1
+    // );
+  }
+
+  drawEnemies() {
+    let a = {
+      x: this.player.playerXPos,
+      y: this.player.playerYPos,
+      width: this.player.width * 1.5 - 12,
+      height: this.player.height * 1.5 - 6
+    };
+
+    // this.ctx.fillStyle = '#BBBBBB4D';
+    // this.ctx.fillRect(
+    //     this.player.playerXPos,
+    //     this.player.playerYPos,
+    //     (this.player.width * 1.5) - 12,
+    //     (this.player.height * 1.5) - 6
+    // );
+
+    for (let enemy of this.enemies) {
+      this.ctx.drawImage(
+        this.images["enemies/" + enemy.getImage()],
+        enemy.offsetFrameX * enemy.width, // sidled/animation
+        enemy.offsetFrameY * enemy.height, // höjden
+        enemy.getWidth(),
+        enemy.getHeight(),
+        enemy.realXPos,
+        enemy.realYPos,
+        enemy.getWidth() * 2,
+        enemy.getHeight() * 2
+      );
+      this.ctx.fillStyle = "#000000";
+      this.ctx.fillRect(
+        enemy.realXPos + (enemy.width * 2) / 2,
+        enemy.realYPos + (enemy.height * 2) / 2,
+        3,
+        3
+        // enemy.getWidth() * 2,
+        // enemy.getHeight() * 2
+      );
+
+      if (enemy.missiles) {
+        for (let missile of enemy.missiles) {
+          this.ctx.drawImage(
+            this.images[missile.image],
+            missile.posX - 8 + this.map.worldXOffset,
+            missile.posY - 8 + this.map.worldYOffset,
+            32,
+            32
+          );
+          // this.ctx.fillRect(
+          //     missile.posX + this.map.worldXOffset,
+          //     missile.posY + this.map.worldYOffset,
+          //     missile.width,
+          //     missile.height
+          // );
+          let b = {
+            x: missile.posX + this.map.worldXOffset,
+            y: missile.posY + this.map.worldYOffset,
+            width: missile.width,
+            height: missile.height
+          };
+
+          if (_funcs_js__WEBPACK_IMPORTED_MODULE_3__.funcs.isCollide(a, b)) {
+            missile.hit = true;
+            this.player.getHurt(enemy.damage);
+            // enemy.getHurt(this.player.damage);
+          }
+        }
+
+        // for (let enemy of this.enemies) {
+        // }
+      }
+
+      /*if (funcs.isCollide({
+                x: this.player.playerXPos,
+                y: this.player.playerYPos,
+                width: (this.player.width * 1.5) - 12,
+                height: (this.player.height * 1.5) - 6
+            }, {
+                x: enemy.realXPos,
+                y: enemy.realYPos,
+                width: enemy.getWidth() * 2,
+                height: enemy.getHeight() * 2
+            }) && !enemy.hurt) {
+            // if (realXPos > attackXPos &&
+            //     realXPos < attackXPos + 20 &&
+            //     realYPos > attackYPos &&
+            //     realYPos < attackYPos + 40
+            // ) {
+                this.player.getHurt(enemy.damage);
+            }*/
+    }
+  }
+
+  drawAttackingSquares() {
+    if (this.player.attacking) {
+      let facingOffset = this.player.facingX == 1 ? 32 + 12 : 0;
+      let attackYPos = this.player.posY + 20 + this.map.worldYOffset - 32;
+      let attackXPos =
+        this.player.posX + facingOffset + this.map.worldXOffset - 32;
+
+      let a = {
+        x: attackXPos,
+        y: attackYPos,
+        width: 20,
+        height: 40
+      };
+
+      this.ctx.fillStyle = "#005AFF4D";
+      this.ctx.fillRect(attackXPos, attackYPos, 20, 40);
+      this.ctx.fillStyle = "#005AFF";
+      this.ctx.strokeRect(attackXPos, attackYPos, 20, 40);
+
+      for (let enemy of this.enemies) {
+        let b = {
+          x: enemy.realXPos,
+          y: enemy.realYPos,
+          width: enemy.getWidth() * 2,
+          height: enemy.getHeight() * 2
+        };
+
+        if (_funcs_js__WEBPACK_IMPORTED_MODULE_3__.funcs.isCollide(a, b)) {
+          enemy.getHurt(this.player.damage);
+        }
+      }
+    }
+  }
+
+  drawStatusText() {
+    this.ctx.font = "20px courier";
+    this.ctx.fillStyle = "#fff";
+    this.ctx.fillText(
+      "lvl: " +
+        this.player.level +
+        "  xp " +
+        this.player.experience +
+        "/" +
+        this.player.nextLevel,
+      20,
+      80
+    );
+    this.ctx.fillStyle = "#ffffffc";
+    this.ctx.fillText(this.player.facing, 10, 120);
+    this.ctx.fillText(
+      Math.round(this.player.posY) + ", " + Math.round(this.player.posX),
+      10,
+      140
+    );
+
+    this.ctx.fillText(
+      Math.round(
+        this.player.posY + this.map.worldYOffset - this.player.height * 2
+      ) +
+        ", " +
+        Math.round(
+          this.player.posX + this.map.worldXOffset - this.player.width * 2
+        ),
+      10,
+      160
+    );
+
+    this.ctx.fillText(
+      Math.round(this.player.clickY - this.map.worldYOffset) +
+        ", " +
+        Math.round(this.player.clickX - this.map.worldXOffset),
+      10,
+      180
+    );
+    this.ctx.stroke();
+  }
+
+  drawHealthbar() {
+    this.ctx.font = "20px courier";
+    this.ctx.fillStyle = "#fff";
+    this.ctx.fillText(
+      "lvl: " +
+        this.player.level +
+        "  xp " +
+        this.player.experience +
+        "/" +
+        this.player.nextLevel,
+      20,
+      80
+    );
+    this.ctx.fillStyle = "#FFFFFF55";
+    this.ctx.fillRect(17, 17, this.barWidth + 6, this.barHeight + 6);
+
+    this.ctx.fillStyle = "#CB2E2E";
+    this.ctx.fillRect(
+      20,
+      20,
+      this.barWidth * (this.player.health / this.player.maxHealth),
+      this.barHeight
+    );
+
+    this.ctx.fillStyle = "#FFFFFF55";
+    this.ctx.fillRect(17, 37, this.barWidth + 6, this.barHeight + 6);
+
+    this.ctx.fillStyle = "#24A733";
+    this.ctx.fillRect(
+      20,
+      40,
+      this.barWidth * (this.player.stamina / this.player.maxStamina),
+      this.barHeight
+    );
+  }
+
+  drawPointer() {
+    let image = this.images["glove.png"];
+    this.player.hoverAction = "move";
+    this.player.hoverTarget = null;
+
+    let a = {
+      x: this.mouseX,
+      y: this.mouseY,
+      width: 1,
+      height: 1
+    };
+
+    for (let enemy of this.enemies) {
+      let b = {
+        x: enemy.realXPos,
+        y: enemy.realYPos,
+        width: enemy.getWidth() * 2,
+        height: enemy.getHeight() * 2
+      };
+
+      if (_funcs_js__WEBPACK_IMPORTED_MODULE_3__.funcs.isCollide(a, b)) {
+        this.player.hoverAction = "attack";
+        this.player.hoverTarget = enemy;
+        image = this.images["sword.png"];
+      }
+    }
+
+    if (this.mouseX && this.mouseY) {
+      this.ctx.drawImage(image, this.mouseX, this.mouseY, 32, 32);
+    }
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -114,11 +1073,49 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!****************************!*\
   !*** ./assets/js/Layer.js ***!
   \****************************/
-/*! exports provided: Layer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Layer\", function() { return Layer; });\n\n\n// import { Player } from './Player.js';\n// import { TileSet } from './TileSet.js';\n// import { funcs } from './funcs.js';\n\nclass Layer {\n  constructor(\n    id,\n    data,\n    width,\n    height,\n    visible,\n    opacity,\n    layerName,\n    tileWidth,\n    tileHeight,\n    objects\n  ) {\n    this.id = id;\n    this.name = layerName;\n    this.width = width;\n    this.height = height;\n    this.visible = visible;\n    this.opacity = opacity;\n    this.tileWidth = tileWidth;\n    this.tileHeight = tileHeight;\n    this.data = data;\n    this.objects = objects;\n    // console.log(this.image);\n    // var tileAmountWidth = Math.floor(width / tileWidth);\n    // this.lastgid = tileAmountWidth * Math.floor(height / tileHeight) + firstgid - 1;\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvTGF5ZXIuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9hc3NldHMvanMvTGF5ZXIuanM/MGQ1YyJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcblxuLy8gaW1wb3J0IHsgUGxheWVyIH0gZnJvbSAnLi9QbGF5ZXIuanMnO1xuLy8gaW1wb3J0IHsgVGlsZVNldCB9IGZyb20gJy4vVGlsZVNldC5qcyc7XG4vLyBpbXBvcnQgeyBmdW5jcyB9IGZyb20gJy4vZnVuY3MuanMnO1xuXG5jbGFzcyBMYXllciB7XG4gIGNvbnN0cnVjdG9yKFxuICAgIGlkLFxuICAgIGRhdGEsXG4gICAgd2lkdGgsXG4gICAgaGVpZ2h0LFxuICAgIHZpc2libGUsXG4gICAgb3BhY2l0eSxcbiAgICBsYXllck5hbWUsXG4gICAgdGlsZVdpZHRoLFxuICAgIHRpbGVIZWlnaHQsXG4gICAgb2JqZWN0c1xuICApIHtcbiAgICB0aGlzLmlkID0gaWQ7XG4gICAgdGhpcy5uYW1lID0gbGF5ZXJOYW1lO1xuICAgIHRoaXMud2lkdGggPSB3aWR0aDtcbiAgICB0aGlzLmhlaWdodCA9IGhlaWdodDtcbiAgICB0aGlzLnZpc2libGUgPSB2aXNpYmxlO1xuICAgIHRoaXMub3BhY2l0eSA9IG9wYWNpdHk7XG4gICAgdGhpcy50aWxlV2lkdGggPSB0aWxlV2lkdGg7XG4gICAgdGhpcy50aWxlSGVpZ2h0ID0gdGlsZUhlaWdodDtcbiAgICB0aGlzLmRhdGEgPSBkYXRhO1xuICAgIHRoaXMub2JqZWN0cyA9IG9iamVjdHM7XG4gICAgLy8gY29uc29sZS5sb2codGhpcy5pbWFnZSk7XG4gICAgLy8gdmFyIHRpbGVBbW91bnRXaWR0aCA9IE1hdGguZmxvb3Iod2lkdGggLyB0aWxlV2lkdGgpO1xuICAgIC8vIHRoaXMubGFzdGdpZCA9IHRpbGVBbW91bnRXaWR0aCAqIE1hdGguZmxvb3IoaGVpZ2h0IC8gdGlsZUhlaWdodCkgKyBmaXJzdGdpZCAtIDE7XG4gIH1cbn1cblxuZXhwb3J0IHsgTGF5ZXIgfTtcbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./assets/js/Layer.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Layer": () => (/* binding */ Layer)
+/* harmony export */ });
+
+
+// import { Player } from './Player.js';
+// import { TileSet } from './TileSet.js';
+// import { funcs } from './funcs.js';
+
+class Layer {
+  constructor(
+    id,
+    data,
+    width,
+    height,
+    visible,
+    opacity,
+    layerName,
+    tileWidth,
+    tileHeight,
+    objects
+  ) {
+    this.id = id;
+    this.name = layerName;
+    this.width = width;
+    this.height = height;
+    this.visible = visible;
+    this.opacity = opacity;
+    this.tileWidth = tileWidth;
+    this.tileHeight = tileHeight;
+    this.data = data;
+    this.objects = objects;
+    // console.log(this.image);
+    // var tileAmountWidth = Math.floor(width / tileWidth);
+    // this.lastgid = tileAmountWidth * Math.floor(height / tileHeight) + firstgid - 1;
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -126,11 +1123,237 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!**************************!*\
   !*** ./assets/js/Map.js ***!
   \**************************/
-/*! exports provided: Map */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Map\", function() { return Map; });\n/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Player.js */ \"./assets/js/Player.js\");\n/* harmony import */ var _TileSet_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TileSet.js */ \"./assets/js/TileSet.js\");\n/* harmony import */ var _Layer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Layer.js */ \"./assets/js/Layer.js\");\n/* harmony import */ var _Tile_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Tile.js */ \"./assets/js/Tile.js\");\n/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./funcs.js */ \"./assets/js/funcs.js\");\n\n\n\n\n\n\n\n\nclass Map {\n  constructor(url) {\n    this.url = url;\n    this.xmlDoc = null;\n    this.tileSets = [];\n    this.layers = {};\n    this.plane = [];\n    this.data = null;\n    this.worldXOffset = 0;\n    this.worldYOffset = 0;\n    this.realWidth = 0;\n    this.realHeight = 0;\n    this.dataLayer = {};\n  }\n\n  loadLayers() {\n    console.log(this.data);\n    for (let datalayer of this.data.layers) {\n      let id = datalayer.id;\n      let width = datalayer.width;\n      let height = datalayer.height;\n      let visible = datalayer.visible;\n      let opacity = datalayer.opacity;\n      let layerName = datalayer.name.toCamelCase();\n      let tileWidth = this.data.tilewidth;\n      let tiledata = datalayer.data;\n      let tileHeight = this.data.tileheight;\n      let objects = datalayer.objects;\n\n      this.layers[layerName] = new _Layer_js__WEBPACK_IMPORTED_MODULE_2__[\"Layer\"](\n        id,\n        tiledata,\n        width,\n        height,\n        visible,\n        opacity,\n        layerName,\n        tileWidth,\n        tileHeight,\n        objects\n      );\n    }\n  }\n\n  loadTilesets() {\n    // console.log(this.data.tilesets)\n    for (let tileset of this.data.tilesets) {\n      // console.log(tileset);\n      let firstGid = tileset.firstgid;\n      let tilesetImagePath = tileset.image;\n      let width = this.data.width;\n      let height = this.data.height;\n      let tileWidth = this.data.tilewidth;\n      let tileHeight = this.data.tileheight;\n\n      this.tileSets.push(\n        new _TileSet_js__WEBPACK_IMPORTED_MODULE_1__[\"TileSet\"](\n          firstGid,\n          tileWidth,\n          tileHeight,\n          tilesetImagePath,\n          width,\n          height\n        )\n      );\n    }\n  }\n\n  setMapData() {\n    if (this.layers[\"dataLayer\"]) {\n      for (let dataObj of this.layers[\"dataLayer\"].objects) {\n        this.dataLayer[dataObj.name.toCamelCase()] = dataObj;\n      }\n      delete this.layers[\"dataLayer\"];\n      // this.layers.splice(dataLayer, 1);\n    }\n  }\n\n  async loadTileSetimages() {\n    for (let tileset of this.tileSets) {\n      await tileset.loadTileSetImage();\n    }\n  }\n\n  async getMapData() {\n    let that = this;\n    let object = await window.fetch(that.url);\n    let data = await object.json();\n\n    that.data = data;\n  }\n\n  async loadMap() {\n    await this.getMapData();\n    let that = this;\n\n    that.width = that.data.width;\n    that.height = that.data.height;\n    that.tileWidth = that.data.tilewidth;\n    that.tileHeight = that.data.tileheight;\n\n    that.loadLayers();\n    that.loadTilesets();\n    await that.loadTileSetimages();\n    that.setMapData();\n    // that.layers[0].data\n    for (let layer in that.layers) {\n      let tileCounter = 0;\n\n      that.plane[layer] = [];\n      for (let y = 0; y < that.data.height; y++) {\n        that.plane[layer][y] = [];\n        for (let x = 0; x < that.data.width; x++) {\n          let xOffset = x * that.data.tilewidth;\n          let yOffset = y * that.data.tileheight;\n\n          that.plane[layer][y][x] = new _Tile_js__WEBPACK_IMPORTED_MODULE_3__[\"Tile\"](\n            tileCounter,\n            xOffset,\n            yOffset,\n            that.data.tilewidth,\n            that.data.tileheight,\n            that.layers[layer].data[tileCounter]\n          );\n          tileCounter++;\n        }\n      }\n    }\n    that.objectsOverlay = that.plane.objectsOverlay;\n    delete that.plane.objectsOverlay;\n    // console.log(that.objectsOverlay);\n    /*for (let y = 0; y < that.data.height; y++) {\n            that.plane[y] = [];\n            for (let x = 0; x < that.data.width; x++) {\n                let xOffset = x * that.data.tilewidth;\n                let yOffset = y * that.data.tileheight;\n\n                that.plane[y][x] = new Tile(\n                    tileCounter,\n                    xOffset,\n                    yOffset,\n                    that.data.tilewidth,\n                    that.data.tileheight,\n                    that.layers['ground'].data[tileCounter]\n                );\n                tileCounter++;\n            }\n        }*/\n    // let screenBitmap = new Bitmap(new BitmapData(mapWidth * tileWidth, mapHeight * tileHeight, false, 0x22ffff));\n    // let screenBitmapTopLayer = new Bitmap(new BitmapData(mapWidth*tileWidth,mapHeight*tileHeight,true,0));\n\n    // load images for tileset\n    // for (let i = 0; i < that.tileSets.length; i++) {\n    //     // let loader = new TileCodeEventLoader();\n    //     // loader.contentLoaderInfo.addEventListener(Event.COMPLETE, tilesLoadComplete);\n    //     // loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, progressHandler);\n    //     // loader.tileSet = tileSets[i];\n    //     // loader.load(new URLRequest(\"../assets/\" + tileSets[i].source));\n    //     // eventLoaders.push(loader);\n    //     let mapimage = await window.fetch('assets/img/map/' + that.tileSets[i].source);\n    //     let text = await mapimage.text();\n    //     let xmlDoc = (new window.DOMParser()).parseFromString(text, \"text/xml\");\n\n    //     console.log(xmlDoc);\n    //     // console.log(xmlDoc.activeElement.children[0]);\n    //     that.mapImage = xmlDoc.activeElement.children[0];\n    // }\n    // let screenBitmap = image\n  }\n\n  /*async loadMap() {\n        let that = this;\n        let xmlDoc = window.fetch(that.url)\n            .then(response => response.text())\n            .then(function(str) {\n                return (new window.DOMParser()).parseFromString(str, \"text/xml\")\n            })\n            // .then(str => return (new window.DOMParser()).parseFromString(str, \"text/xml\"))\n            .then(function(ret) {\n                console.log(ret.activeElement);\n                let map = ret.activeElement;\n                that.width = map.getAttribute(\"width\");\n                that.height = map.getAttribute(\"height\");\n                that.tileWidth = map.getAttribute(\"tilewidth\");\n                that.tileHeight = map.getAttribute(\"tileheight\");\n                that.xmlDoc = ret;\n\n                for (let tileSet of map.getElementsByTagName('tileset')) {\n                    console.log(tileSet);\n                    let imageWidth = tileSet.getAttribute('width');\n                    let imageHeight = tileSet.getAttribute('height');\n                    let firstGid = tileSet.getAttribute(\"firstgid\");\n                    let tilesetName = tileSet.getAttribute(\"name\");\n                    let tilesetTileWidth = tileSet.getAttribute(\"tilewidth\");\n                    let tilesetTileHeight = tileSet.getAttribute(\"tileheight\");\n                    let tilesetImagePath = tileSet.getAttribute(\"source\");\n                    that.tileSets.push(new TileSet(firstGid, tilesetName, tilesetTileWidth, tilesetTileHeight, tilesetImagePath, imageWidth, imageHeight));\n                }\n\n                let xmlCounter = 0;\n            });\n            // .then(data => console.log(data));\n            // that.width = xmlDoc.attribute(\"width\");\n            // that.height = xmlDoc.attribute(\"height\");\n            // that.tileWidth = xmlDoc.attribute(\"tilewidth\");\n            // that.tileHeight = xmlDoc.attribute(\"tileheight\");\n        // console.log(xmlDoc);\n    }*/\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvTWFwLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vYXNzZXRzL2pzL01hcC5qcz9hZDIzIl0sInNvdXJjZXNDb250ZW50IjpbIlwidXNlIHN0cmljdFwiO1xuXG5pbXBvcnQgeyBQbGF5ZXIgfSBmcm9tIFwiLi9QbGF5ZXIuanNcIjtcbmltcG9ydCB7IFRpbGVTZXQgfSBmcm9tIFwiLi9UaWxlU2V0LmpzXCI7XG5pbXBvcnQgeyBMYXllciB9IGZyb20gXCIuL0xheWVyLmpzXCI7XG5pbXBvcnQgeyBUaWxlIH0gZnJvbSBcIi4vVGlsZS5qc1wiO1xuaW1wb3J0IHsgZnVuY3MgfSBmcm9tIFwiLi9mdW5jcy5qc1wiO1xuXG5jbGFzcyBNYXAge1xuICBjb25zdHJ1Y3Rvcih1cmwpIHtcbiAgICB0aGlzLnVybCA9IHVybDtcbiAgICB0aGlzLnhtbERvYyA9IG51bGw7XG4gICAgdGhpcy50aWxlU2V0cyA9IFtdO1xuICAgIHRoaXMubGF5ZXJzID0ge307XG4gICAgdGhpcy5wbGFuZSA9IFtdO1xuICAgIHRoaXMuZGF0YSA9IG51bGw7XG4gICAgdGhpcy53b3JsZFhPZmZzZXQgPSAwO1xuICAgIHRoaXMud29ybGRZT2Zmc2V0ID0gMDtcbiAgICB0aGlzLnJlYWxXaWR0aCA9IDA7XG4gICAgdGhpcy5yZWFsSGVpZ2h0ID0gMDtcbiAgICB0aGlzLmRhdGFMYXllciA9IHt9O1xuICB9XG5cbiAgbG9hZExheWVycygpIHtcbiAgICBjb25zb2xlLmxvZyh0aGlzLmRhdGEpO1xuICAgIGZvciAobGV0IGRhdGFsYXllciBvZiB0aGlzLmRhdGEubGF5ZXJzKSB7XG4gICAgICBsZXQgaWQgPSBkYXRhbGF5ZXIuaWQ7XG4gICAgICBsZXQgd2lkdGggPSBkYXRhbGF5ZXIud2lkdGg7XG4gICAgICBsZXQgaGVpZ2h0ID0gZGF0YWxheWVyLmhlaWdodDtcbiAgICAgIGxldCB2aXNpYmxlID0gZGF0YWxheWVyLnZpc2libGU7XG4gICAgICBsZXQgb3BhY2l0eSA9IGRhdGFsYXllci5vcGFjaXR5O1xuICAgICAgbGV0IGxheWVyTmFtZSA9IGRhdGFsYXllci5uYW1lLnRvQ2FtZWxDYXNlKCk7XG4gICAgICBsZXQgdGlsZVdpZHRoID0gdGhpcy5kYXRhLnRpbGV3aWR0aDtcbiAgICAgIGxldCB0aWxlZGF0YSA9IGRhdGFsYXllci5kYXRhO1xuICAgICAgbGV0IHRpbGVIZWlnaHQgPSB0aGlzLmRhdGEudGlsZWhlaWdodDtcbiAgICAgIGxldCBvYmplY3RzID0gZGF0YWxheWVyLm9iamVjdHM7XG5cbiAgICAgIHRoaXMubGF5ZXJzW2xheWVyTmFtZV0gPSBuZXcgTGF5ZXIoXG4gICAgICAgIGlkLFxuICAgICAgICB0aWxlZGF0YSxcbiAgICAgICAgd2lkdGgsXG4gICAgICAgIGhlaWdodCxcbiAgICAgICAgdmlzaWJsZSxcbiAgICAgICAgb3BhY2l0eSxcbiAgICAgICAgbGF5ZXJOYW1lLFxuICAgICAgICB0aWxlV2lkdGgsXG4gICAgICAgIHRpbGVIZWlnaHQsXG4gICAgICAgIG9iamVjdHNcbiAgICAgICk7XG4gICAgfVxuICB9XG5cbiAgbG9hZFRpbGVzZXRzKCkge1xuICAgIC8vIGNvbnNvbGUubG9nKHRoaXMuZGF0YS50aWxlc2V0cylcbiAgICBmb3IgKGxldCB0aWxlc2V0IG9mIHRoaXMuZGF0YS50aWxlc2V0cykge1xuICAgICAgLy8gY29uc29sZS5sb2codGlsZXNldCk7XG4gICAgICBsZXQgZmlyc3RHaWQgPSB0aWxlc2V0LmZpcnN0Z2lkO1xuICAgICAgbGV0IHRpbGVzZXRJbWFnZVBhdGggPSB0aWxlc2V0LmltYWdlO1xuICAgICAgbGV0IHdpZHRoID0gdGhpcy5kYXRhLndpZHRoO1xuICAgICAgbGV0IGhlaWdodCA9IHRoaXMuZGF0YS5oZWlnaHQ7XG4gICAgICBsZXQgdGlsZVdpZHRoID0gdGhpcy5kYXRhLnRpbGV3aWR0aDtcbiAgICAgIGxldCB0aWxlSGVpZ2h0ID0gdGhpcy5kYXRhLnRpbGVoZWlnaHQ7XG5cbiAgICAgIHRoaXMudGlsZVNldHMucHVzaChcbiAgICAgICAgbmV3IFRpbGVTZXQoXG4gICAgICAgICAgZmlyc3RHaWQsXG4gICAgICAgICAgdGlsZVdpZHRoLFxuICAgICAgICAgIHRpbGVIZWlnaHQsXG4gICAgICAgICAgdGlsZXNldEltYWdlUGF0aCxcbiAgICAgICAgICB3aWR0aCxcbiAgICAgICAgICBoZWlnaHRcbiAgICAgICAgKVxuICAgICAgKTtcbiAgICB9XG4gIH1cblxuICBzZXRNYXBEYXRhKCkge1xuICAgIGlmICh0aGlzLmxheWVyc1tcImRhdGFMYXllclwiXSkge1xuICAgICAgZm9yIChsZXQgZGF0YU9iaiBvZiB0aGlzLmxheWVyc1tcImRhdGFMYXllclwiXS5vYmplY3RzKSB7XG4gICAgICAgIHRoaXMuZGF0YUxheWVyW2RhdGFPYmoubmFtZS50b0NhbWVsQ2FzZSgpXSA9IGRhdGFPYmo7XG4gICAgICB9XG4gICAgICBkZWxldGUgdGhpcy5sYXllcnNbXCJkYXRhTGF5ZXJcIl07XG4gICAgICAvLyB0aGlzLmxheWVycy5zcGxpY2UoZGF0YUxheWVyLCAxKTtcbiAgICB9XG4gIH1cblxuICBhc3luYyBsb2FkVGlsZVNldGltYWdlcygpIHtcbiAgICBmb3IgKGxldCB0aWxlc2V0IG9mIHRoaXMudGlsZVNldHMpIHtcbiAgICAgIGF3YWl0IHRpbGVzZXQubG9hZFRpbGVTZXRJbWFnZSgpO1xuICAgIH1cbiAgfVxuXG4gIGFzeW5jIGdldE1hcERhdGEoKSB7XG4gICAgbGV0IHRoYXQgPSB0aGlzO1xuICAgIGxldCBvYmplY3QgPSBhd2FpdCB3aW5kb3cuZmV0Y2godGhhdC51cmwpO1xuICAgIGxldCBkYXRhID0gYXdhaXQgb2JqZWN0Lmpzb24oKTtcblxuICAgIHRoYXQuZGF0YSA9IGRhdGE7XG4gIH1cblxuICBhc3luYyBsb2FkTWFwKCkge1xuICAgIGF3YWl0IHRoaXMuZ2V0TWFwRGF0YSgpO1xuICAgIGxldCB0aGF0ID0gdGhpcztcblxuICAgIHRoYXQud2lkdGggPSB0aGF0LmRhdGEud2lkdGg7XG4gICAgdGhhdC5oZWlnaHQgPSB0aGF0LmRhdGEuaGVpZ2h0O1xuICAgIHRoYXQudGlsZVdpZHRoID0gdGhhdC5kYXRhLnRpbGV3aWR0aDtcbiAgICB0aGF0LnRpbGVIZWlnaHQgPSB0aGF0LmRhdGEudGlsZWhlaWdodDtcblxuICAgIHRoYXQubG9hZExheWVycygpO1xuICAgIHRoYXQubG9hZFRpbGVzZXRzKCk7XG4gICAgYXdhaXQgdGhhdC5sb2FkVGlsZVNldGltYWdlcygpO1xuICAgIHRoYXQuc2V0TWFwRGF0YSgpO1xuICAgIC8vIHRoYXQubGF5ZXJzWzBdLmRhdGFcbiAgICBmb3IgKGxldCBsYXllciBpbiB0aGF0LmxheWVycykge1xuICAgICAgbGV0IHRpbGVDb3VudGVyID0gMDtcblxuICAgICAgdGhhdC5wbGFuZVtsYXllcl0gPSBbXTtcbiAgICAgIGZvciAobGV0IHkgPSAwOyB5IDwgdGhhdC5kYXRhLmhlaWdodDsgeSsrKSB7XG4gICAgICAgIHRoYXQucGxhbmVbbGF5ZXJdW3ldID0gW107XG4gICAgICAgIGZvciAobGV0IHggPSAwOyB4IDwgdGhhdC5kYXRhLndpZHRoOyB4KyspIHtcbiAgICAgICAgICBsZXQgeE9mZnNldCA9IHggKiB0aGF0LmRhdGEudGlsZXdpZHRoO1xuICAgICAgICAgIGxldCB5T2Zmc2V0ID0geSAqIHRoYXQuZGF0YS50aWxlaGVpZ2h0O1xuXG4gICAgICAgICAgdGhhdC5wbGFuZVtsYXllcl1beV1beF0gPSBuZXcgVGlsZShcbiAgICAgICAgICAgIHRpbGVDb3VudGVyLFxuICAgICAgICAgICAgeE9mZnNldCxcbiAgICAgICAgICAgIHlPZmZzZXQsXG4gICAgICAgICAgICB0aGF0LmRhdGEudGlsZXdpZHRoLFxuICAgICAgICAgICAgdGhhdC5kYXRhLnRpbGVoZWlnaHQsXG4gICAgICAgICAgICB0aGF0LmxheWVyc1tsYXllcl0uZGF0YVt0aWxlQ291bnRlcl1cbiAgICAgICAgICApO1xuICAgICAgICAgIHRpbGVDb3VudGVyKys7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG4gICAgdGhhdC5vYmplY3RzT3ZlcmxheSA9IHRoYXQucGxhbmUub2JqZWN0c092ZXJsYXk7XG4gICAgZGVsZXRlIHRoYXQucGxhbmUub2JqZWN0c092ZXJsYXk7XG4gICAgLy8gY29uc29sZS5sb2codGhhdC5vYmplY3RzT3ZlcmxheSk7XG4gICAgLypmb3IgKGxldCB5ID0gMDsgeSA8IHRoYXQuZGF0YS5oZWlnaHQ7IHkrKykge1xuICAgICAgICAgICAgdGhhdC5wbGFuZVt5XSA9IFtdO1xuICAgICAgICAgICAgZm9yIChsZXQgeCA9IDA7IHggPCB0aGF0LmRhdGEud2lkdGg7IHgrKykge1xuICAgICAgICAgICAgICAgIGxldCB4T2Zmc2V0ID0geCAqIHRoYXQuZGF0YS50aWxld2lkdGg7XG4gICAgICAgICAgICAgICAgbGV0IHlPZmZzZXQgPSB5ICogdGhhdC5kYXRhLnRpbGVoZWlnaHQ7XG5cbiAgICAgICAgICAgICAgICB0aGF0LnBsYW5lW3ldW3hdID0gbmV3IFRpbGUoXG4gICAgICAgICAgICAgICAgICAgIHRpbGVDb3VudGVyLFxuICAgICAgICAgICAgICAgICAgICB4T2Zmc2V0LFxuICAgICAgICAgICAgICAgICAgICB5T2Zmc2V0LFxuICAgICAgICAgICAgICAgICAgICB0aGF0LmRhdGEudGlsZXdpZHRoLFxuICAgICAgICAgICAgICAgICAgICB0aGF0LmRhdGEudGlsZWhlaWdodCxcbiAgICAgICAgICAgICAgICAgICAgdGhhdC5sYXllcnNbJ2dyb3VuZCddLmRhdGFbdGlsZUNvdW50ZXJdXG4gICAgICAgICAgICAgICAgKTtcbiAgICAgICAgICAgICAgICB0aWxlQ291bnRlcisrO1xuICAgICAgICAgICAgfVxuICAgICAgICB9Ki9cbiAgICAvLyBsZXQgc2NyZWVuQml0bWFwID0gbmV3IEJpdG1hcChuZXcgQml0bWFwRGF0YShtYXBXaWR0aCAqIHRpbGVXaWR0aCwgbWFwSGVpZ2h0ICogdGlsZUhlaWdodCwgZmFsc2UsIDB4MjJmZmZmKSk7XG4gICAgLy8gbGV0IHNjcmVlbkJpdG1hcFRvcExheWVyID0gbmV3IEJpdG1hcChuZXcgQml0bWFwRGF0YShtYXBXaWR0aCp0aWxlV2lkdGgsbWFwSGVpZ2h0KnRpbGVIZWlnaHQsdHJ1ZSwwKSk7XG5cbiAgICAvLyBsb2FkIGltYWdlcyBmb3IgdGlsZXNldFxuICAgIC8vIGZvciAobGV0IGkgPSAwOyBpIDwgdGhhdC50aWxlU2V0cy5sZW5ndGg7IGkrKykge1xuICAgIC8vICAgICAvLyBsZXQgbG9hZGVyID0gbmV3IFRpbGVDb2RlRXZlbnRMb2FkZXIoKTtcbiAgICAvLyAgICAgLy8gbG9hZGVyLmNvbnRlbnRMb2FkZXJJbmZvLmFkZEV2ZW50TGlzdGVuZXIoRXZlbnQuQ09NUExFVEUsIHRpbGVzTG9hZENvbXBsZXRlKTtcbiAgICAvLyAgICAgLy8gbG9hZGVyLmNvbnRlbnRMb2FkZXJJbmZvLmFkZEV2ZW50TGlzdGVuZXIoUHJvZ3Jlc3NFdmVudC5QUk9HUkVTUywgcHJvZ3Jlc3NIYW5kbGVyKTtcbiAgICAvLyAgICAgLy8gbG9hZGVyLnRpbGVTZXQgPSB0aWxlU2V0c1tpXTtcbiAgICAvLyAgICAgLy8gbG9hZGVyLmxvYWQobmV3IFVSTFJlcXVlc3QoXCIuLi9hc3NldHMvXCIgKyB0aWxlU2V0c1tpXS5zb3VyY2UpKTtcbiAgICAvLyAgICAgLy8gZXZlbnRMb2FkZXJzLnB1c2gobG9hZGVyKTtcbiAgICAvLyAgICAgbGV0IG1hcGltYWdlID0gYXdhaXQgd2luZG93LmZldGNoKCdhc3NldHMvaW1nL21hcC8nICsgdGhhdC50aWxlU2V0c1tpXS5zb3VyY2UpO1xuICAgIC8vICAgICBsZXQgdGV4dCA9IGF3YWl0IG1hcGltYWdlLnRleHQoKTtcbiAgICAvLyAgICAgbGV0IHhtbERvYyA9IChuZXcgd2luZG93LkRPTVBhcnNlcigpKS5wYXJzZUZyb21TdHJpbmcodGV4dCwgXCJ0ZXh0L3htbFwiKTtcblxuICAgIC8vICAgICBjb25zb2xlLmxvZyh4bWxEb2MpO1xuICAgIC8vICAgICAvLyBjb25zb2xlLmxvZyh4bWxEb2MuYWN0aXZlRWxlbWVudC5jaGlsZHJlblswXSk7XG4gICAgLy8gICAgIHRoYXQubWFwSW1hZ2UgPSB4bWxEb2MuYWN0aXZlRWxlbWVudC5jaGlsZHJlblswXTtcbiAgICAvLyB9XG4gICAgLy8gbGV0IHNjcmVlbkJpdG1hcCA9IGltYWdlXG4gIH1cblxuICAvKmFzeW5jIGxvYWRNYXAoKSB7XG4gICAgICAgIGxldCB0aGF0ID0gdGhpcztcbiAgICAgICAgbGV0IHhtbERvYyA9IHdpbmRvdy5mZXRjaCh0aGF0LnVybClcbiAgICAgICAgICAgIC50aGVuKHJlc3BvbnNlID0+IHJlc3BvbnNlLnRleHQoKSlcbiAgICAgICAgICAgIC50aGVuKGZ1bmN0aW9uKHN0cikge1xuICAgICAgICAgICAgICAgIHJldHVybiAobmV3IHdpbmRvdy5ET01QYXJzZXIoKSkucGFyc2VGcm9tU3RyaW5nKHN0ciwgXCJ0ZXh0L3htbFwiKVxuICAgICAgICAgICAgfSlcbiAgICAgICAgICAgIC8vIC50aGVuKHN0ciA9PiByZXR1cm4gKG5ldyB3aW5kb3cuRE9NUGFyc2VyKCkpLnBhcnNlRnJvbVN0cmluZyhzdHIsIFwidGV4dC94bWxcIikpXG4gICAgICAgICAgICAudGhlbihmdW5jdGlvbihyZXQpIHtcbiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyhyZXQuYWN0aXZlRWxlbWVudCk7XG4gICAgICAgICAgICAgICAgbGV0IG1hcCA9IHJldC5hY3RpdmVFbGVtZW50O1xuICAgICAgICAgICAgICAgIHRoYXQud2lkdGggPSBtYXAuZ2V0QXR0cmlidXRlKFwid2lkdGhcIik7XG4gICAgICAgICAgICAgICAgdGhhdC5oZWlnaHQgPSBtYXAuZ2V0QXR0cmlidXRlKFwiaGVpZ2h0XCIpO1xuICAgICAgICAgICAgICAgIHRoYXQudGlsZVdpZHRoID0gbWFwLmdldEF0dHJpYnV0ZShcInRpbGV3aWR0aFwiKTtcbiAgICAgICAgICAgICAgICB0aGF0LnRpbGVIZWlnaHQgPSBtYXAuZ2V0QXR0cmlidXRlKFwidGlsZWhlaWdodFwiKTtcbiAgICAgICAgICAgICAgICB0aGF0LnhtbERvYyA9IHJldDtcblxuICAgICAgICAgICAgICAgIGZvciAobGV0IHRpbGVTZXQgb2YgbWFwLmdldEVsZW1lbnRzQnlUYWdOYW1lKCd0aWxlc2V0JykpIHtcbiAgICAgICAgICAgICAgICAgICAgY29uc29sZS5sb2codGlsZVNldCk7XG4gICAgICAgICAgICAgICAgICAgIGxldCBpbWFnZVdpZHRoID0gdGlsZVNldC5nZXRBdHRyaWJ1dGUoJ3dpZHRoJyk7XG4gICAgICAgICAgICAgICAgICAgIGxldCBpbWFnZUhlaWdodCA9IHRpbGVTZXQuZ2V0QXR0cmlidXRlKCdoZWlnaHQnKTtcbiAgICAgICAgICAgICAgICAgICAgbGV0IGZpcnN0R2lkID0gdGlsZVNldC5nZXRBdHRyaWJ1dGUoXCJmaXJzdGdpZFwiKTtcbiAgICAgICAgICAgICAgICAgICAgbGV0IHRpbGVzZXROYW1lID0gdGlsZVNldC5nZXRBdHRyaWJ1dGUoXCJuYW1lXCIpO1xuICAgICAgICAgICAgICAgICAgICBsZXQgdGlsZXNldFRpbGVXaWR0aCA9IHRpbGVTZXQuZ2V0QXR0cmlidXRlKFwidGlsZXdpZHRoXCIpO1xuICAgICAgICAgICAgICAgICAgICBsZXQgdGlsZXNldFRpbGVIZWlnaHQgPSB0aWxlU2V0LmdldEF0dHJpYnV0ZShcInRpbGVoZWlnaHRcIik7XG4gICAgICAgICAgICAgICAgICAgIGxldCB0aWxlc2V0SW1hZ2VQYXRoID0gdGlsZVNldC5nZXRBdHRyaWJ1dGUoXCJzb3VyY2VcIik7XG4gICAgICAgICAgICAgICAgICAgIHRoYXQudGlsZVNldHMucHVzaChuZXcgVGlsZVNldChmaXJzdEdpZCwgdGlsZXNldE5hbWUsIHRpbGVzZXRUaWxlV2lkdGgsIHRpbGVzZXRUaWxlSGVpZ2h0LCB0aWxlc2V0SW1hZ2VQYXRoLCBpbWFnZVdpZHRoLCBpbWFnZUhlaWdodCkpO1xuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgIGxldCB4bWxDb3VudGVyID0gMDtcbiAgICAgICAgICAgIH0pO1xuICAgICAgICAgICAgLy8gLnRoZW4oZGF0YSA9PiBjb25zb2xlLmxvZyhkYXRhKSk7XG4gICAgICAgICAgICAvLyB0aGF0LndpZHRoID0geG1sRG9jLmF0dHJpYnV0ZShcIndpZHRoXCIpO1xuICAgICAgICAgICAgLy8gdGhhdC5oZWlnaHQgPSB4bWxEb2MuYXR0cmlidXRlKFwiaGVpZ2h0XCIpO1xuICAgICAgICAgICAgLy8gdGhhdC50aWxlV2lkdGggPSB4bWxEb2MuYXR0cmlidXRlKFwidGlsZXdpZHRoXCIpO1xuICAgICAgICAgICAgLy8gdGhhdC50aWxlSGVpZ2h0ID0geG1sRG9jLmF0dHJpYnV0ZShcInRpbGVoZWlnaHRcIik7XG4gICAgICAgIC8vIGNvbnNvbGUubG9nKHhtbERvYyk7XG4gICAgfSovXG59XG5cbmV4cG9ydCB7IE1hcCB9O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./assets/js/Map.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Map": () => (/* binding */ Map)
+/* harmony export */ });
+/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Player.js */ "./assets/js/Player.js");
+/* harmony import */ var _TileSet_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TileSet.js */ "./assets/js/TileSet.js");
+/* harmony import */ var _Layer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Layer.js */ "./assets/js/Layer.js");
+/* harmony import */ var _Tile_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Tile.js */ "./assets/js/Tile.js");
+/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./funcs.js */ "./assets/js/funcs.js");
+
+
+
+
+
+
+
+
+class Map {
+  constructor(url) {
+    this.url = url;
+    this.xmlDoc = null;
+    this.tileSets = [];
+    this.layers = {};
+    this.plane = [];
+    this.data = null;
+    this.worldXOffset = 0;
+    this.worldYOffset = 0;
+    this.realWidth = 0;
+    this.realHeight = 0;
+    this.dataLayer = {};
+  }
+
+  loadLayers() {
+    console.log(this.data);
+    for (let datalayer of this.data.layers) {
+      let id = datalayer.id;
+      let width = datalayer.width;
+      let height = datalayer.height;
+      let visible = datalayer.visible;
+      let opacity = datalayer.opacity;
+      let layerName = datalayer.name.toCamelCase();
+      let tileWidth = this.data.tilewidth;
+      let tiledata = datalayer.data;
+      let tileHeight = this.data.tileheight;
+      let objects = datalayer.objects;
+
+      this.layers[layerName] = new _Layer_js__WEBPACK_IMPORTED_MODULE_2__.Layer(
+        id,
+        tiledata,
+        width,
+        height,
+        visible,
+        opacity,
+        layerName,
+        tileWidth,
+        tileHeight,
+        objects
+      );
+    }
+  }
+
+  loadTilesets() {
+    // console.log(this.data.tilesets)
+    for (let tileset of this.data.tilesets) {
+      // console.log(tileset);
+      let firstGid = tileset.firstgid;
+      let tilesetImagePath = tileset.image;
+      let width = this.data.width;
+      let height = this.data.height;
+      let tileWidth = this.data.tilewidth;
+      let tileHeight = this.data.tileheight;
+
+      this.tileSets.push(
+        new _TileSet_js__WEBPACK_IMPORTED_MODULE_1__.TileSet(
+          firstGid,
+          tileWidth,
+          tileHeight,
+          tilesetImagePath,
+          width,
+          height
+        )
+      );
+    }
+  }
+
+  setMapData() {
+    if (this.layers["dataLayer"]) {
+      for (let dataObj of this.layers["dataLayer"].objects) {
+        this.dataLayer[dataObj.name.toCamelCase()] = dataObj;
+      }
+      delete this.layers["dataLayer"];
+      // this.layers.splice(dataLayer, 1);
+    }
+  }
+
+  async loadTileSetimages() {
+    for (let tileset of this.tileSets) {
+      await tileset.loadTileSetImage();
+    }
+  }
+
+  async getMapData() {
+    let that = this;
+    let object = await window.fetch(that.url);
+    let data = await object.json();
+
+    that.data = data;
+  }
+
+  async loadMap() {
+    await this.getMapData();
+    let that = this;
+
+    that.width = that.data.width;
+    that.height = that.data.height;
+    that.tileWidth = that.data.tilewidth;
+    that.tileHeight = that.data.tileheight;
+
+    that.loadLayers();
+    that.loadTilesets();
+    await that.loadTileSetimages();
+    that.setMapData();
+    // that.layers[0].data
+    for (let layer in that.layers) {
+      let tileCounter = 0;
+
+      that.plane[layer] = [];
+      for (let y = 0; y < that.data.height; y++) {
+        that.plane[layer][y] = [];
+        for (let x = 0; x < that.data.width; x++) {
+          let xOffset = x * that.data.tilewidth;
+          let yOffset = y * that.data.tileheight;
+
+          that.plane[layer][y][x] = new _Tile_js__WEBPACK_IMPORTED_MODULE_3__.Tile(
+            tileCounter,
+            xOffset,
+            yOffset,
+            that.data.tilewidth,
+            that.data.tileheight,
+            that.layers[layer].data[tileCounter]
+          );
+          tileCounter++;
+        }
+      }
+    }
+    that.objectsOverlay = that.plane.objectsOverlay;
+    delete that.plane.objectsOverlay;
+    // console.log(that.objectsOverlay);
+    /*for (let y = 0; y < that.data.height; y++) {
+            that.plane[y] = [];
+            for (let x = 0; x < that.data.width; x++) {
+                let xOffset = x * that.data.tilewidth;
+                let yOffset = y * that.data.tileheight;
+
+                that.plane[y][x] = new Tile(
+                    tileCounter,
+                    xOffset,
+                    yOffset,
+                    that.data.tilewidth,
+                    that.data.tileheight,
+                    that.layers['ground'].data[tileCounter]
+                );
+                tileCounter++;
+            }
+        }*/
+    // let screenBitmap = new Bitmap(new BitmapData(mapWidth * tileWidth, mapHeight * tileHeight, false, 0x22ffff));
+    // let screenBitmapTopLayer = new Bitmap(new BitmapData(mapWidth*tileWidth,mapHeight*tileHeight,true,0));
+
+    // load images for tileset
+    // for (let i = 0; i < that.tileSets.length; i++) {
+    //     // let loader = new TileCodeEventLoader();
+    //     // loader.contentLoaderInfo.addEventListener(Event.COMPLETE, tilesLoadComplete);
+    //     // loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+    //     // loader.tileSet = tileSets[i];
+    //     // loader.load(new URLRequest("../assets/" + tileSets[i].source));
+    //     // eventLoaders.push(loader);
+    //     let mapimage = await window.fetch('assets/img/map/' + that.tileSets[i].source);
+    //     let text = await mapimage.text();
+    //     let xmlDoc = (new window.DOMParser()).parseFromString(text, "text/xml");
+
+    //     console.log(xmlDoc);
+    //     // console.log(xmlDoc.activeElement.children[0]);
+    //     that.mapImage = xmlDoc.activeElement.children[0];
+    // }
+    // let screenBitmap = image
+  }
+
+  /*async loadMap() {
+        let that = this;
+        let xmlDoc = window.fetch(that.url)
+            .then(response => response.text())
+            .then(function(str) {
+                return (new window.DOMParser()).parseFromString(str, "text/xml")
+            })
+            // .then(str => return (new window.DOMParser()).parseFromString(str, "text/xml"))
+            .then(function(ret) {
+                console.log(ret.activeElement);
+                let map = ret.activeElement;
+                that.width = map.getAttribute("width");
+                that.height = map.getAttribute("height");
+                that.tileWidth = map.getAttribute("tilewidth");
+                that.tileHeight = map.getAttribute("tileheight");
+                that.xmlDoc = ret;
+
+                for (let tileSet of map.getElementsByTagName('tileset')) {
+                    console.log(tileSet);
+                    let imageWidth = tileSet.getAttribute('width');
+                    let imageHeight = tileSet.getAttribute('height');
+                    let firstGid = tileSet.getAttribute("firstgid");
+                    let tilesetName = tileSet.getAttribute("name");
+                    let tilesetTileWidth = tileSet.getAttribute("tilewidth");
+                    let tilesetTileHeight = tileSet.getAttribute("tileheight");
+                    let tilesetImagePath = tileSet.getAttribute("source");
+                    that.tileSets.push(new TileSet(firstGid, tilesetName, tilesetTileWidth, tilesetTileHeight, tilesetImagePath, imageWidth, imageHeight));
+                }
+
+                let xmlCounter = 0;
+            });
+            // .then(data => console.log(data));
+            // that.width = xmlDoc.attribute("width");
+            // that.height = xmlDoc.attribute("height");
+            // that.tileWidth = xmlDoc.attribute("tilewidth");
+            // that.tileHeight = xmlDoc.attribute("tileheight");
+        // console.log(xmlDoc);
+    }*/
+}
+
+
+
 
 /***/ }),
 
@@ -138,11 +1361,591 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!*****************************!*\
   !*** ./assets/js/Player.js ***!
   \*****************************/
-/*! exports provided: Player */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Player\", function() { return Player; });\n/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./funcs.js */ \"./assets/js/funcs.js\");\n\n// import { Game } from './Game.js';\n\n\nclass Player {\n  constructor(startX, startY) {\n    this.level = 1;\n    this.experience = 0;\n    this.nextLevel = 100;\n    this.damage = 5;\n    this.health = 100;\n    this.stamina = 100;\n    this.maxHealth = 100;\n    this.maxStamina = 100;\n    this.facing = \"\";\n    this.facingY = \"south\";\n    this.facingX = 1;\n    this.frame = 1;\n    this.startX = startX;\n    this.startY = startY;\n    this.keyPressed = {};\n    this.posX = startX;\n    this.posY = startY;\n    this.moving = false;\n    this.moveSpeed = 8;\n    this.calculatedMoveSpeed = 1;\n    this.offsetFrameY = 0;\n    this.offsetFrameX = 0;\n    this.animationFrame = 0;\n    this.animationFrames = [12, 7, 9, 9, 9, 5, 4, 7, 12, 7, 9, 9, 9, 5, 4, 7];\n    this.animationTimer = null;\n    this.height = 32;\n    this.width = 32;\n    this.attacking = false;\n    this.attackCooldown = 9;\n    this.attackCounter = 0;\n    this.attackTimer = 0;\n    this.attackCombo = 0;\n    this.jumping = false;\n    this.jumpCooldown = 9;\n    this.jumpCounter = 0;\n    this.jumpTimer = 0;\n    this.fps = 10;\n    this.hurtTimer = null;\n    this.hurt = false;\n    this.alive = true;\n    this.clickX = 0;\n    this.clickY = 0;\n    this.clickAction = \"move\";\n    this.clickTarget = null;\n    this.hoverAction = \"move\";\n    // this.startAnimation();\n  }\n\n  die() {\n    this.alive = false;\n    this.doAnimation(7, false);\n  }\n\n  mouseUp(e) {\n    // console.log(e);\n  }\n\n  mouseDown(e, worldXOffset, worldYOffset) {\n    let el = e.target;\n\n    if (el.getTagName == \"canvas\") {\n      this.clickX = e.clientX - el.offsetLeft;\n      this.clickY = e.clientY - el.offsetTop;\n      this.realClickX = e.clientX - el.offsetLeft - worldXOffset;\n      this.realClickY = e.clientY - el.offsetTop - worldYOffset;\n    }\n    this.clickAction = this.hoverAction;\n    this.clickTarget = this.hoverTarget;\n  }\n\n  doAnimation(yOffset, restart = true, duration = 999) {\n    let updateAnimationFrames = this.updateAnimationFrames.bind(this);\n    let getAnimationType = this.getAnimationType.bind(this);\n    let startAnimation = this.startAnimation.bind(this);\n    let stopAnimation = this.stopAnimation.bind(this);\n\n    stopAnimation();\n    // clearInterval(this.animationTimer);\n    if (duration === 999) {\n      duration = this.animationFrames[yOffset] * (1000 / this.fps);\n    }\n    console.log(duration);\n    this.offsetFrameY = 0;\n    if (this.facingX == 0) {\n      this.offsetFrameY += 8;\n    }\n    // this.getAnimationType();\n    this.offsetFrameY += yOffset;\n    this.offsetFrameX = 0;\n    let counter = 0;\n    this.animationTimer = setInterval(function() {\n      counter++;\n      console.log(counter);\n      updateAnimationFrames();\n    }, 1000 / this.fps);\n\n    setTimeout(function() {\n      stopAnimation();\n      if (restart) {\n        startAnimation();\n      }\n    }, duration);\n  }\n\n  stopAnimation() {\n    clearInterval(this.animationTimer);\n  }\n\n  getHurt(damage) {\n    if (!this.hurt) {\n      let doAnimation = this.doAnimation.bind(this);\n      // let setNotHurting = this.setNotHurting.bind(this);\n      let setNotHurt = this.setNotHurt.bind(this);\n\n      clearInterval(this.attackTimer);\n      this.attackCounter = 0;\n      this.attacking = false;\n      this.hurt = true;\n      // this.hurting = true;\n      this.health -= damage;\n      if (this.health <= 0) {\n        this.die();\n        console.log(\"Player died\");\n      } else {\n        this.offsetFrameX = 0;\n        doAnimation(6);\n        this.hurtTimer = setTimeout(function() {\n          // setNotHurting();\n          setNotHurt();\n        }, 400);\n      }\n      // this.hurt = hurt;\n    }\n  }\n\n  pressKey(key, pressed) {\n    this.keyPressed[key] = pressed;\n  }\n\n  getxp(xp) {\n    this.experience += xp;\n    if (this.experience >= this.nextLevel) {\n      this.level += 1;\n      this.nextLevel = this.nextLevel + this.nextLevel * 1.5;\n      this.experience = 0;\n    }\n  }\n\n  setNotHurt() {\n    this.hurt = false;\n  }\n\n  setNotHurting() {\n    this.hurting = false;\n  }\n\n  attack() {\n    if (this.clickTarget.alive) {\n      if (this.attackCombo >= 2) {\n        this.attackCombo = 0;\n      } else {\n        this.attackCombo++;\n      }\n      if (!this.attacking) {\n        let attackTimer = this.attackTimer;\n        let attacking = this.attacking;\n        let offsetFrameX = this.offsetFrameX;\n        let attackCounter = this.attackCounter;\n        let attackCooldown = this.attackCooldown;\n        let damage = this.damage;\n        let clickTarget = this.clickTarget;\n        let setNotAttacking = this.setNotAttacking.bind(this);\n\n        this.stamina -= 10;\n        this.offsetFrameX = 0;\n        this.attacking = true;\n\n        this.doAnimation(2 + this.attackCombo);\n        attackCounter = attackCooldown;\n        this.attackTimer = setInterval(function() {\n          if (attackCounter == attackCooldown - 2) {\n            clickTarget.getHurt(damage);\n          }\n          if (attackCounter == 0) {\n            clearInterval(attackTimer);\n            // attacking = false;\n            setNotAttacking();\n            console.log(\"player not attacking\");\n            offsetFrameX = 0;\n          }\n          attackCounter--;\n        }, 1000 / this.fps);\n      }\n    }\n  }\n\n  setNotAttacking() {\n    this.attacking = false;\n  }\n\n  jump() {\n    this.offsetFrameX = 0;\n    if (!this.jumping && this.jumpCounter <= 0) {\n      this.jumping = true;\n      this.jumpTimer = this.jumpCooldown;\n      this.jumpTimer = setInterval(function() {\n        this.jumpCounter--;\n        if (this.jumpCounter == 0) {\n          clearInterval(this.jumpTimer);\n          this.jumping = false;\n          this.offsetFrameX = 0;\n        }\n      }, 1000 / this.fps);\n    }\n  }\n\n  getXTarget() {\n    let xTarget = this.realClickX;\n\n    if (this.clickTarget !== undefined && this.clickTarget !== null) {\n      xTarget = this.clickTarget.getXCenterPos() - this.clickTarget.getWidth();\n    }\n    return xTarget;\n  }\n\n  getYTarget() {\n    let yTarget = this.realClickY;\n\n    if (this.clickTarget !== undefined && this.clickTarget !== null) {\n      yTarget = this.clickTarget.getYCenterPos() - this.clickTarget.getHeight();\n    }\n    return yTarget;\n  }\n\n  checkObjectsCollision(a1, a2, map) {\n    let objL = map.plane.objects;\n    let ts = map.tileSets[0].tiles;\n\n    // console.log(map);\n    for (let x = map.startX; x < map.endX; x++) {\n      for (let y = map.startY; y < map.endY; y++) {\n        if (objL[x][y]) {\n          let tileType = objL[x][y].getType();\n\n          if (tileType != 0) {\n            let t = {\n              x: objL[x][y].xOffset + map.worldXOffset,\n              y: objL[x][y].yOffset + map.worldYOffset,\n              width: objL[x][y].width,\n              height: objL[x][y].height\n            };\n\n            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__[\"funcs\"].isCollide(a1, t)) {\n              // console.log(objL[x][y])\n              // console.log('colliding;')\n              this.isCollidingX = true;\n            }\n\n            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__[\"funcs\"].isCollide(a2, t)) {\n              // console.log('colliding;')\n              this.isCollidingY = true;\n            }\n          }\n        }\n      }\n    }\n  }\n\n  move2(worldOffset, enemies, map) {\n    if (this.alive) {\n      let targetX = this.getXTarget();\n      let targetY = this.getYTarget();\n      let dx = targetX - this.posX;\n      let dy = targetY - this.posY;\n      let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;\n      let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;\n      let distance = Math.round(Math.sqrt(dx * dx + dy * dy));\n\n      distance = this.clickTarget\n        ? distance - this.clickTarget.width * 2 + 5\n        : distance;\n      // console.log(this.attacking, this.hurt);\n      if (!this.attacking && !this.hurt) {\n        // console.log(distance, this.moveSpeed);\n        if (targetX && targetY && distance - this.moveSpeed > this.moveSpeed) {\n          let xSpeed = Math.round((dx / distance) * this.moveSpeed * hMovement);\n          let ySpeed = Math.round((dy / distance) * this.moveSpeed * vMovement);\n\n          let a1 = {\n            x: this.playerXPos + this.moveSpeed * hMovement,\n            y: this.playerYPos,\n            width: this.width * 1.5 - 12,\n            height: this.height * 1.5 - 6\n          };\n          let a2 = {\n            x: this.playerXPos,\n            y: this.playerYPos + this.moveSpeed * vMovement,\n            width: this.width * 1.5 - 12,\n            height: this.height * 1.5 - 6\n          };\n\n          this.isCollidingX = false;\n          this.isCollidingY = false;\n\n          for (let enemy of enemies) {\n            let b = {\n              x: enemy.realXPos,\n              y: enemy.realYPos,\n              width: enemy.width * 2,\n              height: enemy.height * 2\n            };\n\n            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__[\"funcs\"].isCollide(a1, b)) {\n              this.isCollidingX = true;\n            }\n\n            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__[\"funcs\"].isCollide(a2, b)) {\n              this.isCollidingY = true;\n            }\n          }\n\n          // console.log(objL, ts)\n\n          this.checkObjectsCollision(a1, a2, map);\n\n          if (this.isCollidingX && this.isCollidingY) {\n            this.stopMoving();\n          } else {\n            if (!this.isCollidingX) {\n              this.posX += xSpeed * hMovement;\n            } else if (ySpeed <= 0.5) {\n              this.stopMoving();\n              // this.posY += this.moveSpeed * vMovement;\n              // this.posX += 0.1 * -hMovement;\n            }\n            if (!this.isCollidingY) {\n              this.posY += ySpeed * vMovement;\n            } else if (xSpeed <= 0.5) {\n              this.stopMoving();\n              // this.posX += this.moveSpeed * hMovement;\n              // this.posY += 0.1 * -vMovement;\n            }\n          }\n\n          if (!this.moving) {\n            this.offsetFrameX = 0;\n          }\n\n          if (dx > 0) {\n            this.facingX = 1;\n          } else if (dx < 0) {\n            this.facingX = 0;\n          }\n\n          this.moving = true;\n        } else {\n          if (this.clickTarget !== null && this.clickTarget !== undefined) {\n            this.attack();\n          }\n          this.stopMoving();\n        }\n      }\n    }\n  }\n\n  move(worldOffset) {\n    if (this.alive) {\n      let hMovement = this.checkPressed(\"d\") - this.checkPressed(\"a\");\n      let vMovement = this.checkPressed(\"s\") - this.checkPressed(\"w\");\n      let attacked = this.checkPressed(\"e\") == 1;\n      let jumped = this.checkPressed(\" \") == 1;\n      let running = this.checkPressed(\"Shift\") == 1;\n      // let moved = this.checkPressed('d') || this.checkPressed('a') || this.checkPressed('s') || this.checkPressed('w');\n\n      // if (moved && !this.moving || !moved && this.moving) {\n      //     this.attacking = false;\n      // }\n      // console.log(this.keyPressed);\n      if (!this.attacking && !this.hurt) {\n        if (hMovement != 0 && vMovement != 0) {\n          if (running) {\n            this.moveSpeed = 20;\n          } else {\n            this.moveSpeed = 8;\n          }\n          let xySpeed = Math.round(\n            Math.sqrt((this.moveSpeed * this.moveSpeed) / 2)\n          );\n          let steph = xySpeed * hMovement;\n          let stepv = xySpeed * vMovement;\n\n          if (!this.moving) {\n            this.offsetFrameX = 0;\n          }\n\n          this.moving = true;\n          if (\n            this.posX + steph >= 0 &&\n            this.posX + steph + this.width * 2 <= worldOffset.w\n          ) {\n            this.posX += steph;\n            // this.posX += steph;\n          }\n          if (\n            this.posY + stepv >= 0 &&\n            this.posY + stepv + this.height * 2 < worldOffset.h\n          ) {\n            this.posY += stepv;\n          }\n          // this.posX += steph;\n          // this.posY += stepv;\n\n          // this.posY += stepv;\n        } else if (hMovement != 0 || vMovement != 0) {\n          if (!this.moving) {\n            this.offsetFrameX = 0;\n          }\n          this.moving = true;\n          var steph = hMovement * this.moveSpeed;\n          var stepv = vMovement * this.moveSpeed;\n\n          if (\n            this.posX + steph >= 0 &&\n            this.posX + steph + this.width * 2 <= worldOffset.w\n          ) {\n            this.posX += steph;\n          }\n\n          if (\n            this.posY + stepv >= 0 &&\n            this.posY + stepv + this.height * 2 < worldOffset.h\n          ) {\n            this.posY += stepv;\n          }\n          // this.posX += hMovement * this.moveSpeed;\n          // this.posY += vMovement * this.moveSpeed;\n        }\n\n        if (vMovement == 0 && hMovement == 0) {\n          if (this.moving) {\n            this.offsetFrameX = 0;\n          }\n          this.moving = false;\n        }\n\n        if (jumped && !this.jumping) {\n          this.jump();\n        }\n\n        this.facing = this.returnDirection();\n      }\n\n      if (attacked && !this.attacking) {\n        this.attack();\n      }\n    }\n  }\n\n  stopMoving() {\n    this.clickTarget = null;\n    this.realClickY = null;\n    this.realClickX = null;\n    this.moving = false;\n  }\n\n  startData() {\n    let updateData = this.updateData.bind(this);\n\n    this.updateTimer = setInterval(function() {\n      updateData();\n    }, 1000 / this.fps);\n  }\n\n  startAnimation() {\n    let getAnimationType = this.getAnimationType.bind(this);\n    let updateData = this.updateData.bind(this);\n    let updateAnimationFrames = this.updateAnimationFrames.bind(this);\n    clearInterval(this.animationTimer);\n\n    this.animationTimer = setInterval(function() {\n      getAnimationType();\n      updateData();\n      updateAnimationFrames();\n    }, 1000 / this.fps);\n    this.started = true;\n  }\n\n  updateData() {\n    if (!this.moving) {\n      if (this.stamina != this.maxStamina) {\n        this.stamina = this.stamina + 0.5;\n      }\n    }\n\n    if (this.stamina < 0) {\n      this.stamina = 0;\n    }\n    if (this.health < 0) {\n      this.health = 0;\n    }\n  }\n\n  updateAnimationFrames() {\n    let outOfBounds =\n      this.offsetFrameX >= this.animationFrames[this.offsetFrameY];\n\n    // if (this.attacking && outOfBounds) {\n    //     this.attacking = false;\n    // }\n\n    // if (this.jumping && outOfBounds) {\n    //     this.jumping = false;\n    // }\n\n    // if (this.hurting && outOfBounds) {\n    //     this.hurting = false;\n    // }\n\n    if (this.animationFrames[this.offsetFrameY] === undefined || outOfBounds) {\n      this.animationFrame = 0;\n      this.offsetFrameX = 0;\n    } else {\n      this.offsetFrameX += 1;\n    }\n  }\n\n  returnDirection() {\n    if (this.moving) {\n      this.action = \"running\";\n      // this.facingX = '';\n      if (this.checkPressed(\"d\")) {\n        this.facingX = 1;\n      } else if (this.checkPressed(\"a\")) {\n        this.facingX = 0;\n      }\n\n      this.facingY = \"\";\n    } else {\n      this.action = \"standing\";\n    }\n\n    return this.action + this.facingY + this.facingX;\n  }\n\n  getAnimationType() {\n    this.offsetFrameY = 0;\n    if (this.facingX == 0) {\n      this.offsetFrameY += 8;\n    }\n\n    if (!this.alive) {\n      this.offsetFrameY += 7;\n    } /*else if (this.jumping) {\n            this.offsetFrameY += 5;\n        } else if (this.attacking) {\n            this.offsetFrameY += 2 + this.attackCombo;\n        } else if (this.hurting) {\n            this.offsetFrameY += 6;\n        } */ else if (\n      this.moving\n    ) {\n      this.offsetFrameY += 1;\n    }\n  }\n\n  checkPressed(key) {\n    return this.keyPressed[key] ? 1 : 0;\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvUGxheWVyLmpzLmpzIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vYXNzZXRzL2pzL1BsYXllci5qcz81ZjEzIl0sInNvdXJjZXNDb250ZW50IjpbIlwidXNlIHN0cmljdFwiO1xuLy8gaW1wb3J0IHsgR2FtZSB9IGZyb20gJy4vR2FtZS5qcyc7XG5pbXBvcnQgeyBmdW5jcyB9IGZyb20gXCIuL2Z1bmNzLmpzXCI7XG5cbmNsYXNzIFBsYXllciB7XG4gIGNvbnN0cnVjdG9yKHN0YXJ0WCwgc3RhcnRZKSB7XG4gICAgdGhpcy5sZXZlbCA9IDE7XG4gICAgdGhpcy5leHBlcmllbmNlID0gMDtcbiAgICB0aGlzLm5leHRMZXZlbCA9IDEwMDtcbiAgICB0aGlzLmRhbWFnZSA9IDU7XG4gICAgdGhpcy5oZWFsdGggPSAxMDA7XG4gICAgdGhpcy5zdGFtaW5hID0gMTAwO1xuICAgIHRoaXMubWF4SGVhbHRoID0gMTAwO1xuICAgIHRoaXMubWF4U3RhbWluYSA9IDEwMDtcbiAgICB0aGlzLmZhY2luZyA9IFwiXCI7XG4gICAgdGhpcy5mYWNpbmdZID0gXCJzb3V0aFwiO1xuICAgIHRoaXMuZmFjaW5nWCA9IDE7XG4gICAgdGhpcy5mcmFtZSA9IDE7XG4gICAgdGhpcy5zdGFydFggPSBzdGFydFg7XG4gICAgdGhpcy5zdGFydFkgPSBzdGFydFk7XG4gICAgdGhpcy5rZXlQcmVzc2VkID0ge307XG4gICAgdGhpcy5wb3NYID0gc3RhcnRYO1xuICAgIHRoaXMucG9zWSA9IHN0YXJ0WTtcbiAgICB0aGlzLm1vdmluZyA9IGZhbHNlO1xuICAgIHRoaXMubW92ZVNwZWVkID0gODtcbiAgICB0aGlzLmNhbGN1bGF0ZWRNb3ZlU3BlZWQgPSAxO1xuICAgIHRoaXMub2Zmc2V0RnJhbWVZID0gMDtcbiAgICB0aGlzLm9mZnNldEZyYW1lWCA9IDA7XG4gICAgdGhpcy5hbmltYXRpb25GcmFtZSA9IDA7XG4gICAgdGhpcy5hbmltYXRpb25GcmFtZXMgPSBbMTIsIDcsIDksIDksIDksIDUsIDQsIDcsIDEyLCA3LCA5LCA5LCA5LCA1LCA0LCA3XTtcbiAgICB0aGlzLmFuaW1hdGlvblRpbWVyID0gbnVsbDtcbiAgICB0aGlzLmhlaWdodCA9IDMyO1xuICAgIHRoaXMud2lkdGggPSAzMjtcbiAgICB0aGlzLmF0dGFja2luZyA9IGZhbHNlO1xuICAgIHRoaXMuYXR0YWNrQ29vbGRvd24gPSA5O1xuICAgIHRoaXMuYXR0YWNrQ291bnRlciA9IDA7XG4gICAgdGhpcy5hdHRhY2tUaW1lciA9IDA7XG4gICAgdGhpcy5hdHRhY2tDb21ibyA9IDA7XG4gICAgdGhpcy5qdW1waW5nID0gZmFsc2U7XG4gICAgdGhpcy5qdW1wQ29vbGRvd24gPSA5O1xuICAgIHRoaXMuanVtcENvdW50ZXIgPSAwO1xuICAgIHRoaXMuanVtcFRpbWVyID0gMDtcbiAgICB0aGlzLmZwcyA9IDEwO1xuICAgIHRoaXMuaHVydFRpbWVyID0gbnVsbDtcbiAgICB0aGlzLmh1cnQgPSBmYWxzZTtcbiAgICB0aGlzLmFsaXZlID0gdHJ1ZTtcbiAgICB0aGlzLmNsaWNrWCA9IDA7XG4gICAgdGhpcy5jbGlja1kgPSAwO1xuICAgIHRoaXMuY2xpY2tBY3Rpb24gPSBcIm1vdmVcIjtcbiAgICB0aGlzLmNsaWNrVGFyZ2V0ID0gbnVsbDtcbiAgICB0aGlzLmhvdmVyQWN0aW9uID0gXCJtb3ZlXCI7XG4gICAgLy8gdGhpcy5zdGFydEFuaW1hdGlvbigpO1xuICB9XG5cbiAgZGllKCkge1xuICAgIHRoaXMuYWxpdmUgPSBmYWxzZTtcbiAgICB0aGlzLmRvQW5pbWF0aW9uKDcsIGZhbHNlKTtcbiAgfVxuXG4gIG1vdXNlVXAoZSkge1xuICAgIC8vIGNvbnNvbGUubG9nKGUpO1xuICB9XG5cbiAgbW91c2VEb3duKGUsIHdvcmxkWE9mZnNldCwgd29ybGRZT2Zmc2V0KSB7XG4gICAgbGV0IGVsID0gZS50YXJnZXQ7XG5cbiAgICBpZiAoZWwuZ2V0VGFnTmFtZSA9PSBcImNhbnZhc1wiKSB7XG4gICAgICB0aGlzLmNsaWNrWCA9IGUuY2xpZW50WCAtIGVsLm9mZnNldExlZnQ7XG4gICAgICB0aGlzLmNsaWNrWSA9IGUuY2xpZW50WSAtIGVsLm9mZnNldFRvcDtcbiAgICAgIHRoaXMucmVhbENsaWNrWCA9IGUuY2xpZW50WCAtIGVsLm9mZnNldExlZnQgLSB3b3JsZFhPZmZzZXQ7XG4gICAgICB0aGlzLnJlYWxDbGlja1kgPSBlLmNsaWVudFkgLSBlbC5vZmZzZXRUb3AgLSB3b3JsZFlPZmZzZXQ7XG4gICAgfVxuICAgIHRoaXMuY2xpY2tBY3Rpb24gPSB0aGlzLmhvdmVyQWN0aW9uO1xuICAgIHRoaXMuY2xpY2tUYXJnZXQgPSB0aGlzLmhvdmVyVGFyZ2V0O1xuICB9XG5cbiAgZG9BbmltYXRpb24oeU9mZnNldCwgcmVzdGFydCA9IHRydWUsIGR1cmF0aW9uID0gOTk5KSB7XG4gICAgbGV0IHVwZGF0ZUFuaW1hdGlvbkZyYW1lcyA9IHRoaXMudXBkYXRlQW5pbWF0aW9uRnJhbWVzLmJpbmQodGhpcyk7XG4gICAgbGV0IGdldEFuaW1hdGlvblR5cGUgPSB0aGlzLmdldEFuaW1hdGlvblR5cGUuYmluZCh0aGlzKTtcbiAgICBsZXQgc3RhcnRBbmltYXRpb24gPSB0aGlzLnN0YXJ0QW5pbWF0aW9uLmJpbmQodGhpcyk7XG4gICAgbGV0IHN0b3BBbmltYXRpb24gPSB0aGlzLnN0b3BBbmltYXRpb24uYmluZCh0aGlzKTtcblxuICAgIHN0b3BBbmltYXRpb24oKTtcbiAgICAvLyBjbGVhckludGVydmFsKHRoaXMuYW5pbWF0aW9uVGltZXIpO1xuICAgIGlmIChkdXJhdGlvbiA9PT0gOTk5KSB7XG4gICAgICBkdXJhdGlvbiA9IHRoaXMuYW5pbWF0aW9uRnJhbWVzW3lPZmZzZXRdICogKDEwMDAgLyB0aGlzLmZwcyk7XG4gICAgfVxuICAgIGNvbnNvbGUubG9nKGR1cmF0aW9uKTtcbiAgICB0aGlzLm9mZnNldEZyYW1lWSA9IDA7XG4gICAgaWYgKHRoaXMuZmFjaW5nWCA9PSAwKSB7XG4gICAgICB0aGlzLm9mZnNldEZyYW1lWSArPSA4O1xuICAgIH1cbiAgICAvLyB0aGlzLmdldEFuaW1hdGlvblR5cGUoKTtcbiAgICB0aGlzLm9mZnNldEZyYW1lWSArPSB5T2Zmc2V0O1xuICAgIHRoaXMub2Zmc2V0RnJhbWVYID0gMDtcbiAgICBsZXQgY291bnRlciA9IDA7XG4gICAgdGhpcy5hbmltYXRpb25UaW1lciA9IHNldEludGVydmFsKGZ1bmN0aW9uKCkge1xuICAgICAgY291bnRlcisrO1xuICAgICAgY29uc29sZS5sb2coY291bnRlcik7XG4gICAgICB1cGRhdGVBbmltYXRpb25GcmFtZXMoKTtcbiAgICB9LCAxMDAwIC8gdGhpcy5mcHMpO1xuXG4gICAgc2V0VGltZW91dChmdW5jdGlvbigpIHtcbiAgICAgIHN0b3BBbmltYXRpb24oKTtcbiAgICAgIGlmIChyZXN0YXJ0KSB7XG4gICAgICAgIHN0YXJ0QW5pbWF0aW9uKCk7XG4gICAgICB9XG4gICAgfSwgZHVyYXRpb24pO1xuICB9XG5cbiAgc3RvcEFuaW1hdGlvbigpIHtcbiAgICBjbGVhckludGVydmFsKHRoaXMuYW5pbWF0aW9uVGltZXIpO1xuICB9XG5cbiAgZ2V0SHVydChkYW1hZ2UpIHtcbiAgICBpZiAoIXRoaXMuaHVydCkge1xuICAgICAgbGV0IGRvQW5pbWF0aW9uID0gdGhpcy5kb0FuaW1hdGlvbi5iaW5kKHRoaXMpO1xuICAgICAgLy8gbGV0IHNldE5vdEh1cnRpbmcgPSB0aGlzLnNldE5vdEh1cnRpbmcuYmluZCh0aGlzKTtcbiAgICAgIGxldCBzZXROb3RIdXJ0ID0gdGhpcy5zZXROb3RIdXJ0LmJpbmQodGhpcyk7XG5cbiAgICAgIGNsZWFySW50ZXJ2YWwodGhpcy5hdHRhY2tUaW1lcik7XG4gICAgICB0aGlzLmF0dGFja0NvdW50ZXIgPSAwO1xuICAgICAgdGhpcy5hdHRhY2tpbmcgPSBmYWxzZTtcbiAgICAgIHRoaXMuaHVydCA9IHRydWU7XG4gICAgICAvLyB0aGlzLmh1cnRpbmcgPSB0cnVlO1xuICAgICAgdGhpcy5oZWFsdGggLT0gZGFtYWdlO1xuICAgICAgaWYgKHRoaXMuaGVhbHRoIDw9IDApIHtcbiAgICAgICAgdGhpcy5kaWUoKTtcbiAgICAgICAgY29uc29sZS5sb2coXCJQbGF5ZXIgZGllZFwiKTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHRoaXMub2Zmc2V0RnJhbWVYID0gMDtcbiAgICAgICAgZG9BbmltYXRpb24oNik7XG4gICAgICAgIHRoaXMuaHVydFRpbWVyID0gc2V0VGltZW91dChmdW5jdGlvbigpIHtcbiAgICAgICAgICAvLyBzZXROb3RIdXJ0aW5nKCk7XG4gICAgICAgICAgc2V0Tm90SHVydCgpO1xuICAgICAgICB9LCA0MDApO1xuICAgICAgfVxuICAgICAgLy8gdGhpcy5odXJ0ID0gaHVydDtcbiAgICB9XG4gIH1cblxuICBwcmVzc0tleShrZXksIHByZXNzZWQpIHtcbiAgICB0aGlzLmtleVByZXNzZWRba2V5XSA9IHByZXNzZWQ7XG4gIH1cblxuICBnZXR4cCh4cCkge1xuICAgIHRoaXMuZXhwZXJpZW5jZSArPSB4cDtcbiAgICBpZiAodGhpcy5leHBlcmllbmNlID49IHRoaXMubmV4dExldmVsKSB7XG4gICAgICB0aGlzLmxldmVsICs9IDE7XG4gICAgICB0aGlzLm5leHRMZXZlbCA9IHRoaXMubmV4dExldmVsICsgdGhpcy5uZXh0TGV2ZWwgKiAxLjU7XG4gICAgICB0aGlzLmV4cGVyaWVuY2UgPSAwO1xuICAgIH1cbiAgfVxuXG4gIHNldE5vdEh1cnQoKSB7XG4gICAgdGhpcy5odXJ0ID0gZmFsc2U7XG4gIH1cblxuICBzZXROb3RIdXJ0aW5nKCkge1xuICAgIHRoaXMuaHVydGluZyA9IGZhbHNlO1xuICB9XG5cbiAgYXR0YWNrKCkge1xuICAgIGlmICh0aGlzLmNsaWNrVGFyZ2V0LmFsaXZlKSB7XG4gICAgICBpZiAodGhpcy5hdHRhY2tDb21ibyA+PSAyKSB7XG4gICAgICAgIHRoaXMuYXR0YWNrQ29tYm8gPSAwO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgdGhpcy5hdHRhY2tDb21ibysrO1xuICAgICAgfVxuICAgICAgaWYgKCF0aGlzLmF0dGFja2luZykge1xuICAgICAgICBsZXQgYXR0YWNrVGltZXIgPSB0aGlzLmF0dGFja1RpbWVyO1xuICAgICAgICBsZXQgYXR0YWNraW5nID0gdGhpcy5hdHRhY2tpbmc7XG4gICAgICAgIGxldCBvZmZzZXRGcmFtZVggPSB0aGlzLm9mZnNldEZyYW1lWDtcbiAgICAgICAgbGV0IGF0dGFja0NvdW50ZXIgPSB0aGlzLmF0dGFja0NvdW50ZXI7XG4gICAgICAgIGxldCBhdHRhY2tDb29sZG93biA9IHRoaXMuYXR0YWNrQ29vbGRvd247XG4gICAgICAgIGxldCBkYW1hZ2UgPSB0aGlzLmRhbWFnZTtcbiAgICAgICAgbGV0IGNsaWNrVGFyZ2V0ID0gdGhpcy5jbGlja1RhcmdldDtcbiAgICAgICAgbGV0IHNldE5vdEF0dGFja2luZyA9IHRoaXMuc2V0Tm90QXR0YWNraW5nLmJpbmQodGhpcyk7XG5cbiAgICAgICAgdGhpcy5zdGFtaW5hIC09IDEwO1xuICAgICAgICB0aGlzLm9mZnNldEZyYW1lWCA9IDA7XG4gICAgICAgIHRoaXMuYXR0YWNraW5nID0gdHJ1ZTtcblxuICAgICAgICB0aGlzLmRvQW5pbWF0aW9uKDIgKyB0aGlzLmF0dGFja0NvbWJvKTtcbiAgICAgICAgYXR0YWNrQ291bnRlciA9IGF0dGFja0Nvb2xkb3duO1xuICAgICAgICB0aGlzLmF0dGFja1RpbWVyID0gc2V0SW50ZXJ2YWwoZnVuY3Rpb24oKSB7XG4gICAgICAgICAgaWYgKGF0dGFja0NvdW50ZXIgPT0gYXR0YWNrQ29vbGRvd24gLSAyKSB7XG4gICAgICAgICAgICBjbGlja1RhcmdldC5nZXRIdXJ0KGRhbWFnZSk7XG4gICAgICAgICAgfVxuICAgICAgICAgIGlmIChhdHRhY2tDb3VudGVyID09IDApIHtcbiAgICAgICAgICAgIGNsZWFySW50ZXJ2YWwoYXR0YWNrVGltZXIpO1xuICAgICAgICAgICAgLy8gYXR0YWNraW5nID0gZmFsc2U7XG4gICAgICAgICAgICBzZXROb3RBdHRhY2tpbmcoKTtcbiAgICAgICAgICAgIGNvbnNvbGUubG9nKFwicGxheWVyIG5vdCBhdHRhY2tpbmdcIik7XG4gICAgICAgICAgICBvZmZzZXRGcmFtZVggPSAwO1xuICAgICAgICAgIH1cbiAgICAgICAgICBhdHRhY2tDb3VudGVyLS07XG4gICAgICAgIH0sIDEwMDAgLyB0aGlzLmZwcyk7XG4gICAgICB9XG4gICAgfVxuICB9XG5cbiAgc2V0Tm90QXR0YWNraW5nKCkge1xuICAgIHRoaXMuYXR0YWNraW5nID0gZmFsc2U7XG4gIH1cblxuICBqdW1wKCkge1xuICAgIHRoaXMub2Zmc2V0RnJhbWVYID0gMDtcbiAgICBpZiAoIXRoaXMuanVtcGluZyAmJiB0aGlzLmp1bXBDb3VudGVyIDw9IDApIHtcbiAgICAgIHRoaXMuanVtcGluZyA9IHRydWU7XG4gICAgICB0aGlzLmp1bXBUaW1lciA9IHRoaXMuanVtcENvb2xkb3duO1xuICAgICAgdGhpcy5qdW1wVGltZXIgPSBzZXRJbnRlcnZhbChmdW5jdGlvbigpIHtcbiAgICAgICAgdGhpcy5qdW1wQ291bnRlci0tO1xuICAgICAgICBpZiAodGhpcy5qdW1wQ291bnRlciA9PSAwKSB7XG4gICAgICAgICAgY2xlYXJJbnRlcnZhbCh0aGlzLmp1bXBUaW1lcik7XG4gICAgICAgICAgdGhpcy5qdW1waW5nID0gZmFsc2U7XG4gICAgICAgICAgdGhpcy5vZmZzZXRGcmFtZVggPSAwO1xuICAgICAgICB9XG4gICAgICB9LCAxMDAwIC8gdGhpcy5mcHMpO1xuICAgIH1cbiAgfVxuXG4gIGdldFhUYXJnZXQoKSB7XG4gICAgbGV0IHhUYXJnZXQgPSB0aGlzLnJlYWxDbGlja1g7XG5cbiAgICBpZiAodGhpcy5jbGlja1RhcmdldCAhPT0gdW5kZWZpbmVkICYmIHRoaXMuY2xpY2tUYXJnZXQgIT09IG51bGwpIHtcbiAgICAgIHhUYXJnZXQgPSB0aGlzLmNsaWNrVGFyZ2V0LmdldFhDZW50ZXJQb3MoKSAtIHRoaXMuY2xpY2tUYXJnZXQuZ2V0V2lkdGgoKTtcbiAgICB9XG4gICAgcmV0dXJuIHhUYXJnZXQ7XG4gIH1cblxuICBnZXRZVGFyZ2V0KCkge1xuICAgIGxldCB5VGFyZ2V0ID0gdGhpcy5yZWFsQ2xpY2tZO1xuXG4gICAgaWYgKHRoaXMuY2xpY2tUYXJnZXQgIT09IHVuZGVmaW5lZCAmJiB0aGlzLmNsaWNrVGFyZ2V0ICE9PSBudWxsKSB7XG4gICAgICB5VGFyZ2V0ID0gdGhpcy5jbGlja1RhcmdldC5nZXRZQ2VudGVyUG9zKCkgLSB0aGlzLmNsaWNrVGFyZ2V0LmdldEhlaWdodCgpO1xuICAgIH1cbiAgICByZXR1cm4geVRhcmdldDtcbiAgfVxuXG4gIGNoZWNrT2JqZWN0c0NvbGxpc2lvbihhMSwgYTIsIG1hcCkge1xuICAgIGxldCBvYmpMID0gbWFwLnBsYW5lLm9iamVjdHM7XG4gICAgbGV0IHRzID0gbWFwLnRpbGVTZXRzWzBdLnRpbGVzO1xuXG4gICAgLy8gY29uc29sZS5sb2cobWFwKTtcbiAgICBmb3IgKGxldCB4ID0gbWFwLnN0YXJ0WDsgeCA8IG1hcC5lbmRYOyB4KyspIHtcbiAgICAgIGZvciAobGV0IHkgPSBtYXAuc3RhcnRZOyB5IDwgbWFwLmVuZFk7IHkrKykge1xuICAgICAgICBpZiAob2JqTFt4XVt5XSkge1xuICAgICAgICAgIGxldCB0aWxlVHlwZSA9IG9iakxbeF1beV0uZ2V0VHlwZSgpO1xuXG4gICAgICAgICAgaWYgKHRpbGVUeXBlICE9IDApIHtcbiAgICAgICAgICAgIGxldCB0ID0ge1xuICAgICAgICAgICAgICB4OiBvYmpMW3hdW3ldLnhPZmZzZXQgKyBtYXAud29ybGRYT2Zmc2V0LFxuICAgICAgICAgICAgICB5OiBvYmpMW3hdW3ldLnlPZmZzZXQgKyBtYXAud29ybGRZT2Zmc2V0LFxuICAgICAgICAgICAgICB3aWR0aDogb2JqTFt4XVt5XS53aWR0aCxcbiAgICAgICAgICAgICAgaGVpZ2h0OiBvYmpMW3hdW3ldLmhlaWdodFxuICAgICAgICAgICAgfTtcblxuICAgICAgICAgICAgaWYgKGZ1bmNzLmlzQ29sbGlkZShhMSwgdCkpIHtcbiAgICAgICAgICAgICAgLy8gY29uc29sZS5sb2cob2JqTFt4XVt5XSlcbiAgICAgICAgICAgICAgLy8gY29uc29sZS5sb2coJ2NvbGxpZGluZzsnKVxuICAgICAgICAgICAgICB0aGlzLmlzQ29sbGlkaW5nWCA9IHRydWU7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGlmIChmdW5jcy5pc0NvbGxpZGUoYTIsIHQpKSB7XG4gICAgICAgICAgICAgIC8vIGNvbnNvbGUubG9nKCdjb2xsaWRpbmc7JylcbiAgICAgICAgICAgICAgdGhpcy5pc0NvbGxpZGluZ1kgPSB0cnVlO1xuICAgICAgICAgICAgfVxuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIG1vdmUyKHdvcmxkT2Zmc2V0LCBlbmVtaWVzLCBtYXApIHtcbiAgICBpZiAodGhpcy5hbGl2ZSkge1xuICAgICAgbGV0IHRhcmdldFggPSB0aGlzLmdldFhUYXJnZXQoKTtcbiAgICAgIGxldCB0YXJnZXRZID0gdGhpcy5nZXRZVGFyZ2V0KCk7XG4gICAgICBsZXQgZHggPSB0YXJnZXRYIC0gdGhpcy5wb3NYO1xuICAgICAgbGV0IGR5ID0gdGFyZ2V0WSAtIHRoaXMucG9zWTtcbiAgICAgIGxldCBoTW92ZW1lbnQgPSBkeCA+IDAgPyAxIDogZHggPCAwID8gLTEgOiAwO1xuICAgICAgbGV0IHZNb3ZlbWVudCA9IGR5ID4gMCA/IDEgOiBkeSA8IDAgPyAtMSA6IDA7XG4gICAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnJvdW5kKE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSkpO1xuXG4gICAgICBkaXN0YW5jZSA9IHRoaXMuY2xpY2tUYXJnZXRcbiAgICAgICAgPyBkaXN0YW5jZSAtIHRoaXMuY2xpY2tUYXJnZXQud2lkdGggKiAyICsgNVxuICAgICAgICA6IGRpc3RhbmNlO1xuICAgICAgLy8gY29uc29sZS5sb2codGhpcy5hdHRhY2tpbmcsIHRoaXMuaHVydCk7XG4gICAgICBpZiAoIXRoaXMuYXR0YWNraW5nICYmICF0aGlzLmh1cnQpIHtcbiAgICAgICAgLy8gY29uc29sZS5sb2coZGlzdGFuY2UsIHRoaXMubW92ZVNwZWVkKTtcbiAgICAgICAgaWYgKHRhcmdldFggJiYgdGFyZ2V0WSAmJiBkaXN0YW5jZSAtIHRoaXMubW92ZVNwZWVkID4gdGhpcy5tb3ZlU3BlZWQpIHtcbiAgICAgICAgICBsZXQgeFNwZWVkID0gTWF0aC5yb3VuZCgoZHggLyBkaXN0YW5jZSkgKiB0aGlzLm1vdmVTcGVlZCAqIGhNb3ZlbWVudCk7XG4gICAgICAgICAgbGV0IHlTcGVlZCA9IE1hdGgucm91bmQoKGR5IC8gZGlzdGFuY2UpICogdGhpcy5tb3ZlU3BlZWQgKiB2TW92ZW1lbnQpO1xuXG4gICAgICAgICAgbGV0IGExID0ge1xuICAgICAgICAgICAgeDogdGhpcy5wbGF5ZXJYUG9zICsgdGhpcy5tb3ZlU3BlZWQgKiBoTW92ZW1lbnQsXG4gICAgICAgICAgICB5OiB0aGlzLnBsYXllcllQb3MsXG4gICAgICAgICAgICB3aWR0aDogdGhpcy53aWR0aCAqIDEuNSAtIDEyLFxuICAgICAgICAgICAgaGVpZ2h0OiB0aGlzLmhlaWdodCAqIDEuNSAtIDZcbiAgICAgICAgICB9O1xuICAgICAgICAgIGxldCBhMiA9IHtcbiAgICAgICAgICAgIHg6IHRoaXMucGxheWVyWFBvcyxcbiAgICAgICAgICAgIHk6IHRoaXMucGxheWVyWVBvcyArIHRoaXMubW92ZVNwZWVkICogdk1vdmVtZW50LFxuICAgICAgICAgICAgd2lkdGg6IHRoaXMud2lkdGggKiAxLjUgLSAxMixcbiAgICAgICAgICAgIGhlaWdodDogdGhpcy5oZWlnaHQgKiAxLjUgLSA2XG4gICAgICAgICAgfTtcblxuICAgICAgICAgIHRoaXMuaXNDb2xsaWRpbmdYID0gZmFsc2U7XG4gICAgICAgICAgdGhpcy5pc0NvbGxpZGluZ1kgPSBmYWxzZTtcblxuICAgICAgICAgIGZvciAobGV0IGVuZW15IG9mIGVuZW1pZXMpIHtcbiAgICAgICAgICAgIGxldCBiID0ge1xuICAgICAgICAgICAgICB4OiBlbmVteS5yZWFsWFBvcyxcbiAgICAgICAgICAgICAgeTogZW5lbXkucmVhbFlQb3MsXG4gICAgICAgICAgICAgIHdpZHRoOiBlbmVteS53aWR0aCAqIDIsXG4gICAgICAgICAgICAgIGhlaWdodDogZW5lbXkuaGVpZ2h0ICogMlxuICAgICAgICAgICAgfTtcblxuICAgICAgICAgICAgaWYgKGZ1bmNzLmlzQ29sbGlkZShhMSwgYikpIHtcbiAgICAgICAgICAgICAgdGhpcy5pc0NvbGxpZGluZ1ggPSB0cnVlO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICBpZiAoZnVuY3MuaXNDb2xsaWRlKGEyLCBiKSkge1xuICAgICAgICAgICAgICB0aGlzLmlzQ29sbGlkaW5nWSA9IHRydWU7XG4gICAgICAgICAgICB9XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgLy8gY29uc29sZS5sb2cob2JqTCwgdHMpXG5cbiAgICAgICAgICB0aGlzLmNoZWNrT2JqZWN0c0NvbGxpc2lvbihhMSwgYTIsIG1hcCk7XG5cbiAgICAgICAgICBpZiAodGhpcy5pc0NvbGxpZGluZ1ggJiYgdGhpcy5pc0NvbGxpZGluZ1kpIHtcbiAgICAgICAgICAgIHRoaXMuc3RvcE1vdmluZygpO1xuICAgICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgICBpZiAoIXRoaXMuaXNDb2xsaWRpbmdYKSB7XG4gICAgICAgICAgICAgIHRoaXMucG9zWCArPSB4U3BlZWQgKiBoTW92ZW1lbnQ7XG4gICAgICAgICAgICB9IGVsc2UgaWYgKHlTcGVlZCA8PSAwLjUpIHtcbiAgICAgICAgICAgICAgdGhpcy5zdG9wTW92aW5nKCk7XG4gICAgICAgICAgICAgIC8vIHRoaXMucG9zWSArPSB0aGlzLm1vdmVTcGVlZCAqIHZNb3ZlbWVudDtcbiAgICAgICAgICAgICAgLy8gdGhpcy5wb3NYICs9IDAuMSAqIC1oTW92ZW1lbnQ7XG4gICAgICAgICAgICB9XG4gICAgICAgICAgICBpZiAoIXRoaXMuaXNDb2xsaWRpbmdZKSB7XG4gICAgICAgICAgICAgIHRoaXMucG9zWSArPSB5U3BlZWQgKiB2TW92ZW1lbnQ7XG4gICAgICAgICAgICB9IGVsc2UgaWYgKHhTcGVlZCA8PSAwLjUpIHtcbiAgICAgICAgICAgICAgdGhpcy5zdG9wTW92aW5nKCk7XG4gICAgICAgICAgICAgIC8vIHRoaXMucG9zWCArPSB0aGlzLm1vdmVTcGVlZCAqIGhNb3ZlbWVudDtcbiAgICAgICAgICAgICAgLy8gdGhpcy5wb3NZICs9IDAuMSAqIC12TW92ZW1lbnQ7XG4gICAgICAgICAgICB9XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgaWYgKCF0aGlzLm1vdmluZykge1xuICAgICAgICAgICAgdGhpcy5vZmZzZXRGcmFtZVggPSAwO1xuICAgICAgICAgIH1cblxuICAgICAgICAgIGlmIChkeCA+IDApIHtcbiAgICAgICAgICAgIHRoaXMuZmFjaW5nWCA9IDE7XG4gICAgICAgICAgfSBlbHNlIGlmIChkeCA8IDApIHtcbiAgICAgICAgICAgIHRoaXMuZmFjaW5nWCA9IDA7XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgdGhpcy5tb3ZpbmcgPSB0cnVlO1xuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgIGlmICh0aGlzLmNsaWNrVGFyZ2V0ICE9PSBudWxsICYmIHRoaXMuY2xpY2tUYXJnZXQgIT09IHVuZGVmaW5lZCkge1xuICAgICAgICAgICAgdGhpcy5hdHRhY2soKTtcbiAgICAgICAgICB9XG4gICAgICAgICAgdGhpcy5zdG9wTW92aW5nKCk7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG4gIH1cblxuICBtb3ZlKHdvcmxkT2Zmc2V0KSB7XG4gICAgaWYgKHRoaXMuYWxpdmUpIHtcbiAgICAgIGxldCBoTW92ZW1lbnQgPSB0aGlzLmNoZWNrUHJlc3NlZChcImRcIikgLSB0aGlzLmNoZWNrUHJlc3NlZChcImFcIik7XG4gICAgICBsZXQgdk1vdmVtZW50ID0gdGhpcy5jaGVja1ByZXNzZWQoXCJzXCIpIC0gdGhpcy5jaGVja1ByZXNzZWQoXCJ3XCIpO1xuICAgICAgbGV0IGF0dGFja2VkID0gdGhpcy5jaGVja1ByZXNzZWQoXCJlXCIpID09IDE7XG4gICAgICBsZXQganVtcGVkID0gdGhpcy5jaGVja1ByZXNzZWQoXCIgXCIpID09IDE7XG4gICAgICBsZXQgcnVubmluZyA9IHRoaXMuY2hlY2tQcmVzc2VkKFwiU2hpZnRcIikgPT0gMTtcbiAgICAgIC8vIGxldCBtb3ZlZCA9IHRoaXMuY2hlY2tQcmVzc2VkKCdkJykgfHwgdGhpcy5jaGVja1ByZXNzZWQoJ2EnKSB8fCB0aGlzLmNoZWNrUHJlc3NlZCgncycpIHx8IHRoaXMuY2hlY2tQcmVzc2VkKCd3Jyk7XG5cbiAgICAgIC8vIGlmIChtb3ZlZCAmJiAhdGhpcy5tb3ZpbmcgfHwgIW1vdmVkICYmIHRoaXMubW92aW5nKSB7XG4gICAgICAvLyAgICAgdGhpcy5hdHRhY2tpbmcgPSBmYWxzZTtcbiAgICAgIC8vIH1cbiAgICAgIC8vIGNvbnNvbGUubG9nKHRoaXMua2V5UHJlc3NlZCk7XG4gICAgICBpZiAoIXRoaXMuYXR0YWNraW5nICYmICF0aGlzLmh1cnQpIHtcbiAgICAgICAgaWYgKGhNb3ZlbWVudCAhPSAwICYmIHZNb3ZlbWVudCAhPSAwKSB7XG4gICAgICAgICAgaWYgKHJ1bm5pbmcpIHtcbiAgICAgICAgICAgIHRoaXMubW92ZVNwZWVkID0gMjA7XG4gICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgIHRoaXMubW92ZVNwZWVkID0gODtcbiAgICAgICAgICB9XG4gICAgICAgICAgbGV0IHh5U3BlZWQgPSBNYXRoLnJvdW5kKFxuICAgICAgICAgICAgTWF0aC5zcXJ0KCh0aGlzLm1vdmVTcGVlZCAqIHRoaXMubW92ZVNwZWVkKSAvIDIpXG4gICAgICAgICAgKTtcbiAgICAgICAgICBsZXQgc3RlcGggPSB4eVNwZWVkICogaE1vdmVtZW50O1xuICAgICAgICAgIGxldCBzdGVwdiA9IHh5U3BlZWQgKiB2TW92ZW1lbnQ7XG5cbiAgICAgICAgICBpZiAoIXRoaXMubW92aW5nKSB7XG4gICAgICAgICAgICB0aGlzLm9mZnNldEZyYW1lWCA9IDA7XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgdGhpcy5tb3ZpbmcgPSB0cnVlO1xuICAgICAgICAgIGlmIChcbiAgICAgICAgICAgIHRoaXMucG9zWCArIHN0ZXBoID49IDAgJiZcbiAgICAgICAgICAgIHRoaXMucG9zWCArIHN0ZXBoICsgdGhpcy53aWR0aCAqIDIgPD0gd29ybGRPZmZzZXQud1xuICAgICAgICAgICkge1xuICAgICAgICAgICAgdGhpcy5wb3NYICs9IHN0ZXBoO1xuICAgICAgICAgICAgLy8gdGhpcy5wb3NYICs9IHN0ZXBoO1xuICAgICAgICAgIH1cbiAgICAgICAgICBpZiAoXG4gICAgICAgICAgICB0aGlzLnBvc1kgKyBzdGVwdiA+PSAwICYmXG4gICAgICAgICAgICB0aGlzLnBvc1kgKyBzdGVwdiArIHRoaXMuaGVpZ2h0ICogMiA8IHdvcmxkT2Zmc2V0LmhcbiAgICAgICAgICApIHtcbiAgICAgICAgICAgIHRoaXMucG9zWSArPSBzdGVwdjtcbiAgICAgICAgICB9XG4gICAgICAgICAgLy8gdGhpcy5wb3NYICs9IHN0ZXBoO1xuICAgICAgICAgIC8vIHRoaXMucG9zWSArPSBzdGVwdjtcblxuICAgICAgICAgIC8vIHRoaXMucG9zWSArPSBzdGVwdjtcbiAgICAgICAgfSBlbHNlIGlmIChoTW92ZW1lbnQgIT0gMCB8fCB2TW92ZW1lbnQgIT0gMCkge1xuICAgICAgICAgIGlmICghdGhpcy5tb3ZpbmcpIHtcbiAgICAgICAgICAgIHRoaXMub2Zmc2V0RnJhbWVYID0gMDtcbiAgICAgICAgICB9XG4gICAgICAgICAgdGhpcy5tb3ZpbmcgPSB0cnVlO1xuICAgICAgICAgIHZhciBzdGVwaCA9IGhNb3ZlbWVudCAqIHRoaXMubW92ZVNwZWVkO1xuICAgICAgICAgIHZhciBzdGVwdiA9IHZNb3ZlbWVudCAqIHRoaXMubW92ZVNwZWVkO1xuXG4gICAgICAgICAgaWYgKFxuICAgICAgICAgICAgdGhpcy5wb3NYICsgc3RlcGggPj0gMCAmJlxuICAgICAgICAgICAgdGhpcy5wb3NYICsgc3RlcGggKyB0aGlzLndpZHRoICogMiA8PSB3b3JsZE9mZnNldC53XG4gICAgICAgICAgKSB7XG4gICAgICAgICAgICB0aGlzLnBvc1ggKz0gc3RlcGg7XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgaWYgKFxuICAgICAgICAgICAgdGhpcy5wb3NZICsgc3RlcHYgPj0gMCAmJlxuICAgICAgICAgICAgdGhpcy5wb3NZICsgc3RlcHYgKyB0aGlzLmhlaWdodCAqIDIgPCB3b3JsZE9mZnNldC5oXG4gICAgICAgICAgKSB7XG4gICAgICAgICAgICB0aGlzLnBvc1kgKz0gc3RlcHY7XG4gICAgICAgICAgfVxuICAgICAgICAgIC8vIHRoaXMucG9zWCArPSBoTW92ZW1lbnQgKiB0aGlzLm1vdmVTcGVlZDtcbiAgICAgICAgICAvLyB0aGlzLnBvc1kgKz0gdk1vdmVtZW50ICogdGhpcy5tb3ZlU3BlZWQ7XG4gICAgICAgIH1cblxuICAgICAgICBpZiAodk1vdmVtZW50ID09IDAgJiYgaE1vdmVtZW50ID09IDApIHtcbiAgICAgICAgICBpZiAodGhpcy5tb3ZpbmcpIHtcbiAgICAgICAgICAgIHRoaXMub2Zmc2V0RnJhbWVYID0gMDtcbiAgICAgICAgICB9XG4gICAgICAgICAgdGhpcy5tb3ZpbmcgPSBmYWxzZTtcbiAgICAgICAgfVxuXG4gICAgICAgIGlmIChqdW1wZWQgJiYgIXRoaXMuanVtcGluZykge1xuICAgICAgICAgIHRoaXMuanVtcCgpO1xuICAgICAgICB9XG5cbiAgICAgICAgdGhpcy5mYWNpbmcgPSB0aGlzLnJldHVybkRpcmVjdGlvbigpO1xuICAgICAgfVxuXG4gICAgICBpZiAoYXR0YWNrZWQgJiYgIXRoaXMuYXR0YWNraW5nKSB7XG4gICAgICAgIHRoaXMuYXR0YWNrKCk7XG4gICAgICB9XG4gICAgfVxuICB9XG5cbiAgc3RvcE1vdmluZygpIHtcbiAgICB0aGlzLmNsaWNrVGFyZ2V0ID0gbnVsbDtcbiAgICB0aGlzLnJlYWxDbGlja1kgPSBudWxsO1xuICAgIHRoaXMucmVhbENsaWNrWCA9IG51bGw7XG4gICAgdGhpcy5tb3ZpbmcgPSBmYWxzZTtcbiAgfVxuXG4gIHN0YXJ0RGF0YSgpIHtcbiAgICBsZXQgdXBkYXRlRGF0YSA9IHRoaXMudXBkYXRlRGF0YS5iaW5kKHRoaXMpO1xuXG4gICAgdGhpcy51cGRhdGVUaW1lciA9IHNldEludGVydmFsKGZ1bmN0aW9uKCkge1xuICAgICAgdXBkYXRlRGF0YSgpO1xuICAgIH0sIDEwMDAgLyB0aGlzLmZwcyk7XG4gIH1cblxuICBzdGFydEFuaW1hdGlvbigpIHtcbiAgICBsZXQgZ2V0QW5pbWF0aW9uVHlwZSA9IHRoaXMuZ2V0QW5pbWF0aW9uVHlwZS5iaW5kKHRoaXMpO1xuICAgIGxldCB1cGRhdGVEYXRhID0gdGhpcy51cGRhdGVEYXRhLmJpbmQodGhpcyk7XG4gICAgbGV0IHVwZGF0ZUFuaW1hdGlvbkZyYW1lcyA9IHRoaXMudXBkYXRlQW5pbWF0aW9uRnJhbWVzLmJpbmQodGhpcyk7XG4gICAgY2xlYXJJbnRlcnZhbCh0aGlzLmFuaW1hdGlvblRpbWVyKTtcblxuICAgIHRoaXMuYW5pbWF0aW9uVGltZXIgPSBzZXRJbnRlcnZhbChmdW5jdGlvbigpIHtcbiAgICAgIGdldEFuaW1hdGlvblR5cGUoKTtcbiAgICAgIHVwZGF0ZURhdGEoKTtcbiAgICAgIHVwZGF0ZUFuaW1hdGlvbkZyYW1lcygpO1xuICAgIH0sIDEwMDAgLyB0aGlzLmZwcyk7XG4gICAgdGhpcy5zdGFydGVkID0gdHJ1ZTtcbiAgfVxuXG4gIHVwZGF0ZURhdGEoKSB7XG4gICAgaWYgKCF0aGlzLm1vdmluZykge1xuICAgICAgaWYgKHRoaXMuc3RhbWluYSAhPSB0aGlzLm1heFN0YW1pbmEpIHtcbiAgICAgICAgdGhpcy5zdGFtaW5hID0gdGhpcy5zdGFtaW5hICsgMC41O1xuICAgICAgfVxuICAgIH1cblxuICAgIGlmICh0aGlzLnN0YW1pbmEgPCAwKSB7XG4gICAgICB0aGlzLnN0YW1pbmEgPSAwO1xuICAgIH1cbiAgICBpZiAodGhpcy5oZWFsdGggPCAwKSB7XG4gICAgICB0aGlzLmhlYWx0aCA9IDA7XG4gICAgfVxuICB9XG5cbiAgdXBkYXRlQW5pbWF0aW9uRnJhbWVzKCkge1xuICAgIGxldCBvdXRPZkJvdW5kcyA9XG4gICAgICB0aGlzLm9mZnNldEZyYW1lWCA+PSB0aGlzLmFuaW1hdGlvbkZyYW1lc1t0aGlzLm9mZnNldEZyYW1lWV07XG5cbiAgICAvLyBpZiAodGhpcy5hdHRhY2tpbmcgJiYgb3V0T2ZCb3VuZHMpIHtcbiAgICAvLyAgICAgdGhpcy5hdHRhY2tpbmcgPSBmYWxzZTtcbiAgICAvLyB9XG5cbiAgICAvLyBpZiAodGhpcy5qdW1waW5nICYmIG91dE9mQm91bmRzKSB7XG4gICAgLy8gICAgIHRoaXMuanVtcGluZyA9IGZhbHNlO1xuICAgIC8vIH1cblxuICAgIC8vIGlmICh0aGlzLmh1cnRpbmcgJiYgb3V0T2ZCb3VuZHMpIHtcbiAgICAvLyAgICAgdGhpcy5odXJ0aW5nID0gZmFsc2U7XG4gICAgLy8gfVxuXG4gICAgaWYgKHRoaXMuYW5pbWF0aW9uRnJhbWVzW3RoaXMub2Zmc2V0RnJhbWVZXSA9PT0gdW5kZWZpbmVkIHx8IG91dE9mQm91bmRzKSB7XG4gICAgICB0aGlzLmFuaW1hdGlvbkZyYW1lID0gMDtcbiAgICAgIHRoaXMub2Zmc2V0RnJhbWVYID0gMDtcbiAgICB9IGVsc2Uge1xuICAgICAgdGhpcy5vZmZzZXRGcmFtZVggKz0gMTtcbiAgICB9XG4gIH1cblxuICByZXR1cm5EaXJlY3Rpb24oKSB7XG4gICAgaWYgKHRoaXMubW92aW5nKSB7XG4gICAgICB0aGlzLmFjdGlvbiA9IFwicnVubmluZ1wiO1xuICAgICAgLy8gdGhpcy5mYWNpbmdYID0gJyc7XG4gICAgICBpZiAodGhpcy5jaGVja1ByZXNzZWQoXCJkXCIpKSB7XG4gICAgICAgIHRoaXMuZmFjaW5nWCA9IDE7XG4gICAgICB9IGVsc2UgaWYgKHRoaXMuY2hlY2tQcmVzc2VkKFwiYVwiKSkge1xuICAgICAgICB0aGlzLmZhY2luZ1ggPSAwO1xuICAgICAgfVxuXG4gICAgICB0aGlzLmZhY2luZ1kgPSBcIlwiO1xuICAgIH0gZWxzZSB7XG4gICAgICB0aGlzLmFjdGlvbiA9IFwic3RhbmRpbmdcIjtcbiAgICB9XG5cbiAgICByZXR1cm4gdGhpcy5hY3Rpb24gKyB0aGlzLmZhY2luZ1kgKyB0aGlzLmZhY2luZ1g7XG4gIH1cblxuICBnZXRBbmltYXRpb25UeXBlKCkge1xuICAgIHRoaXMub2Zmc2V0RnJhbWVZID0gMDtcbiAgICBpZiAodGhpcy5mYWNpbmdYID09IDApIHtcbiAgICAgIHRoaXMub2Zmc2V0RnJhbWVZICs9IDg7XG4gICAgfVxuXG4gICAgaWYgKCF0aGlzLmFsaXZlKSB7XG4gICAgICB0aGlzLm9mZnNldEZyYW1lWSArPSA3O1xuICAgIH0gLyplbHNlIGlmICh0aGlzLmp1bXBpbmcpIHtcbiAgICAgICAgICAgIHRoaXMub2Zmc2V0RnJhbWVZICs9IDU7XG4gICAgICAgIH0gZWxzZSBpZiAodGhpcy5hdHRhY2tpbmcpIHtcbiAgICAgICAgICAgIHRoaXMub2Zmc2V0RnJhbWVZICs9IDIgKyB0aGlzLmF0dGFja0NvbWJvO1xuICAgICAgICB9IGVsc2UgaWYgKHRoaXMuaHVydGluZykge1xuICAgICAgICAgICAgdGhpcy5vZmZzZXRGcmFtZVkgKz0gNjtcbiAgICAgICAgfSAqLyBlbHNlIGlmIChcbiAgICAgIHRoaXMubW92aW5nXG4gICAgKSB7XG4gICAgICB0aGlzLm9mZnNldEZyYW1lWSArPSAxO1xuICAgIH1cbiAgfVxuXG4gIGNoZWNrUHJlc3NlZChrZXkpIHtcbiAgICByZXR1cm4gdGhpcy5rZXlQcmVzc2VkW2tleV0gPyAxIDogMDtcbiAgfVxufVxuXG5leHBvcnQgeyBQbGF5ZXIgfTtcbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Iiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./assets/js/Player.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Player": () => (/* binding */ Player)
+/* harmony export */ });
+/* harmony import */ var _funcs_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./funcs.js */ "./assets/js/funcs.js");
+
+// import { Game } from './Game.js';
+
+
+class Player {
+  constructor(startX, startY) {
+    this.level = 1;
+    this.experience = 0;
+    this.nextLevel = 100;
+    this.damage = 5;
+    this.health = 100;
+    this.stamina = 100;
+    this.maxHealth = 100;
+    this.maxStamina = 100;
+    this.facing = "";
+    this.facingY = "south";
+    this.facingX = 1;
+    this.frame = 1;
+    this.startX = startX;
+    this.startY = startY;
+    this.keyPressed = {};
+    this.posX = startX;
+    this.posY = startY;
+    this.moving = false;
+    this.moveSpeed = 8;
+    this.calculatedMoveSpeed = 1;
+    this.offsetFrameY = 0;
+    this.offsetFrameX = 0;
+    this.animationFrame = 0;
+    this.animationFrames = [12, 7, 9, 9, 9, 5, 4, 7, 12, 7, 9, 9, 9, 5, 4, 7];
+    this.animationTimer = null;
+    this.height = 32;
+    this.width = 32;
+    this.attacking = false;
+    this.attackCooldown = 9;
+    this.attackCounter = 0;
+    this.attackTimer = 0;
+    this.attackCombo = 0;
+    this.jumping = false;
+    this.jumpCooldown = 9;
+    this.jumpCounter = 0;
+    this.jumpTimer = 0;
+    this.fps = 10;
+    this.hurtTimer = null;
+    this.hurt = false;
+    this.alive = true;
+    this.clickX = 0;
+    this.clickY = 0;
+    this.clickAction = "move";
+    this.clickTarget = null;
+    this.hoverAction = "move";
+    // this.startAnimation();
+  }
+
+  die() {
+    this.alive = false;
+    this.doAnimation(7, false);
+  }
+
+  mouseUp(e) {
+    // console.log(e);
+  }
+
+  mouseDown(e, worldXOffset, worldYOffset) {
+    let el = e.target;
+
+    if (el.getTagName == "canvas") {
+      this.clickX = e.clientX - el.offsetLeft;
+      this.clickY = e.clientY - el.offsetTop;
+      this.realClickX = e.clientX - el.offsetLeft - worldXOffset;
+      this.realClickY = e.clientY - el.offsetTop - worldYOffset;
+    }
+    this.clickAction = this.hoverAction;
+    this.clickTarget = this.hoverTarget;
+  }
+
+  doAnimation(yOffset, restart = true, duration = 999) {
+    let updateAnimationFrames = this.updateAnimationFrames.bind(this);
+    let getAnimationType = this.getAnimationType.bind(this);
+    let startAnimation = this.startAnimation.bind(this);
+    let stopAnimation = this.stopAnimation.bind(this);
+
+    stopAnimation();
+    // clearInterval(this.animationTimer);
+    if (duration === 999) {
+      duration = this.animationFrames[yOffset] * (1000 / this.fps);
+    }
+    console.log(duration);
+    this.offsetFrameY = 0;
+    if (this.facingX == 0) {
+      this.offsetFrameY += 8;
+    }
+    // this.getAnimationType();
+    this.offsetFrameY += yOffset;
+    this.offsetFrameX = 0;
+    let counter = 0;
+    this.animationTimer = setInterval(function() {
+      counter++;
+      console.log(counter);
+      updateAnimationFrames();
+    }, 1000 / this.fps);
+
+    setTimeout(function() {
+      stopAnimation();
+      if (restart) {
+        startAnimation();
+      }
+    }, duration);
+  }
+
+  stopAnimation() {
+    clearInterval(this.animationTimer);
+  }
+
+  getHurt(damage) {
+    if (!this.hurt) {
+      let doAnimation = this.doAnimation.bind(this);
+      // let setNotHurting = this.setNotHurting.bind(this);
+      let setNotHurt = this.setNotHurt.bind(this);
+
+      clearInterval(this.attackTimer);
+      this.attackCounter = 0;
+      this.attacking = false;
+      this.hurt = true;
+      // this.hurting = true;
+      this.health -= damage;
+      if (this.health <= 0) {
+        this.die();
+        console.log("Player died");
+      } else {
+        this.offsetFrameX = 0;
+        doAnimation(6);
+        this.hurtTimer = setTimeout(function() {
+          // setNotHurting();
+          setNotHurt();
+        }, 400);
+      }
+      // this.hurt = hurt;
+    }
+  }
+
+  pressKey(key, pressed) {
+    this.keyPressed[key] = pressed;
+  }
+
+  getxp(xp) {
+    this.experience += xp;
+    if (this.experience >= this.nextLevel) {
+      this.level += 1;
+      this.nextLevel = this.nextLevel + this.nextLevel * 1.5;
+      this.experience = 0;
+    }
+  }
+
+  setNotHurt() {
+    this.hurt = false;
+  }
+
+  setNotHurting() {
+    this.hurting = false;
+  }
+
+  attack() {
+    if (this.clickTarget.alive) {
+      if (this.attackCombo >= 2) {
+        this.attackCombo = 0;
+      } else {
+        this.attackCombo++;
+      }
+      if (!this.attacking) {
+        let attackTimer = this.attackTimer;
+        let attacking = this.attacking;
+        let offsetFrameX = this.offsetFrameX;
+        let attackCounter = this.attackCounter;
+        let attackCooldown = this.attackCooldown;
+        let damage = this.damage;
+        let clickTarget = this.clickTarget;
+        let setNotAttacking = this.setNotAttacking.bind(this);
+
+        this.stamina -= 10;
+        this.offsetFrameX = 0;
+        this.attacking = true;
+
+        this.doAnimation(2 + this.attackCombo);
+        attackCounter = attackCooldown;
+        this.attackTimer = setInterval(function() {
+          if (attackCounter == attackCooldown - 2) {
+            clickTarget.getHurt(damage);
+          }
+          if (attackCounter == 0) {
+            clearInterval(attackTimer);
+            // attacking = false;
+            setNotAttacking();
+            console.log("player not attacking");
+            offsetFrameX = 0;
+          }
+          attackCounter--;
+        }, 1000 / this.fps);
+      }
+    }
+  }
+
+  setNotAttacking() {
+    this.attacking = false;
+  }
+
+  jump() {
+    this.offsetFrameX = 0;
+    if (!this.jumping && this.jumpCounter <= 0) {
+      this.jumping = true;
+      this.jumpTimer = this.jumpCooldown;
+      this.jumpTimer = setInterval(function() {
+        this.jumpCounter--;
+        if (this.jumpCounter == 0) {
+          clearInterval(this.jumpTimer);
+          this.jumping = false;
+          this.offsetFrameX = 0;
+        }
+      }, 1000 / this.fps);
+    }
+  }
+
+  getXTarget() {
+    let xTarget = this.realClickX;
+
+    if (this.clickTarget !== undefined && this.clickTarget !== null) {
+      xTarget = this.clickTarget.getXCenterPos() - this.clickTarget.getWidth();
+    }
+    return xTarget;
+  }
+
+  getYTarget() {
+    let yTarget = this.realClickY;
+
+    if (this.clickTarget !== undefined && this.clickTarget !== null) {
+      yTarget = this.clickTarget.getYCenterPos() - this.clickTarget.getHeight();
+    }
+    return yTarget;
+  }
+
+  checkObjectsCollision(a1, a2, map) {
+    let objL = map.plane.objects;
+    let ts = map.tileSets[0].tiles;
+
+    // console.log(map);
+    for (let x = map.startX; x < map.endX; x++) {
+      for (let y = map.startY; y < map.endY; y++) {
+        if (objL[x][y]) {
+          let tileType = objL[x][y].getType();
+
+          if (tileType != 0) {
+            let t = {
+              x: objL[x][y].xOffset + map.worldXOffset,
+              y: objL[x][y].yOffset + map.worldYOffset,
+              width: objL[x][y].width,
+              height: objL[x][y].height
+            };
+
+            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__.funcs.isCollide(a1, t)) {
+              // console.log(objL[x][y])
+              // console.log('colliding;')
+              this.isCollidingX = true;
+            }
+
+            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__.funcs.isCollide(a2, t)) {
+              // console.log('colliding;')
+              this.isCollidingY = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  move2(worldOffset, enemies, map) {
+    if (this.alive) {
+      let targetX = this.getXTarget();
+      let targetY = this.getYTarget();
+      let dx = targetX - this.posX;
+      let dy = targetY - this.posY;
+      let hMovement = dx > 0 ? 1 : dx < 0 ? -1 : 0;
+      let vMovement = dy > 0 ? 1 : dy < 0 ? -1 : 0;
+      let distance = Math.round(Math.sqrt(dx * dx + dy * dy));
+
+      distance = this.clickTarget
+        ? distance - this.clickTarget.width * 2 + 5
+        : distance;
+      // console.log(this.attacking, this.hurt);
+      if (!this.attacking && !this.hurt) {
+        // console.log(distance, this.moveSpeed);
+        if (targetX && targetY && distance - this.moveSpeed > this.moveSpeed) {
+          let xSpeed = Math.round((dx / distance) * this.moveSpeed * hMovement);
+          let ySpeed = Math.round((dy / distance) * this.moveSpeed * vMovement);
+
+          let a1 = {
+            x: this.playerXPos + this.moveSpeed * hMovement,
+            y: this.playerYPos,
+            width: this.width * 1.5 - 12,
+            height: this.height * 1.5 - 6
+          };
+          let a2 = {
+            x: this.playerXPos,
+            y: this.playerYPos + this.moveSpeed * vMovement,
+            width: this.width * 1.5 - 12,
+            height: this.height * 1.5 - 6
+          };
+
+          this.isCollidingX = false;
+          this.isCollidingY = false;
+
+          for (let enemy of enemies) {
+            let b = {
+              x: enemy.realXPos,
+              y: enemy.realYPos,
+              width: enemy.width * 2,
+              height: enemy.height * 2
+            };
+
+            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__.funcs.isCollide(a1, b)) {
+              this.isCollidingX = true;
+            }
+
+            if (_funcs_js__WEBPACK_IMPORTED_MODULE_0__.funcs.isCollide(a2, b)) {
+              this.isCollidingY = true;
+            }
+          }
+
+          // console.log(objL, ts)
+
+          this.checkObjectsCollision(a1, a2, map);
+
+          if (this.isCollidingX && this.isCollidingY) {
+            this.stopMoving();
+          } else {
+            if (!this.isCollidingX) {
+              this.posX += xSpeed * hMovement;
+            } else if (ySpeed <= 0.5) {
+              this.stopMoving();
+              // this.posY += this.moveSpeed * vMovement;
+              // this.posX += 0.1 * -hMovement;
+            }
+            if (!this.isCollidingY) {
+              this.posY += ySpeed * vMovement;
+            } else if (xSpeed <= 0.5) {
+              this.stopMoving();
+              // this.posX += this.moveSpeed * hMovement;
+              // this.posY += 0.1 * -vMovement;
+            }
+          }
+
+          if (!this.moving) {
+            this.offsetFrameX = 0;
+          }
+
+          if (dx > 0) {
+            this.facingX = 1;
+          } else if (dx < 0) {
+            this.facingX = 0;
+          }
+
+          this.moving = true;
+        } else {
+          if (this.clickTarget !== null && this.clickTarget !== undefined) {
+            this.attack();
+          }
+          this.stopMoving();
+        }
+      }
+    }
+  }
+
+  move(worldOffset) {
+    if (this.alive) {
+      let hMovement = this.checkPressed("d") - this.checkPressed("a");
+      let vMovement = this.checkPressed("s") - this.checkPressed("w");
+      let attacked = this.checkPressed("e") == 1;
+      let jumped = this.checkPressed(" ") == 1;
+      let running = this.checkPressed("Shift") == 1;
+      // let moved = this.checkPressed('d') || this.checkPressed('a') || this.checkPressed('s') || this.checkPressed('w');
+
+      // if (moved && !this.moving || !moved && this.moving) {
+      //     this.attacking = false;
+      // }
+      // console.log(this.keyPressed);
+      if (!this.attacking && !this.hurt) {
+        if (hMovement != 0 && vMovement != 0) {
+          if (running) {
+            this.moveSpeed = 20;
+          } else {
+            this.moveSpeed = 8;
+          }
+          let xySpeed = Math.round(
+            Math.sqrt((this.moveSpeed * this.moveSpeed) / 2)
+          );
+          let steph = xySpeed * hMovement;
+          let stepv = xySpeed * vMovement;
+
+          if (!this.moving) {
+            this.offsetFrameX = 0;
+          }
+
+          this.moving = true;
+          if (
+            this.posX + steph >= 0 &&
+            this.posX + steph + this.width * 2 <= worldOffset.w
+          ) {
+            this.posX += steph;
+            // this.posX += steph;
+          }
+          if (
+            this.posY + stepv >= 0 &&
+            this.posY + stepv + this.height * 2 < worldOffset.h
+          ) {
+            this.posY += stepv;
+          }
+          // this.posX += steph;
+          // this.posY += stepv;
+
+          // this.posY += stepv;
+        } else if (hMovement != 0 || vMovement != 0) {
+          if (!this.moving) {
+            this.offsetFrameX = 0;
+          }
+          this.moving = true;
+          var steph = hMovement * this.moveSpeed;
+          var stepv = vMovement * this.moveSpeed;
+
+          if (
+            this.posX + steph >= 0 &&
+            this.posX + steph + this.width * 2 <= worldOffset.w
+          ) {
+            this.posX += steph;
+          }
+
+          if (
+            this.posY + stepv >= 0 &&
+            this.posY + stepv + this.height * 2 < worldOffset.h
+          ) {
+            this.posY += stepv;
+          }
+          // this.posX += hMovement * this.moveSpeed;
+          // this.posY += vMovement * this.moveSpeed;
+        }
+
+        if (vMovement == 0 && hMovement == 0) {
+          if (this.moving) {
+            this.offsetFrameX = 0;
+          }
+          this.moving = false;
+        }
+
+        if (jumped && !this.jumping) {
+          this.jump();
+        }
+
+        this.facing = this.returnDirection();
+      }
+
+      if (attacked && !this.attacking) {
+        this.attack();
+      }
+    }
+  }
+
+  stopMoving() {
+    this.clickTarget = null;
+    this.realClickY = null;
+    this.realClickX = null;
+    this.moving = false;
+  }
+
+  startData() {
+    let updateData = this.updateData.bind(this);
+
+    this.updateTimer = setInterval(function() {
+      updateData();
+    }, 1000 / this.fps);
+  }
+
+  startAnimation() {
+    let getAnimationType = this.getAnimationType.bind(this);
+    let updateData = this.updateData.bind(this);
+    let updateAnimationFrames = this.updateAnimationFrames.bind(this);
+    clearInterval(this.animationTimer);
+
+    this.animationTimer = setInterval(function() {
+      getAnimationType();
+      updateData();
+      updateAnimationFrames();
+    }, 1000 / this.fps);
+    this.started = true;
+  }
+
+  updateData() {
+    if (!this.moving) {
+      if (this.stamina != this.maxStamina) {
+        this.stamina = this.stamina + 0.5;
+      }
+    }
+
+    if (this.stamina < 0) {
+      this.stamina = 0;
+    }
+    if (this.health < 0) {
+      this.health = 0;
+    }
+  }
+
+  updateAnimationFrames() {
+    let outOfBounds =
+      this.offsetFrameX >= this.animationFrames[this.offsetFrameY];
+
+    // if (this.attacking && outOfBounds) {
+    //     this.attacking = false;
+    // }
+
+    // if (this.jumping && outOfBounds) {
+    //     this.jumping = false;
+    // }
+
+    // if (this.hurting && outOfBounds) {
+    //     this.hurting = false;
+    // }
+
+    if (this.animationFrames[this.offsetFrameY] === undefined || outOfBounds) {
+      this.animationFrame = 0;
+      this.offsetFrameX = 0;
+    } else {
+      this.offsetFrameX += 1;
+    }
+  }
+
+  returnDirection() {
+    if (this.moving) {
+      this.action = "running";
+      // this.facingX = '';
+      if (this.checkPressed("d")) {
+        this.facingX = 1;
+      } else if (this.checkPressed("a")) {
+        this.facingX = 0;
+      }
+
+      this.facingY = "";
+    } else {
+      this.action = "standing";
+    }
+
+    return this.action + this.facingY + this.facingX;
+  }
+
+  getAnimationType() {
+    this.offsetFrameY = 0;
+    if (this.facingX == 0) {
+      this.offsetFrameY += 8;
+    }
+
+    if (!this.alive) {
+      this.offsetFrameY += 7;
+    } /*else if (this.jumping) {
+            this.offsetFrameY += 5;
+        } else if (this.attacking) {
+            this.offsetFrameY += 2 + this.attackCombo;
+        } else if (this.hurting) {
+            this.offsetFrameY += 6;
+        } */ else if (
+      this.moving
+    ) {
+      this.offsetFrameY += 1;
+    }
+  }
+
+  checkPressed(key) {
+    return this.keyPressed[key] ? 1 : 0;
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -150,11 +1953,109 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!****************************!*\
   !*** ./assets/js/Slime.js ***!
   \****************************/
-/*! exports provided: Slime */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Slime\", function() { return Slime; });\n/* harmony import */ var _Enemy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Enemy.js */ \"./assets/js/Enemy.js\");\n\n\n\n// import { TileSet } from './TileSet.js';\n// import { funcs } from './funcs.js';\n\nclass Slime extends _Enemy_js__WEBPACK_IMPORTED_MODULE_0__[\"Enemy\"] {\n  constructor(x, y, name, maxHealth, damage, speed, expGive) {\n    super(x, y, name, maxHealth, damage, speed, expGive);\n    this.image = \"slime_red.png\";\n    this.animationFrames = [3];\n    this.width = 16;\n    this.height = 16;\n    this.moveSpeed = 3;\n    this.attackCooldown = 3000;\n  }\n\n  getImage() {\n    return this.image;\n  }\n\n  getWidth() {\n    return this.width;\n  }\n\n  getHeight() {\n    return this.height;\n  }\n\n  getXPos() {\n    return this.xPos;\n  }\n\n  getYPos() {\n    return this.yPos;\n  }\n\n  startAnimation() {\n    let that = this;\n\n    if (!that.started) {\n      that.animationTimer = setInterval(function() {\n        that.updateAnimationFrames();\n      }, 1000 / 10);\n      that.started = true;\n    }\n  }\n\n  die() {\n    this.alive = false;\n  }\n\n  getHurt(damage) {\n    let that = this;\n\n    if (!that.hurt) {\n      console.log(`${that.name} was damaged ${damage} points!`);\n      that.hurt = true;\n      that.health -= damage;\n      that.hurtTimer = setTimeout(function() {\n        if (that.health <= 0) {\n          that.die();\n          console.log(`${that.name} died!`);\n        }\n        that.hurt = false;\n        console.log(\"not hurt\");\n      }, 1000);\n    }\n  }\n\n  updateAnimationFrames() {\n    let that = this;\n    let outOfBounds =\n      that.offsetFrameX >= that.animationFrames[that.offsetFrameY];\n\n    // if (that.attacking && outOfBounds) {\n    //     that.attacking = false;\n    // }\n\n    if (that.hurt && that.offsetFrameX % 2 != 0) {\n      that.offsetFrameY = 1;\n    } else {\n      that.offsetFrameY = 0;\n    }\n\n    if (that.animationFrames[that.offsetFrameY] === undefined || outOfBounds) {\n      that.animationFrame = 0;\n      that.offsetFrameX = 0;\n    } else {\n      that.offsetFrameX += 1;\n    }\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvU2xpbWUuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9hc3NldHMvanMvU2xpbWUuanM/OGRiNiJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcblxuaW1wb3J0IHsgRW5lbXkgfSBmcm9tIFwiLi9FbmVteS5qc1wiO1xuLy8gaW1wb3J0IHsgVGlsZVNldCB9IGZyb20gJy4vVGlsZVNldC5qcyc7XG4vLyBpbXBvcnQgeyBmdW5jcyB9IGZyb20gJy4vZnVuY3MuanMnO1xuXG5jbGFzcyBTbGltZSBleHRlbmRzIEVuZW15IHtcbiAgY29uc3RydWN0b3IoeCwgeSwgbmFtZSwgbWF4SGVhbHRoLCBkYW1hZ2UsIHNwZWVkLCBleHBHaXZlKSB7XG4gICAgc3VwZXIoeCwgeSwgbmFtZSwgbWF4SGVhbHRoLCBkYW1hZ2UsIHNwZWVkLCBleHBHaXZlKTtcbiAgICB0aGlzLmltYWdlID0gXCJzbGltZV9yZWQucG5nXCI7XG4gICAgdGhpcy5hbmltYXRpb25GcmFtZXMgPSBbM107XG4gICAgdGhpcy53aWR0aCA9IDE2O1xuICAgIHRoaXMuaGVpZ2h0ID0gMTY7XG4gICAgdGhpcy5tb3ZlU3BlZWQgPSAzO1xuICAgIHRoaXMuYXR0YWNrQ29vbGRvd24gPSAzMDAwO1xuICB9XG5cbiAgZ2V0SW1hZ2UoKSB7XG4gICAgcmV0dXJuIHRoaXMuaW1hZ2U7XG4gIH1cblxuICBnZXRXaWR0aCgpIHtcbiAgICByZXR1cm4gdGhpcy53aWR0aDtcbiAgfVxuXG4gIGdldEhlaWdodCgpIHtcbiAgICByZXR1cm4gdGhpcy5oZWlnaHQ7XG4gIH1cblxuICBnZXRYUG9zKCkge1xuICAgIHJldHVybiB0aGlzLnhQb3M7XG4gIH1cblxuICBnZXRZUG9zKCkge1xuICAgIHJldHVybiB0aGlzLnlQb3M7XG4gIH1cblxuICBzdGFydEFuaW1hdGlvbigpIHtcbiAgICBsZXQgdGhhdCA9IHRoaXM7XG5cbiAgICBpZiAoIXRoYXQuc3RhcnRlZCkge1xuICAgICAgdGhhdC5hbmltYXRpb25UaW1lciA9IHNldEludGVydmFsKGZ1bmN0aW9uKCkge1xuICAgICAgICB0aGF0LnVwZGF0ZUFuaW1hdGlvbkZyYW1lcygpO1xuICAgICAgfSwgMTAwMCAvIDEwKTtcbiAgICAgIHRoYXQuc3RhcnRlZCA9IHRydWU7XG4gICAgfVxuICB9XG5cbiAgZGllKCkge1xuICAgIHRoaXMuYWxpdmUgPSBmYWxzZTtcbiAgfVxuXG4gIGdldEh1cnQoZGFtYWdlKSB7XG4gICAgbGV0IHRoYXQgPSB0aGlzO1xuXG4gICAgaWYgKCF0aGF0Lmh1cnQpIHtcbiAgICAgIGNvbnNvbGUubG9nKGAke3RoYXQubmFtZX0gd2FzIGRhbWFnZWQgJHtkYW1hZ2V9IHBvaW50cyFgKTtcbiAgICAgIHRoYXQuaHVydCA9IHRydWU7XG4gICAgICB0aGF0LmhlYWx0aCAtPSBkYW1hZ2U7XG4gICAgICB0aGF0Lmh1cnRUaW1lciA9IHNldFRpbWVvdXQoZnVuY3Rpb24oKSB7XG4gICAgICAgIGlmICh0aGF0LmhlYWx0aCA8PSAwKSB7XG4gICAgICAgICAgdGhhdC5kaWUoKTtcbiAgICAgICAgICBjb25zb2xlLmxvZyhgJHt0aGF0Lm5hbWV9IGRpZWQhYCk7XG4gICAgICAgIH1cbiAgICAgICAgdGhhdC5odXJ0ID0gZmFsc2U7XG4gICAgICAgIGNvbnNvbGUubG9nKFwibm90IGh1cnRcIik7XG4gICAgICB9LCAxMDAwKTtcbiAgICB9XG4gIH1cblxuICB1cGRhdGVBbmltYXRpb25GcmFtZXMoKSB7XG4gICAgbGV0IHRoYXQgPSB0aGlzO1xuICAgIGxldCBvdXRPZkJvdW5kcyA9XG4gICAgICB0aGF0Lm9mZnNldEZyYW1lWCA+PSB0aGF0LmFuaW1hdGlvbkZyYW1lc1t0aGF0Lm9mZnNldEZyYW1lWV07XG5cbiAgICAvLyBpZiAodGhhdC5hdHRhY2tpbmcgJiYgb3V0T2ZCb3VuZHMpIHtcbiAgICAvLyAgICAgdGhhdC5hdHRhY2tpbmcgPSBmYWxzZTtcbiAgICAvLyB9XG5cbiAgICBpZiAodGhhdC5odXJ0ICYmIHRoYXQub2Zmc2V0RnJhbWVYICUgMiAhPSAwKSB7XG4gICAgICB0aGF0Lm9mZnNldEZyYW1lWSA9IDE7XG4gICAgfSBlbHNlIHtcbiAgICAgIHRoYXQub2Zmc2V0RnJhbWVZID0gMDtcbiAgICB9XG5cbiAgICBpZiAodGhhdC5hbmltYXRpb25GcmFtZXNbdGhhdC5vZmZzZXRGcmFtZVldID09PSB1bmRlZmluZWQgfHwgb3V0T2ZCb3VuZHMpIHtcbiAgICAgIHRoYXQuYW5pbWF0aW9uRnJhbWUgPSAwO1xuICAgICAgdGhhdC5vZmZzZXRGcmFtZVggPSAwO1xuICAgIH0gZWxzZSB7XG4gICAgICB0aGF0Lm9mZnNldEZyYW1lWCArPSAxO1xuICAgIH1cbiAgfVxufVxuXG5leHBvcnQgeyBTbGltZSB9O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./assets/js/Slime.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Slime": () => (/* binding */ Slime)
+/* harmony export */ });
+/* harmony import */ var _Enemy_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Enemy.js */ "./assets/js/Enemy.js");
+
+
+
+// import { TileSet } from './TileSet.js';
+// import { funcs } from './funcs.js';
+
+class Slime extends _Enemy_js__WEBPACK_IMPORTED_MODULE_0__.Enemy {
+  constructor(x, y, name, maxHealth, damage, speed, expGive) {
+    super(x, y, name, maxHealth, damage, speed, expGive);
+    this.image = "slime_red.png";
+    this.animationFrames = [3];
+    this.width = 16;
+    this.height = 16;
+    this.moveSpeed = 3;
+    this.attackCooldown = 3000;
+  }
+
+  getImage() {
+    return this.image;
+  }
+
+  getWidth() {
+    return this.width;
+  }
+
+  getHeight() {
+    return this.height;
+  }
+
+  getXPos() {
+    return this.xPos;
+  }
+
+  getYPos() {
+    return this.yPos;
+  }
+
+  startAnimation() {
+    let that = this;
+
+    if (!that.started) {
+      that.animationTimer = setInterval(function() {
+        that.updateAnimationFrames();
+      }, 1000 / 10);
+      that.started = true;
+    }
+  }
+
+  die() {
+    this.alive = false;
+  }
+
+  getHurt(damage) {
+    let that = this;
+
+    if (!that.hurt) {
+      console.log(`${that.name} was damaged ${damage} points!`);
+      that.hurt = true;
+      that.health -= damage;
+      that.hurtTimer = setTimeout(function() {
+        if (that.health <= 0) {
+          that.die();
+          console.log(`${that.name} died!`);
+        }
+        that.hurt = false;
+        console.log("not hurt");
+      }, 1000);
+    }
+  }
+
+  updateAnimationFrames() {
+    let that = this;
+    let outOfBounds =
+      that.offsetFrameX >= that.animationFrames[that.offsetFrameY];
+
+    // if (that.attacking && outOfBounds) {
+    //     that.attacking = false;
+    // }
+
+    if (that.hurt && that.offsetFrameX % 2 != 0) {
+      that.offsetFrameY = 1;
+    } else {
+      that.offsetFrameY = 0;
+    }
+
+    if (that.animationFrames[that.offsetFrameY] === undefined || outOfBounds) {
+      that.animationFrame = 0;
+      that.offsetFrameX = 0;
+    } else {
+      that.offsetFrameX += 1;
+    }
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -162,11 +2063,57 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!***************************!*\
   !*** ./assets/js/Tile.js ***!
   \***************************/
-/*! exports provided: Tile */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Tile\", function() { return Tile; });\n\n\n// import { Player } from './Player.js';\n// import { TileSet } from './TileSet.js';\n// import { funcs } from './funcs.js';\n\nclass Tile {\n  constructor(id, xOffset, yOffset, width, height, type) {\n    this.id = id;\n    this.xOffset = xOffset;\n    this.yOffset = yOffset;\n    this.width = width;\n    this.height = height;\n    this.type = type;\n    // var tileAmountWidth = Math.floor(width / tileWidth);\n    // this.lastgid = tileAmountWidth * Math.floor(height / tileHeight) + firstgid - 1;\n  }\n\n  getId() {\n    return this.id;\n  }\n\n  getXOffset() {\n    return this.xOffset;\n  }\n\n  getYOffset() {\n    return this.yOffset;\n  }\n\n  getWidth() {\n    return this.width;\n  }\n\n  getHeight() {\n    return this.height;\n  }\n\n  getType() {\n    return this.type;\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvVGlsZS5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9qcy9UaWxlLmpzPzAwOTYiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7XG5cbi8vIGltcG9ydCB7IFBsYXllciB9IGZyb20gJy4vUGxheWVyLmpzJztcbi8vIGltcG9ydCB7IFRpbGVTZXQgfSBmcm9tICcuL1RpbGVTZXQuanMnO1xuLy8gaW1wb3J0IHsgZnVuY3MgfSBmcm9tICcuL2Z1bmNzLmpzJztcblxuY2xhc3MgVGlsZSB7XG4gIGNvbnN0cnVjdG9yKGlkLCB4T2Zmc2V0LCB5T2Zmc2V0LCB3aWR0aCwgaGVpZ2h0LCB0eXBlKSB7XG4gICAgdGhpcy5pZCA9IGlkO1xuICAgIHRoaXMueE9mZnNldCA9IHhPZmZzZXQ7XG4gICAgdGhpcy55T2Zmc2V0ID0geU9mZnNldDtcbiAgICB0aGlzLndpZHRoID0gd2lkdGg7XG4gICAgdGhpcy5oZWlnaHQgPSBoZWlnaHQ7XG4gICAgdGhpcy50eXBlID0gdHlwZTtcbiAgICAvLyB2YXIgdGlsZUFtb3VudFdpZHRoID0gTWF0aC5mbG9vcih3aWR0aCAvIHRpbGVXaWR0aCk7XG4gICAgLy8gdGhpcy5sYXN0Z2lkID0gdGlsZUFtb3VudFdpZHRoICogTWF0aC5mbG9vcihoZWlnaHQgLyB0aWxlSGVpZ2h0KSArIGZpcnN0Z2lkIC0gMTtcbiAgfVxuXG4gIGdldElkKCkge1xuICAgIHJldHVybiB0aGlzLmlkO1xuICB9XG5cbiAgZ2V0WE9mZnNldCgpIHtcbiAgICByZXR1cm4gdGhpcy54T2Zmc2V0O1xuICB9XG5cbiAgZ2V0WU9mZnNldCgpIHtcbiAgICByZXR1cm4gdGhpcy55T2Zmc2V0O1xuICB9XG5cbiAgZ2V0V2lkdGgoKSB7XG4gICAgcmV0dXJuIHRoaXMud2lkdGg7XG4gIH1cblxuICBnZXRIZWlnaHQoKSB7XG4gICAgcmV0dXJuIHRoaXMuaGVpZ2h0O1xuICB9XG5cbiAgZ2V0VHlwZSgpIHtcbiAgICByZXR1cm4gdGhpcy50eXBlO1xuICB9XG59XG5cbmV4cG9ydCB7IFRpbGUgfTtcbiJdLCJtYXBwaW5ncyI6IkFBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Iiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./assets/js/Tile.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Tile": () => (/* binding */ Tile)
+/* harmony export */ });
+
+
+// import { Player } from './Player.js';
+// import { TileSet } from './TileSet.js';
+// import { funcs } from './funcs.js';
+
+class Tile {
+  constructor(id, xOffset, yOffset, width, height, type) {
+    this.id = id;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
+    this.width = width;
+    this.height = height;
+    this.type = type;
+    // var tileAmountWidth = Math.floor(width / tileWidth);
+    // this.lastgid = tileAmountWidth * Math.floor(height / tileHeight) + firstgid - 1;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getXOffset() {
+    return this.xOffset;
+  }
+
+  getYOffset() {
+    return this.yOffset;
+  }
+
+  getWidth() {
+    return this.width;
+  }
+
+  getHeight() {
+    return this.height;
+  }
+
+  getType() {
+    return this.type;
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -174,11 +2121,79 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!******************************!*\
   !*** ./assets/js/TileSet.js ***!
   \******************************/
-/*! exports provided: TileSet */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"TileSet\", function() { return TileSet; });\n/* harmony import */ var _Tile_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Tile.js */ \"./assets/js/Tile.js\");\n\n\n// import { Player } from './Player.js';\n// import { TileSet } from './TileSet.js';\n\n\nclass TileSet {\n  constructor(firstgid, tileWidth, tileHeight, source, width, height) {\n    var tileAmountWidth = Math.floor(width / tileWidth);\n\n    this.firstgid = firstgid;\n    this.tileWidth = tileWidth;\n    this.tileHeight = tileHeight;\n    this.source = source;\n    this.width = width;\n    this.height = height;\n    this.lastgid =\n      tileAmountWidth * Math.floor(height / tileHeight) + firstgid - 1;\n    this.tiles = [];\n  }\n\n  async loadTileSetImage() {\n    let mapimage = await window.fetch(\n      \"assets/img/map/overworld1.tsx\" /* + this.source*/\n    );\n    let text = await mapimage.text();\n    let xmlDoc = new window.DOMParser().parseFromString(text, \"text/xml\");\n    let tileCounter = 1;\n\n    // console.log(xmlDoc);\n    // console.log(xmlDoc.activeElement.children[0]);\n    this.mapImage = xmlDoc.activeElement.getElementsByTagName(\"image\")[0];\n\n    this.columns = xmlDoc.activeElement.getAttribute(\"columns\");\n    this.tilecount = xmlDoc.activeElement.getAttribute(\"tilecount\");\n    this.tilewidth = xmlDoc.activeElement.getAttribute(\"tilewidth\");\n    this.tileheight = xmlDoc.activeElement.getAttribute(\"tileheight\");\n    this.spacing = xmlDoc.activeElement.getAttribute(\"spacing\");\n    this.rows = this.tilecount / this.columns;\n    console.log(this);\n\n    // console.log(this.tilewidth * 39);\n\n    for (let y = 0; y < this.rows; y++) {\n      // this.tiles[y] = [];\n      for (let x = 0; x < this.columns; x++) {\n        let yOffset = y * (parseInt(this.tileheight) + parseInt(this.spacing));\n        let xOffset = x * (parseInt(this.tilewidth) + parseInt(this.spacing));\n\n        this.tiles[tileCounter] = new _Tile_js__WEBPACK_IMPORTED_MODULE_0__[\"Tile\"](\n          tileCounter + 1,\n          xOffset,\n          yOffset,\n          this.tilewidth,\n          this.tileheight,\n          null //this.layers[0].data[tileCounter]\n        );\n        tileCounter++;\n      }\n    }\n  }\n}\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvVGlsZVNldC5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9qcy9UaWxlU2V0LmpzP2U4M2YiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7XG5cbi8vIGltcG9ydCB7IFBsYXllciB9IGZyb20gJy4vUGxheWVyLmpzJztcbi8vIGltcG9ydCB7IFRpbGVTZXQgfSBmcm9tICcuL1RpbGVTZXQuanMnO1xuaW1wb3J0IHsgVGlsZSB9IGZyb20gXCIuL1RpbGUuanNcIjtcblxuY2xhc3MgVGlsZVNldCB7XG4gIGNvbnN0cnVjdG9yKGZpcnN0Z2lkLCB0aWxlV2lkdGgsIHRpbGVIZWlnaHQsIHNvdXJjZSwgd2lkdGgsIGhlaWdodCkge1xuICAgIHZhciB0aWxlQW1vdW50V2lkdGggPSBNYXRoLmZsb29yKHdpZHRoIC8gdGlsZVdpZHRoKTtcblxuICAgIHRoaXMuZmlyc3RnaWQgPSBmaXJzdGdpZDtcbiAgICB0aGlzLnRpbGVXaWR0aCA9IHRpbGVXaWR0aDtcbiAgICB0aGlzLnRpbGVIZWlnaHQgPSB0aWxlSGVpZ2h0O1xuICAgIHRoaXMuc291cmNlID0gc291cmNlO1xuICAgIHRoaXMud2lkdGggPSB3aWR0aDtcbiAgICB0aGlzLmhlaWdodCA9IGhlaWdodDtcbiAgICB0aGlzLmxhc3RnaWQgPVxuICAgICAgdGlsZUFtb3VudFdpZHRoICogTWF0aC5mbG9vcihoZWlnaHQgLyB0aWxlSGVpZ2h0KSArIGZpcnN0Z2lkIC0gMTtcbiAgICB0aGlzLnRpbGVzID0gW107XG4gIH1cblxuICBhc3luYyBsb2FkVGlsZVNldEltYWdlKCkge1xuICAgIGxldCBtYXBpbWFnZSA9IGF3YWl0IHdpbmRvdy5mZXRjaChcbiAgICAgIFwiYXNzZXRzL2ltZy9tYXAvb3ZlcndvcmxkMS50c3hcIiAvKiArIHRoaXMuc291cmNlKi9cbiAgICApO1xuICAgIGxldCB0ZXh0ID0gYXdhaXQgbWFwaW1hZ2UudGV4dCgpO1xuICAgIGxldCB4bWxEb2MgPSBuZXcgd2luZG93LkRPTVBhcnNlcigpLnBhcnNlRnJvbVN0cmluZyh0ZXh0LCBcInRleHQveG1sXCIpO1xuICAgIGxldCB0aWxlQ291bnRlciA9IDE7XG5cbiAgICAvLyBjb25zb2xlLmxvZyh4bWxEb2MpO1xuICAgIC8vIGNvbnNvbGUubG9nKHhtbERvYy5hY3RpdmVFbGVtZW50LmNoaWxkcmVuWzBdKTtcbiAgICB0aGlzLm1hcEltYWdlID0geG1sRG9jLmFjdGl2ZUVsZW1lbnQuZ2V0RWxlbWVudHNCeVRhZ05hbWUoXCJpbWFnZVwiKVswXTtcblxuICAgIHRoaXMuY29sdW1ucyA9IHhtbERvYy5hY3RpdmVFbGVtZW50LmdldEF0dHJpYnV0ZShcImNvbHVtbnNcIik7XG4gICAgdGhpcy50aWxlY291bnQgPSB4bWxEb2MuYWN0aXZlRWxlbWVudC5nZXRBdHRyaWJ1dGUoXCJ0aWxlY291bnRcIik7XG4gICAgdGhpcy50aWxld2lkdGggPSB4bWxEb2MuYWN0aXZlRWxlbWVudC5nZXRBdHRyaWJ1dGUoXCJ0aWxld2lkdGhcIik7XG4gICAgdGhpcy50aWxlaGVpZ2h0ID0geG1sRG9jLmFjdGl2ZUVsZW1lbnQuZ2V0QXR0cmlidXRlKFwidGlsZWhlaWdodFwiKTtcbiAgICB0aGlzLnNwYWNpbmcgPSB4bWxEb2MuYWN0aXZlRWxlbWVudC5nZXRBdHRyaWJ1dGUoXCJzcGFjaW5nXCIpO1xuICAgIHRoaXMucm93cyA9IHRoaXMudGlsZWNvdW50IC8gdGhpcy5jb2x1bW5zO1xuICAgIGNvbnNvbGUubG9nKHRoaXMpO1xuXG4gICAgLy8gY29uc29sZS5sb2codGhpcy50aWxld2lkdGggKiAzOSk7XG5cbiAgICBmb3IgKGxldCB5ID0gMDsgeSA8IHRoaXMucm93czsgeSsrKSB7XG4gICAgICAvLyB0aGlzLnRpbGVzW3ldID0gW107XG4gICAgICBmb3IgKGxldCB4ID0gMDsgeCA8IHRoaXMuY29sdW1uczsgeCsrKSB7XG4gICAgICAgIGxldCB5T2Zmc2V0ID0geSAqIChwYXJzZUludCh0aGlzLnRpbGVoZWlnaHQpICsgcGFyc2VJbnQodGhpcy5zcGFjaW5nKSk7XG4gICAgICAgIGxldCB4T2Zmc2V0ID0geCAqIChwYXJzZUludCh0aGlzLnRpbGV3aWR0aCkgKyBwYXJzZUludCh0aGlzLnNwYWNpbmcpKTtcblxuICAgICAgICB0aGlzLnRpbGVzW3RpbGVDb3VudGVyXSA9IG5ldyBUaWxlKFxuICAgICAgICAgIHRpbGVDb3VudGVyICsgMSxcbiAgICAgICAgICB4T2Zmc2V0LFxuICAgICAgICAgIHlPZmZzZXQsXG4gICAgICAgICAgdGhpcy50aWxld2lkdGgsXG4gICAgICAgICAgdGhpcy50aWxlaGVpZ2h0LFxuICAgICAgICAgIG51bGwgLy90aGlzLmxheWVyc1swXS5kYXRhW3RpbGVDb3VudGVyXVxuICAgICAgICApO1xuICAgICAgICB0aWxlQ291bnRlcisrO1xuICAgICAgfVxuICAgIH1cbiAgfVxufVxuXG5leHBvcnQgeyBUaWxlU2V0IH07XG4iXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./assets/js/TileSet.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TileSet": () => (/* binding */ TileSet)
+/* harmony export */ });
+/* harmony import */ var _Tile_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Tile.js */ "./assets/js/Tile.js");
+
+
+// import { Player } from './Player.js';
+// import { TileSet } from './TileSet.js';
+
+
+class TileSet {
+  constructor(firstgid, tileWidth, tileHeight, source, width, height) {
+    var tileAmountWidth = Math.floor(width / tileWidth);
+
+    this.firstgid = firstgid;
+    this.tileWidth = tileWidth;
+    this.tileHeight = tileHeight;
+    this.source = source;
+    this.width = width;
+    this.height = height;
+    this.lastgid =
+      tileAmountWidth * Math.floor(height / tileHeight) + firstgid - 1;
+    this.tiles = [];
+  }
+
+  async loadTileSetImage() {
+    let mapimage = await window.fetch(
+      'assets/img/map/overworld1.tsx' /* + this.source*/
+    );
+    let text = await mapimage.text();
+    let xmlDoc = new window.DOMParser().parseFromString(text, 'text/xml');
+    let tileCounter = 1;
+
+    console.log(xmlDoc);
+    console.log(xmlDoc.getElementsByTagName('image'));
+    this.mapImage = xmlDoc.getElementsByTagName('image')[0];
+    const tileset = xmlDoc.getElementsByTagName('tileset')[0];
+
+    this.columns = tileset.getAttribute('columns');
+    this.tilecount = tileset.getAttribute('tilecount');
+    this.tilewidth = tileset.getAttribute('tilewidth');
+    this.tileheight = tileset.getAttribute('tileheight');
+    this.spacing = tileset.getAttribute('spacing');
+    this.rows = this.tilecount / this.columns;
+    console.log(this);
+
+    // console.log(this.tilewidth * 39);
+
+    for (let y = 0; y < this.rows; y++) {
+      // this.tiles[y] = [];
+      for (let x = 0; x < this.columns; x++) {
+        let yOffset = y * (parseInt(this.tileheight) + parseInt(this.spacing));
+        let xOffset = x * (parseInt(this.tilewidth) + parseInt(this.spacing));
+
+        this.tiles[tileCounter] = new _Tile_js__WEBPACK_IMPORTED_MODULE_0__.Tile(
+          tileCounter + 1,
+          xOffset,
+          yOffset,
+          this.tilewidth,
+          this.tileheight,
+          null //this.layers[0].data[tileCounter]
+        );
+        tileCounter++;
+      }
+    }
+  }
+}
+
+
+
 
 /***/ }),
 
@@ -186,24 +2201,185 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!****************************!*\
   !*** ./assets/js/funcs.js ***!
   \****************************/
-/*! exports provided: funcs */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"funcs\", function() { return funcs; });\n\n\nlet funcs = {};\n\nfuncs.bind = function(el, action, method) {\n  let element = null;\n\n  if (typeof el == \"string\") {\n    element = document.getElementById(el);\n  } else {\n    element = el;\n  }\n  element.addEventListener(action, method);\n};\n\nString.prototype.toCamelCase = function() {\n  return this.valueOf()\n    .replace(/\\s(.)/g, function($1) {\n      return $1.toUpperCase();\n    })\n    .replace(/\\s/g, \"\")\n    .replace(/^(.)/, function($1) {\n      return $1.toLowerCase();\n    });\n};\n\nfuncs.isCollide = function(a, b) {\n  return !(\n    a.y + a.height < b.y ||\n    a.y > b.y + b.height ||\n    a.x + a.width < b.x ||\n    a.x > b.x + b.width\n  );\n};\n\nfuncs.clone = function(obj) {\n  if (null == obj || \"object\" != typeof obj) {\n    return obj;\n  }\n  var copy = new obj.constructor();\n\n  for (var attr in obj) {\n    if (obj.hasOwnProperty(attr)) {\n      copy[attr] = obj[attr];\n    }\n  }\n  return copy;\n};\n\n// funcs.prototype.binds = function(el, action, method) {\n//     let element = null;\n\n//     if (typeof el == 'string') {\n//         element = document.getElementById(el);\n//     }\n//     element.addEventListener(action, method);\n// };\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvZnVuY3MuanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9hc3NldHMvanMvZnVuY3MuanM/YTVjZSJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcblxubGV0IGZ1bmNzID0ge307XG5cbmZ1bmNzLmJpbmQgPSBmdW5jdGlvbihlbCwgYWN0aW9uLCBtZXRob2QpIHtcbiAgbGV0IGVsZW1lbnQgPSBudWxsO1xuXG4gIGlmICh0eXBlb2YgZWwgPT0gXCJzdHJpbmdcIikge1xuICAgIGVsZW1lbnQgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChlbCk7XG4gIH0gZWxzZSB7XG4gICAgZWxlbWVudCA9IGVsO1xuICB9XG4gIGVsZW1lbnQuYWRkRXZlbnRMaXN0ZW5lcihhY3Rpb24sIG1ldGhvZCk7XG59O1xuXG5TdHJpbmcucHJvdG90eXBlLnRvQ2FtZWxDYXNlID0gZnVuY3Rpb24oKSB7XG4gIHJldHVybiB0aGlzLnZhbHVlT2YoKVxuICAgIC5yZXBsYWNlKC9cXHMoLikvZywgZnVuY3Rpb24oJDEpIHtcbiAgICAgIHJldHVybiAkMS50b1VwcGVyQ2FzZSgpO1xuICAgIH0pXG4gICAgLnJlcGxhY2UoL1xccy9nLCBcIlwiKVxuICAgIC5yZXBsYWNlKC9eKC4pLywgZnVuY3Rpb24oJDEpIHtcbiAgICAgIHJldHVybiAkMS50b0xvd2VyQ2FzZSgpO1xuICAgIH0pO1xufTtcblxuZnVuY3MuaXNDb2xsaWRlID0gZnVuY3Rpb24oYSwgYikge1xuICByZXR1cm4gIShcbiAgICBhLnkgKyBhLmhlaWdodCA8IGIueSB8fFxuICAgIGEueSA+IGIueSArIGIuaGVpZ2h0IHx8XG4gICAgYS54ICsgYS53aWR0aCA8IGIueCB8fFxuICAgIGEueCA+IGIueCArIGIud2lkdGhcbiAgKTtcbn07XG5cbmZ1bmNzLmNsb25lID0gZnVuY3Rpb24ob2JqKSB7XG4gIGlmIChudWxsID09IG9iaiB8fCBcIm9iamVjdFwiICE9IHR5cGVvZiBvYmopIHtcbiAgICByZXR1cm4gb2JqO1xuICB9XG4gIHZhciBjb3B5ID0gbmV3IG9iai5jb25zdHJ1Y3RvcigpO1xuXG4gIGZvciAodmFyIGF0dHIgaW4gb2JqKSB7XG4gICAgaWYgKG9iai5oYXNPd25Qcm9wZXJ0eShhdHRyKSkge1xuICAgICAgY29weVthdHRyXSA9IG9ialthdHRyXTtcbiAgICB9XG4gIH1cbiAgcmV0dXJuIGNvcHk7XG59O1xuXG4vLyBmdW5jcy5wcm90b3R5cGUuYmluZHMgPSBmdW5jdGlvbihlbCwgYWN0aW9uLCBtZXRob2QpIHtcbi8vICAgICBsZXQgZWxlbWVudCA9IG51bGw7XG5cbi8vICAgICBpZiAodHlwZW9mIGVsID09ICdzdHJpbmcnKSB7XG4vLyAgICAgICAgIGVsZW1lbnQgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChlbCk7XG4vLyAgICAgfVxuLy8gICAgIGVsZW1lbnQuYWRkRXZlbnRMaXN0ZW5lcihhY3Rpb24sIG1ldGhvZCk7XG4vLyB9O1xuXG5leHBvcnQgeyBmdW5jcyB9O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./assets/js/funcs.js\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "funcs": () => (/* binding */ funcs)
+/* harmony export */ });
 
-/***/ }),
 
-/***/ "./assets/js/main.js":
-/*!***************************!*\
-  !*** ./assets/js/main.js ***!
-  \***************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+let funcs = {};
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Game_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Game.js */ \"./assets/js/Game.js\");\n/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Player.js */ \"./assets/js/Player.js\");\n/* harmony import */ var _Map_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Map.js */ \"./assets/js/Map.js\");\n\n\n\n\n\n\nlet game = new _Game_js__WEBPACK_IMPORTED_MODULE_0__[\"Game\"](800, 600);\nlet map = new _Map_js__WEBPACK_IMPORTED_MODULE_2__[\"Map\"](\"assets/img/map/overworld1.json\");\n\nmap.loadMap().then(function() {\n  console.log(\"map loaded\");\n  game.map = map;\n\n  let initGame = game.init.bind(game);\n\n  initGame();\n  // game.init();\n  window.addEventListener(\"keyup\", function(e) {\n    game.player.pressKey(e.key, false);\n  });\n  window.addEventListener(\"keydown\", function(e) {\n    game.player.pressKey(e.key, true);\n  });\n  // window.addEventListener('mousedown', function(e) { game.player.mouseDown(e, true); });\n  // window.addEventListener('mouseup', function(e) { game.player.mouseUp(e, true); });\n  //     game.init();\n  //     window.addEventListener('keyup', function(e) { game.player.pressKey(e.key, false); });\n  //     window.addEventListener('keydown', function(e) { game.player.pressKey(e.key, true); });\n  //     console.log(map.xmlDoc);\n});\n\n/*app.keyPressed[e.key] = false;*/\n/*app.keyPressed[e.key] = true;*/\n\n// var xmlDoc = window.fetch(\"assets/img/map/map.xml\")\n//     .then(response => response.text())\n//     .then(str => (new window.DOMParser()).parseFromString(str, \"text/xml\"))\n//     .then(data => data);\n\n// console.log(xmlDoc);\n// game.start();\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvanMvbWFpbi5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9qcy9tYWluLmpzPzQ1ZDgiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2Ugc3RyaWN0XCI7XG5cbmltcG9ydCB7IEdhbWUgfSBmcm9tIFwiLi9HYW1lLmpzXCI7XG5pbXBvcnQgeyBQbGF5ZXIgfSBmcm9tIFwiLi9QbGF5ZXIuanNcIjtcbmltcG9ydCB7IE1hcCB9IGZyb20gXCIuL01hcC5qc1wiO1xuXG5sZXQgZ2FtZSA9IG5ldyBHYW1lKDgwMCwgNjAwKTtcbmxldCBtYXAgPSBuZXcgTWFwKFwiYXNzZXRzL2ltZy9tYXAvb3ZlcndvcmxkMS5qc29uXCIpO1xuXG5tYXAubG9hZE1hcCgpLnRoZW4oZnVuY3Rpb24oKSB7XG4gIGNvbnNvbGUubG9nKFwibWFwIGxvYWRlZFwiKTtcbiAgZ2FtZS5tYXAgPSBtYXA7XG5cbiAgbGV0IGluaXRHYW1lID0gZ2FtZS5pbml0LmJpbmQoZ2FtZSk7XG5cbiAgaW5pdEdhbWUoKTtcbiAgLy8gZ2FtZS5pbml0KCk7XG4gIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKFwia2V5dXBcIiwgZnVuY3Rpb24oZSkge1xuICAgIGdhbWUucGxheWVyLnByZXNzS2V5KGUua2V5LCBmYWxzZSk7XG4gIH0pO1xuICB3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcihcImtleWRvd25cIiwgZnVuY3Rpb24oZSkge1xuICAgIGdhbWUucGxheWVyLnByZXNzS2V5KGUua2V5LCB0cnVlKTtcbiAgfSk7XG4gIC8vIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWRvd24nLCBmdW5jdGlvbihlKSB7IGdhbWUucGxheWVyLm1vdXNlRG93bihlLCB0cnVlKTsgfSk7XG4gIC8vIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdtb3VzZXVwJywgZnVuY3Rpb24oZSkgeyBnYW1lLnBsYXllci5tb3VzZVVwKGUsIHRydWUpOyB9KTtcbiAgLy8gICAgIGdhbWUuaW5pdCgpO1xuICAvLyAgICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ2tleXVwJywgZnVuY3Rpb24oZSkgeyBnYW1lLnBsYXllci5wcmVzc0tleShlLmtleSwgZmFsc2UpOyB9KTtcbiAgLy8gICAgIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdrZXlkb3duJywgZnVuY3Rpb24oZSkgeyBnYW1lLnBsYXllci5wcmVzc0tleShlLmtleSwgdHJ1ZSk7IH0pO1xuICAvLyAgICAgY29uc29sZS5sb2cobWFwLnhtbERvYyk7XG59KTtcblxuLyphcHAua2V5UHJlc3NlZFtlLmtleV0gPSBmYWxzZTsqL1xuLyphcHAua2V5UHJlc3NlZFtlLmtleV0gPSB0cnVlOyovXG5cbi8vIHZhciB4bWxEb2MgPSB3aW5kb3cuZmV0Y2goXCJhc3NldHMvaW1nL21hcC9tYXAueG1sXCIpXG4vLyAgICAgLnRoZW4ocmVzcG9uc2UgPT4gcmVzcG9uc2UudGV4dCgpKVxuLy8gICAgIC50aGVuKHN0ciA9PiAobmV3IHdpbmRvdy5ET01QYXJzZXIoKSkucGFyc2VGcm9tU3RyaW5nKHN0ciwgXCJ0ZXh0L3htbFwiKSlcbi8vICAgICAudGhlbihkYXRhID0+IGRhdGEpO1xuXG4vLyBjb25zb2xlLmxvZyh4bWxEb2MpO1xuLy8gZ2FtZS5zdGFydCgpO1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Iiwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./assets/js/main.js\n");
+funcs.bind = function(el, action, method) {
+  let element = null;
+
+  if (typeof el == "string") {
+    element = document.getElementById(el);
+  } else {
+    element = el;
+  }
+  element.addEventListener(action, method);
+};
+
+String.prototype.toCamelCase = function() {
+  return this.valueOf()
+    .replace(/\s(.)/g, function($1) {
+      return $1.toUpperCase();
+    })
+    .replace(/\s/g, "")
+    .replace(/^(.)/, function($1) {
+      return $1.toLowerCase();
+    });
+};
+
+funcs.isCollide = function(a, b) {
+  return !(
+    a.y + a.height < b.y ||
+    a.y > b.y + b.height ||
+    a.x + a.width < b.x ||
+    a.x > b.x + b.width
+  );
+};
+
+funcs.clone = function(obj) {
+  if (null == obj || "object" != typeof obj) {
+    return obj;
+  }
+  var copy = new obj.constructor();
+
+  for (var attr in obj) {
+    if (obj.hasOwnProperty(attr)) {
+      copy[attr] = obj[attr];
+    }
+  }
+  return copy;
+};
+
+// funcs.prototype.binds = function(el, action, method) {
+//     let element = null;
+
+//     if (typeof el == 'string') {
+//         element = document.getElementById(el);
+//     }
+//     element.addEventListener(action, method);
+// };
+
+
+
 
 /***/ })
 
-/******/ });
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!***************************!*\
+  !*** ./assets/js/main.js ***!
+  \***************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Game_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Game.js */ "./assets/js/Game.js");
+/* harmony import */ var _Player_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Player.js */ "./assets/js/Player.js");
+/* harmony import */ var _Map_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Map.js */ "./assets/js/Map.js");
+
+
+
+
+
+
+let game = new _Game_js__WEBPACK_IMPORTED_MODULE_0__.Game(800, 600);
+let map = new _Map_js__WEBPACK_IMPORTED_MODULE_2__.Map("assets/img/map/overworld1.json");
+
+map.loadMap().then(function() {
+  console.log("map loaded");
+  game.map = map;
+
+  let initGame = game.init.bind(game);
+
+  initGame();
+  // game.init();
+  window.addEventListener("keyup", function(e) {
+    game.player.pressKey(e.key, false);
+  });
+  window.addEventListener("keydown", function(e) {
+    game.player.pressKey(e.key, true);
+  });
+  // window.addEventListener('mousedown', function(e) { game.player.mouseDown(e, true); });
+  // window.addEventListener('mouseup', function(e) { game.player.mouseUp(e, true); });
+  //     game.init();
+  //     window.addEventListener('keyup', function(e) { game.player.pressKey(e.key, false); });
+  //     window.addEventListener('keydown', function(e) { game.player.pressKey(e.key, true); });
+  //     console.log(map.xmlDoc);
+});
+
+/*app.keyPressed[e.key] = false;*/
+/*app.keyPressed[e.key] = true;*/
+
+// var xmlDoc = window.fetch("assets/img/map/map.xml")
+//     .then(response => response.text())
+//     .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+//     .then(data => data);
+
+// console.log(xmlDoc);
+// game.start();
+
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=app.js.map

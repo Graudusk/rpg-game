@@ -1,13 +1,11 @@
-var path = require("path");
+const path = require('path');
 
 module.exports = {
-    entry: "./assets/js/main.js",
+    mode: 'development',
+    entry: './assets/js/main.js',
+    devtool: 'source-map',
     output: {
-        filename: "./app.js"
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'app.js',
     },
-    devServer: {
-        // contentBase: path.join(__dirname, 'dist'),
-        compress: true,
-        port: 1337
-    }
 };
